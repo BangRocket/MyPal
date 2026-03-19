@@ -74,8 +74,10 @@ type App struct {
 	PermManager    *permissions.Manager
 	ToolRegistry   *mcp.ToolRegistry
 
-	CompactionSvc *domainservices.MessageCompactionService
-	SubAgentSvc   *domainservices.SubAgentService
+	CompactionSvc  *domainservices.MessageCompactionService
+	SubAgentSvc    *domainservices.SubAgentService
+	PersonalityRepo     ports.PersonalityRepositoryPort
+	RelationshipRepo    ports.UserPersonaRelationshipRepositoryPort
 	CtxInjector   appcontext.ContextInjector
 	MsgHandler    *domainhandlers.MessageHandler
 	SkillsAdapter *filesystem.SkillsAdapter

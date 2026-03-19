@@ -2,17 +2,20 @@ package resolvers
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/dto"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/generated"
 	"github.com/BangRocket/MyPal/apps/backend/internal/application/registry"
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/handlers"
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/models"
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
 	domainservices "github.com/BangRocket/MyPal/apps/backend/internal/domain/services"
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/services/mcp"
+	personalitysvc "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/personality"
 )
 
 // MessageDispatcherPort processes messages through the unified handler.
@@ -48,6 +51,7 @@ type Deps struct {
 	ConfigSnapshot    *dto.AppConfigSnapshot
 	ConfigPath        string
 	ConfigWriter      dto.ConfigUpdatePort
+	PersonalitySvc    *personalitysvc.Service
 }
 
 // Agent implements agent.Provider.
@@ -931,4 +935,196 @@ func (d *Deps) DenyPairing(ctx context.Context, code, reason string) error {
 		return nil
 	}
 	return d.PairingPort.Deny(ctx, code, reason)
+}
+
+// ─── Personality provider ────────────────────────────────────────────────────
+
+// Personalities returns all personality configurations.
+func (d *Deps) Personalities(ctx context.Context) ([]*generated.Personality, error) {
+	if d.PersonalitySvc == nil {
+		return nil, nil
+	}
+	list, err := d.PersonalitySvc.List(ctx)
+	if err != nil {
+		return nil, err
+	}
+	out := make([]*generated.Personality, len(list))
+	for i, p := range list {
+		out[i] = personalityModelToGenerated(&p)
+	}
+	return out, nil
+}
+
+// Personality returns a single personality by ID.
+func (d *Deps) Personality(ctx context.Context, id string) (*generated.Personality, error) {
+	if d.PersonalitySvc == nil {
+		return nil, nil
+	}
+	p, err := d.PersonalitySvc.Get(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	return personalityModelToGenerated(p), nil
+}
+
+// UserRelationships returns all relationships for a user.
+func (d *Deps) UserRelationships(ctx context.Context, userID string) ([]*generated.UserRelationship, error) {
+	if d.PersonalitySvc == nil {
+		return nil, nil
+	}
+	rels, err := d.PersonalitySvc.GetUserRelationships(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+	out := make([]*generated.UserRelationship, len(rels))
+	for i, r := range rels {
+		out[i] = relationshipModelToGenerated(&r)
+	}
+	return out, nil
+}
+
+// CreatePersonality creates a new personality from GraphQL input.
+func (d *Deps) CreatePersonality(ctx context.Context, input generated.PersonalityInput) (*generated.Personality, error) {
+	if d.PersonalitySvc == nil {
+		return nil, nil
+	}
+	now := time.Now().UTC()
+	m := &models.PersonalityModel{
+		Name:       input.Name,
+		BasePrompt: input.BasePrompt,
+		Traits:     marshalJSONStringArray(input.Traits),
+		Tone:       ptrStrVal(input.Tone),
+		Boundaries: marshalJSONStringArray(input.Boundaries),
+		Quirks:     marshalJSONStringArray(input.Quirks),
+		Adaptations: ptrStrVal(input.Adaptations),
+		IsDefault:  ptrBoolVal(input.IsDefault),
+		CreatedAt:  now,
+		UpdatedAt:  now,
+	}
+	if err := d.PersonalitySvc.Create(ctx, m); err != nil {
+		return nil, err
+	}
+	return personalityModelToGenerated(m), nil
+}
+
+// UpdatePersonality updates an existing personality.
+func (d *Deps) UpdatePersonality(ctx context.Context, id string, input generated.PersonalityInput) (*generated.Personality, error) {
+	if d.PersonalitySvc == nil {
+		return nil, nil
+	}
+	existing, err := d.PersonalitySvc.Get(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	existing.Name = input.Name
+	existing.BasePrompt = input.BasePrompt
+	existing.Traits = marshalJSONStringArray(input.Traits)
+	existing.Tone = ptrStrVal(input.Tone)
+	existing.Boundaries = marshalJSONStringArray(input.Boundaries)
+	existing.Quirks = marshalJSONStringArray(input.Quirks)
+	existing.Adaptations = ptrStrVal(input.Adaptations)
+	if input.IsDefault != nil {
+		existing.IsDefault = *input.IsDefault
+	}
+	existing.UpdatedAt = time.Now().UTC()
+	if err := d.PersonalitySvc.Update(ctx, existing); err != nil {
+		return nil, err
+	}
+	return personalityModelToGenerated(existing), nil
+}
+
+// DeletePersonality deletes a personality by ID.
+func (d *Deps) DeletePersonality(ctx context.Context, id string) (bool, error) {
+	if d.PersonalitySvc == nil {
+		return false, nil
+	}
+	err := d.PersonalitySvc.Delete(ctx, id)
+	return err == nil, err
+}
+
+// SetDefaultPersonality marks a personality as the default.
+func (d *Deps) SetDefaultPersonality(ctx context.Context, id string) (bool, error) {
+	if d.PersonalitySvc == nil {
+		return false, nil
+	}
+	err := d.PersonalitySvc.SetDefault(ctx, id)
+	return err == nil, err
+}
+
+// ─── Personality mapping helpers ─────────────────────────────────────────────
+
+func personalityModelToGenerated(p *models.PersonalityModel) *generated.Personality {
+	return &generated.Personality{
+		ID:          p.ID,
+		Name:        p.Name,
+		BasePrompt:  p.BasePrompt,
+		Traits:      unmarshalJSONStringArray(p.Traits),
+		Tone:        p.Tone,
+		Boundaries:  unmarshalJSONStringArray(p.Boundaries),
+		Quirks:      unmarshalJSONStringArray(p.Quirks),
+		Adaptations: strPtrIfNotEmpty(p.Adaptations),
+		IsDefault:   p.IsDefault,
+		CreatedAt:   p.CreatedAt.Format(time.RFC3339),
+		UpdatedAt:   p.UpdatedAt.Format(time.RFC3339),
+	}
+}
+
+func relationshipModelToGenerated(r *models.UserPersonaRelationshipModel) *generated.UserRelationship {
+	rel := &generated.UserRelationship{
+		UserID:           r.UserID,
+		PersonalityID:    r.PersonalityID,
+		Familiarity:      r.Familiarity,
+		InteractionCount: int(r.InteractionCount),
+	}
+	if r.Preferences != "" {
+		rel.Preferences = &r.Preferences
+	}
+	if !r.LastInteraction.IsZero() {
+		s := r.LastInteraction.Format(time.RFC3339)
+		rel.LastInteraction = &s
+	}
+	return rel
+}
+
+func unmarshalJSONStringArray(raw string) []string {
+	if raw == "" || raw == "null" {
+		return []string{}
+	}
+	var out []string
+	if err := json.Unmarshal([]byte(raw), &out); err != nil {
+		return []string{}
+	}
+	return out
+}
+
+func marshalJSONStringArray(arr []string) string {
+	if len(arr) == 0 {
+		return "[]"
+	}
+	b, err := json.Marshal(arr)
+	if err != nil {
+		return "[]"
+	}
+	return string(b)
+}
+
+func ptrStrVal(s *string) string {
+	if s == nil {
+		return ""
+	}
+	return *s
+}
+
+func ptrBoolVal(b *bool) bool {
+	if b == nil {
+		return false
+	}
+	return *b
+}
+
+func strPtrIfNotEmpty(s string) *string {
+	if s == "" {
+		return nil
+	}
+	return &s
 }

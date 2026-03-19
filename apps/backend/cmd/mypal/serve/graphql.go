@@ -9,6 +9,7 @@ import (
 	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/resolvers"
 	"github.com/BangRocket/MyPal/apps/backend/internal/application/registry"
 	domainservices "github.com/BangRocket/MyPal/apps/backend/internal/domain/services"
+	personalitysvc "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/personality"
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories"
 	aifactory "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/ai/factory"
 	"github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/filesystem"
@@ -52,6 +53,7 @@ func (a *App) initGraphQL() {
 
 	configSnapshot := dto.BuildConfigSnapshot(cfg, aifactory.ProviderName)
 	subAgentAdapter := dto.NewSubAgentAdapter(a.SubAgentSvc)
+	pSvc := personalitysvc.NewService(a.PersonalityRepo, a.RelationshipRepo)
 
 	a.Deps = &resolvers.Deps{
 		AgentRegistry:   a.AgentRegistry,
@@ -83,6 +85,7 @@ func (a *App) initGraphQL() {
 		AIProvider:        a.AIProvider,
 		ConfigSnapshot:    configSnapshot,
 		ConfigPath:        a.CfgPath,
+		PersonalitySvc:    pSvc,
 	}
 
 	a.MsgHandler.SetCapabilitiesChecker(func(cap string) bool {

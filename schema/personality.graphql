@@ -1,0 +1,46 @@
+type Personality {
+  id: String!
+  name: String!
+  basePrompt: String!
+  traits: [String!]!
+  tone: String!
+  boundaries: [String!]!
+  quirks: [String!]!
+  adaptations: String
+  isDefault: Boolean!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type UserRelationship {
+  userId: String!
+  personalityId: String!
+  familiarity: Float!
+  preferences: String
+  interactionCount: Int!
+  lastInteraction: String
+}
+
+input PersonalityInput {
+  name: String!
+  basePrompt: String!
+  traits: [String!]
+  tone: String
+  boundaries: [String!]
+  quirks: [String!]
+  adaptations: String
+  isDefault: Boolean
+}
+
+extend type Query {
+  personalities: [Personality!]!
+  personality(id: String!): Personality
+  userRelationships(userId: String!): [UserRelationship!]!
+}
+
+extend type Mutation {
+  createPersonality(input: PersonalityInput!): Personality!
+  updatePersonality(id: String!, input: PersonalityInput!): Personality!
+  deletePersonality(id: String!): Boolean!
+  setDefaultPersonality(id: String!): Boolean!
+}

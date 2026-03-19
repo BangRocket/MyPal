@@ -359,6 +359,31 @@ type PendingPairing struct {
 	CreatedAt        *string `json:"createdAt,omitempty"`
 }
 
+type Personality struct {
+	ID          string   `json:"id"`
+	Name        string   `json:"name"`
+	BasePrompt  string   `json:"basePrompt"`
+	Traits      []string `json:"traits"`
+	Tone        string   `json:"tone"`
+	Boundaries  []string `json:"boundaries"`
+	Quirks      []string `json:"quirks"`
+	Adaptations *string  `json:"adaptations,omitempty"`
+	IsDefault   bool     `json:"isDefault"`
+	CreatedAt   string   `json:"createdAt"`
+	UpdatedAt   string   `json:"updatedAt"`
+}
+
+type PersonalityInput struct {
+	Name        string   `json:"name"`
+	BasePrompt  string   `json:"basePrompt"`
+	Traits      []string `json:"traits,omitempty"`
+	Tone        *string  `json:"tone,omitempty"`
+	Boundaries  []string `json:"boundaries,omitempty"`
+	Quirks      []string `json:"quirks,omitempty"`
+	Adaptations *string  `json:"adaptations,omitempty"`
+	IsDefault   *bool    `json:"isDefault,omitempty"`
+}
+
 type Query struct {
 }
 
@@ -528,4 +553,13 @@ type UserGraphResult struct {
 	Nodes   []*GraphNode `json:"nodes,omitempty"`
 	Edges   []*GraphEdge `json:"edges,omitempty"`
 	Error   *string      `json:"error,omitempty"`
+}
+
+type UserRelationship struct {
+	UserID           string  `json:"userId"`
+	PersonalityID    string  `json:"personalityId"`
+	Familiarity      float64 `json:"familiarity"`
+	Preferences      *string `json:"preferences,omitempty"`
+	InteractionCount int     `json:"interactionCount"`
+	LastInteraction  *string `json:"lastInteraction,omitempty"`
 }

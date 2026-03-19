@@ -17,6 +17,7 @@ schema:
   - ../../schema/tasks.graphql
   - ../../schema/skills.graphql
   - ../../schema/tools.graphql
+  - ../../schema/personality.graphql
   - ../../schema/subscriptions.graphql
 
 exec:
