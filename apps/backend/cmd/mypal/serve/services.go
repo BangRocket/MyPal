@@ -20,6 +20,9 @@ import (
 	memfile "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/memory/file"
 	memneo4j "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/memory/neo4j"
 	"github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/terminal"
+
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/models"
+	personalitysvc "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/personality"
 )
 
 // initServices initialises the AI provider, memory backend, event bus,
@@ -181,4 +184,39 @@ func (a *App) initServices() {
 		return m
 	})
 
+	// Personality service — used for seeding and message pipeline integration.
+	pSvc := personalitysvc.NewService(a.PersonalityRepo, a.RelationshipRepo)
+	a.MsgHandler.SetPersonalityService(pSvc)
+
+	// Seed the default personality if none exist yet.
+	seedDefaultPersonality(context.Background(), pSvc)
+}
+
+// seedDefaultPersonality creates the built-in "MyPal" personality when the
+// personalities table is empty. This ensures there is always a usable default
+// personality on first boot.
+func seedDefaultPersonality(ctx context.Context, svc *personalitysvc.Service) {
+	existing, err := svc.List(ctx)
+	if err != nil {
+		log.Printf("warn: could not check existing personalities: %v", err)
+		return
+	}
+	if len(existing) > 0 {
+		return // already have personalities, don't seed
+	}
+
+	if err := svc.Create(ctx, &models.PersonalityModel{
+		Name:       "MyPal",
+		BasePrompt: "You are MyPal, a friendly and capable personal AI assistant. You're warm, thoughtful, and genuinely interested in helping. You remember things about the people you talk to and build real relationships over time.",
+		Traits:     `["helpful","curious","warm","thoughtful","reliable"]`,
+		Tone:       "friendly",
+		Boundaries: `["Do not provide medical, legal, or financial advice","Do not pretend to be human","Be honest about uncertainty"]`,
+		Quirks:     `[]`,
+		Adaptations: `{"sms":"Be brief and direct. Short sentences.","email":"Use proper greeting and sign-off. Be more formal.","discord":"Be casual and expressive. Use shorter messages.","telegram":"Be concise but friendly.","slack":"Be professional but warm."}`,
+		IsDefault:  true,
+	}); err != nil {
+		log.Printf("warn: failed to seed default personality: %v", err)
+		return
+	}
+	log.Println("personality: seeded default 'MyPal' personality")
 }
