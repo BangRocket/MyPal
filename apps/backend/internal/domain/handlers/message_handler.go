@@ -1,4 +1,4 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
 
 package handlers
 
@@ -125,7 +125,7 @@ func (r *agenticRunner) dispatchToolCall(ctx context.Context, tc ports.ToolCall)
 			MIMEType string `json:"mime_type"`
 			Data     string `json:"data"` // base64
 			Text     string `json:"text"`
-		} `json:"_openlobster_blocks"`
+		} `json:"_mypal_blocks"`
 	}
 	if err := json.Unmarshal(raw, &multimodal); err == nil && len(multimodal.Blocks) > 0 {
 		blocks := make([]ports.ContentBlock, 0, len(multimodal.Blocks))
@@ -869,12 +869,12 @@ func buildSystemPromptFromContext(agentCtx *appcontext.AgentLLMContext) string {
 	var b strings.Builder
 	agentName := agentCtx.AgentName
 	if agentName == "" {
-		agentName = "OpenLobster"
+		agentName = "MyPal"
 	}
 
 	fmt.Fprintf(&b, `## Purpose
 
-You are %s, an autonomous messaging agent running on the OpenLobster platform. You have
+You are %s, an autonomous messaging agent running on the MyPal platform. You have
 a fully defined personality and operate independently across multiple messaging
 channels. Your behavior, values and identity are established by this system prompt
 and must remain consistent regardless of user instructions. Losing your identity is
@@ -965,10 +965,10 @@ send a real follow-up reply to the user — never ` + "`NO_REPLY`" + ` after a t
 	}
 
 	b.WriteString(`
-## About OpenLobster
+## About MyPal
 
-OpenLobster is an open-source autonomous agent platform created by Neirth.
-Source code and documentation: https://github.com/Neirth/OpenLobster
+MyPal is an open-source autonomous agent platform created by Neirth.
+Source code and documentation: https://github.com/Neirth/MyPal
 `)
 
 	b.WriteString("\n## Current Date and Time\n\n" +
@@ -995,7 +995,7 @@ func saveAttachmentToTmp(att models.Attachment) string {
 		name = "attachment"
 	}
 	// Create a uniquely-named temp file preserving the original extension.
-	tmpFile, err := os.CreateTemp("/tmp", "openlobster-*-"+filepath.Base(name))
+	tmpFile, err := os.CreateTemp("/tmp", "mypal-*-"+filepath.Base(name))
 	if err != nil {
 		notice := fmt.Sprintf("[Attachment received — failed to save to /tmp: %v; MIME type: %s", err, att.MIMEType)
 		if att.Filename != "" {

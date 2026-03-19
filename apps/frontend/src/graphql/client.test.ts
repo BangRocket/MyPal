@@ -1,10 +1,10 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
  
 
 import { describe, it, expect, vi } from 'vitest';
 
 // Mock the UI library
-vi.mock('@openlobster/ui/graphql', () => ({
+vi.mock('@mypal/ui/graphql', () => ({
   createGraphqlClient: (endpoint: string) => ({
     endpoint,
     request: vi.fn(),

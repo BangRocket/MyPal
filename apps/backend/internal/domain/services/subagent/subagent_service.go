@@ -1,4 +1,4 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
 
 package subagent
 
@@ -340,7 +340,7 @@ func (s *Service) dispatchToolCall(ctx context.Context, tc ports.ToolCall) ports
 			MIMEType string `json:"mime_type"`
 			Data     string `json:"data"` // base64
 			Text     string `json:"text"`
-		} `json:"_openlobster_blocks"`
+		} `json:"_mypal_blocks"`
 	}
 	if err := json.Unmarshal(raw, &multimodal); err == nil && len(multimodal.Blocks) > 0 {
 		blocks := make([]ports.ContentBlock, 0, len(multimodal.Blocks))

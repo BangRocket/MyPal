@@ -1,4 +1,4 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
 
 // Package mcp provides the OAuth 2.1 Authorization Code + PKCE flow required
 // by Streamable HTTP MCP servers that protect their endpoints.
@@ -199,7 +199,7 @@ func registerClient(ctx context.Context, registrationEndpoint, callbackBaseURL s
 		return "", nil
 	}
 	body := `{
-		"client_name": "OpenLobster",
+		"client_name": "MyPal",
 		"redirect_uris": ["` + callbackBaseURL + `"],
 		"grant_types": ["authorization_code"],
 		"response_types": ["code"],
@@ -342,13 +342,13 @@ func (m *OAuthManager) InitiateOAuth(ctx context.Context, serverName, mcpURL str
 	if existing, getErr := m.secrets.Get(ctx, clientIDKey); getErr == nil && existing != "" {
 		clientID = existing
 	} else {
-		// Try dynamic client registration; use "openlobster" as fallback client_id
+		// Try dynamic client registration; use "mypal" as fallback client_id
 		clientID, err = registerClient(ctx, meta.RegistrationEndpoint, m.callbackBaseURL)
 		if err != nil || clientID == "" {
 			if err != nil {
-				log.Printf("oauth: dynamic registration failed for %s: %v (using client_id openlobster)", serverName, err)
+				log.Printf("oauth: dynamic registration failed for %s: %v (using client_id mypal)", serverName, err)
 			}
-			clientID = "openlobster"
+			clientID = "mypal"
 		}
 	}
 

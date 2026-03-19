@@ -1,4 +1,4 @@
-// Package slack provides a Slack messaging adapter for OpenLobster.
+// Package slack provides a Slack messaging adapter for MyPal.
 //
 // The adapter uses the Socket Mode API (via github.com/slack-go/slack) so that
 // no public webhook URL is required. It listens to all messages in channels

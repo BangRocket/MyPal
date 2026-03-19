@@ -1,4 +1,4 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
 
 // Package filesystem provides filesystem-backed infrastructure adapters.
 package filesystem

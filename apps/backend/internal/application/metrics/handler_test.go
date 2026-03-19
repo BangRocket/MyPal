@@ -19,6 +19,6 @@ func TestHandler_ServeHTTP(t *testing.T) {
 	h.ServeHTTP(rec, req)
 	require.Equal(t, 200, rec.Code)
 	body := rec.Body.String()
-	assert.True(t, strings.Contains(body, "openlobster_uptime_seconds") ||
-		strings.Contains(body, "# HELP openlobster"), "must include Prometheus metrics")
+	assert.True(t, strings.Contains(body, "mypal_uptime_seconds") ||
+		strings.Contains(body, "# HELP mypal"), "must include Prometheus metrics")
 }

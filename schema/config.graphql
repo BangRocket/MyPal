@@ -52,7 +52,7 @@ type GraphQLConfig {
   enabled:  Boolean
   port:     Int
   host:     String
-  baseUrl:  String  # Public URL of the server (e.g. https://openlobster.example.com). Used for OAuth and callbacks.
+  baseUrl:  String  # Public URL of the server (e.g. https://mypal.example.com). Used for OAuth and callbacks.
 }
 
 type LoggingConfig {

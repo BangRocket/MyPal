@@ -1,5 +1,5 @@
 ---
-description: How messages flow through OpenLobster from arrival to response — the journey of a user message through the agent
+description: How messages flow through MyPal from arrival to response — the journey of a user message through the agent
 icon: message
 ---
 
@@ -13,11 +13,11 @@ This is the end-to-end flow:
 
 ### The 11-step pipeline (in plain language)
 
-1. **Message arrives** — Your channel adapter (Telegram bot, Discord bot, etc.) receives the message from the platform and converts it into a standard format that OpenLobster understands.
+1. **Message arrives** — Your channel adapter (Telegram bot, Discord bot, etc.) receives the message from the platform and converts it into a standard format that MyPal understands.
 
 2. **Dispatcher routes it** — The dispatcher examines where the message came from (Telegram? Discord? GraphQL? Scheduled task?) and sends it to the main message handler.
 
-3. **Pairing validation** — OpenLobster checks: "Do I know who this user is?" If they're messaging for the first time, they'll go through the pairing flow. If they're already paired, we continue.
+3. **Pairing validation** — MyPal checks: "Do I know who this user is?" If they're messaging for the first time, they'll go through the pairing flow. If they're already paired, we continue.
 
 4. **Load context** — The agent gathers context: previous conversations with this user, facts from the memory graph (things the agent has learned about them), and the system prompt that defines how the agent should behave.
 
@@ -25,13 +25,13 @@ This is the end-to-end flow:
 
 6. **Check permissions** — Before the AI model even sees the tools, the permission manager filters them. If you've set a tool to "deny" for this user, they won't see it offered, even if it's available. If you've set "ask", the agent will ask for approval before using it.
 
-7. **Send to AI provider** — OpenLobster packages up: the user's message, the conversation history, available tools, the system prompt, and any memory facts. It sends all of this to your configured AI provider (OpenAI, Anthropic, Ollama, etc.).
+7. **Send to AI provider** — MyPal packages up: the user's message, the conversation history, available tools, the system prompt, and any memory facts. It sends all of this to your configured AI provider (OpenAI, Anthropic, Ollama, etc.).
 
-8. **Model decides** — The AI model reads everything and decides: "Should I answer directly, or do I need to use a tool?" If it needs a tool, it tells OpenLobster which one and what arguments to use.
+8. **Model decides** — The AI model reads everything and decides: "Should I answer directly, or do I need to use a tool?" If it needs a tool, it tells MyPal which one and what arguments to use.
 
-9. **Execute tools** — If the model asked for a tool, OpenLobster runs it. This might mean fetching a webpage, running a terminal command, searching the memory graph, or calling an external API through an MCP server. The result comes back.
+9. **Execute tools** — If the model asked for a tool, MyPal runs it. This might mean fetching a webpage, running a terminal command, searching the memory graph, or calling an external API through an MCP server. The result comes back.
 
-10. **Get final response** — OpenLobster sends the tool results back to the AI model so it can generate its final answer.
+10. **Get final response** — MyPal sends the tool results back to the AI model so it can generate its final answer.
 
 11. **Save and deliver** — The response is saved to the database, the memory graph is updated with any new facts, and the message is routed back to the channel where it came from (Telegram, Discord, etc.). At the same time, the dashboard is notified in real time so you see the conversation update live.
 
@@ -40,7 +40,7 @@ This is the end-to-end flow:
 In the Chat UI, you see:
 
 - **USER** labels for messages from people
-- **OPENLOBSTER** labels for the agent's responses
+- **MYPAL** labels for the agent's responses
 - **TOOL** labels showing which tools the agent used and what they returned
 
 The **TOOL** messages are just for your visibility. Users on Telegram or Discord won't see them — they only see the final response.

@@ -51,16 +51,16 @@ User (Telegram, Discord, etc.)
 | Label | Meaning | Where It Comes From |
 |-------|---------|-------------------|
 | **USER** | Message from a person | Step 1 of the pipeline |
-| **OPENLOBSTER** | Reply from the agent | Steps 3-8 of the pipeline |
+| **MYPAL** | Reply from the agent | Steps 3-8 of the pipeline |
 | **TOOL** | A tool call and its result | Step 9 of the pipeline |
 
-**Important:** Tool labels are for your visibility as an operator. When the agent sends the final response to the user on Telegram/Discord, they don't see the TOOL messages — only the final **OPENLOBSTER** response.
+**Important:** Tool labels are for your visibility as an operator. When the agent sends the final response to the user on Telegram/Discord, they don't see the TOOL messages — only the final **MYPAL** response.
 
 This is why the Chat view sometimes shows more messages than users see on their platform. The TOOL messages are your "behind the scenes" view of how the agent reached its conclusion.
 
 ## Channel and group conversations
 
-OpenLobster supports both direct (one-to-one) and group conversations. When the agent is added to a group on Telegram or Discord, group messages appear in the conversation list alongside direct messages. The **Channel** badge on each conversation row tells you exactly which platform and conversation type it belongs to.
+MyPal supports both direct (one-to-one) and group conversations. When the agent is added to a group on Telegram or Discord, group messages appear in the conversation list alongside direct messages. The **Channel** badge on each conversation row tells you exactly which platform and conversation type it belongs to.
 
 {% hint style="info" %}
 Group conversations work the same way as direct conversations from the operator's perspective. Select the row to read the thread and compose a reply.

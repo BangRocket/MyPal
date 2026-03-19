@@ -1,4 +1,4 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
 
 /**
  * Tests for the shared domain types.
@@ -49,7 +49,7 @@ const MCP_TRANSPORTS: McpTransport[] = ['stdio', 'http', 'sse'];
 function makeAgent(overrides: Partial<Agent> = {}): Agent {
   return {
     id: 'agent-1',
-    name: 'OpenLobster',
+    name: 'MyPal',
     version: '0.1.0',
     status: 'online',
     uptime: 3600,
@@ -167,7 +167,7 @@ function makeSkill(overrides: Partial<Skill> = {}): Skill {
 
 function makeAppConfig(overrides: Partial<AppConfig> = {}): AppConfig {
   return {
-    agentName: 'OpenLobster',
+    agentName: 'MyPal',
     systemPrompt: 'You are a helpful agent.',
     provider: 'openai',
     channels: [],

@@ -1,4 +1,4 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
 
 // Tests that every field exposed in the UpdateConfigInput GraphQL mutation is
 // correctly persisted into viper and that BuildConfigSnapshot reads it back.

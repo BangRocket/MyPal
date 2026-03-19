@@ -1,4 +1,4 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
 
 import { createQuery } from '@tanstack/solid-query';
 import type { GraphQLClient } from 'graphql-request';

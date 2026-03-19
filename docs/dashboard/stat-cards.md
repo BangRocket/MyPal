@@ -14,7 +14,7 @@ The row of cards at the top of the Dashboard gives you an instant read on system
 | **Health** | Overall system status. `OK` when the system is running normally. If it shows `ERROR` or `KO`, investigate the [Recent Logs](logs.md) panel immediately. | `OK` | `ERROR` or `KO` — check logs immediately |
 | **Active Sessions** | Number of conversations that are currently in progress. This is a real-time count of users who have sent at least one message in the last session window. | Depends on use case (1-100+) | Stuck at 0 while users are messaging = channels offline |
 | **MCP Servers** | Number of external tool servers currently connected and available to the agent. Shows only servers with active connections. | All configured servers connected | Lower than expected = server down or auth failed |
-| **Agent Version** | The version of OpenLobster running on the server. Useful for confirming you're running the expected build. | Should match your deployment | Older than expected = server wasn't restarted after upgrade |
+| **Agent Version** | The version of MyPal running on the server. Useful for confirming you're running the expected build. | Should match your deployment | Older than expected = server wasn't restarted after upgrade |
 
 ### Understanding Active Sessions
 

@@ -1,4 +1,4 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
 
 import js from '@eslint/js';
 import tsPlugin from '@typescript-eslint/eslint-plugin';

@@ -1,4 +1,4 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
 
 import type { Component } from "solid-js";
 import { createSignal, For, Show, onMount } from "solid-js";
@@ -10,8 +10,8 @@ import { SchemaField } from "../../components/SchemaForm/SchemaField";
 import {
   CONFIG_QUERY,
   SYSTEM_FILES_QUERY,
-} from "@openlobster/ui/graphql/queries";
-import { WRITE_SYSTEM_FILE_MUTATION } from "@openlobster/ui/graphql/mutations";
+} from "@mypal/ui/graphql/queries";
+import { WRITE_SYSTEM_FILE_MUTATION } from "@mypal/ui/graphql/mutations";
 import { GRAPHQL_ENDPOINT } from "../../graphql/client";
 import { effectiveTheme, setTheme } from "../../stores/themeStore";
 import AppShell from "../../components/AppShell";
@@ -30,7 +30,7 @@ function graphqlHeaders(): Record<string, string> {
 /** Default form values used when loading fails or for initialisation. */
 function getDefaultFormValues(): Record<string, unknown> {
   return {
-    agentName: "OpenLobster",
+    agentName: "MyPal",
     provider: "ollama",
     model: "llama3.2:latest",
     apiKey: "",
@@ -49,7 +49,7 @@ function getDefaultFormValues(): Record<string, unknown> {
       sessions: true,
     },
     databaseDriver: "sqlite",
-    databaseDSN: "./data/openlobster.db",
+    databaseDSN: "./data/mypal.db",
     databaseMaxOpenConns: 0,
     databaseMaxIdleConns: 0,
     memoryBackend: "file",
@@ -175,7 +175,7 @@ const SettingsView: Component = () => {
       if (config) {
         // Transform server config to form values format (nested structure)
         setFormValues({
-          agentName: config.agent?.name || "OpenLobster",
+          agentName: config.agent?.name || "MyPal",
           provider: config.agent?.provider || "ollama",
           model: config.agent?.model || "llama3.2:latest",
           apiKey: config.agent?.apiKey || "",
@@ -194,7 +194,7 @@ const SettingsView: Component = () => {
             sessions: true,
           },
           databaseDriver: config.database?.driver || "sqlite",
-          databaseDSN: config.database?.dsn || "./data/openlobster.db",
+          databaseDSN: config.database?.dsn || "./data/mypal.db",
           databaseMaxOpenConns: config.database?.maxOpenConns || 0,
           databaseMaxIdleConns: config.database?.maxIdleConns || 0,
           memoryBackend: config.memory?.backend || "file",

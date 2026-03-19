@@ -1,4 +1,4 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
 import { defineConfig } from "vitest/config";
 import solid from "vite-plugin-solid";
 import { resolve } from "path";
@@ -9,9 +9,9 @@ export default defineConfig({
   plugins: [solid()],
   resolve: {
     alias: {
-      // Swap only the hooks from @openlobster/ui to ui-tests
+      // Swap only the hooks from @mypal/ui to ui-tests
       // Keep types, graphql, and theme coming from the real package
-      "@openlobster/ui/hooks": uiTestsHooks,
+      "@mypal/ui/hooks": uiTestsHooks,
     },
   },
   test: {

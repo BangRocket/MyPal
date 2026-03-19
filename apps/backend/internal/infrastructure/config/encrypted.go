@@ -72,13 +72,13 @@ func ReadConfigBytes(path string) ([]byte, error) {
 }
 
 // WriteEncryptedConfig writes the current viper config to path.
-// Encrypted if OPENLOBSTER_CONFIG_ENCRYPT is 1 (default), plain YAML if 0.
+// Encrypted if MYPAL_CONFIG_ENCRYPT is 1 (default), plain YAML if 0.
 func WriteEncryptedConfig(path string) error {
 	return WriteEncryptedConfigFromSettings(viper.AllSettings(), path)
 }
 
 // WriteEncryptedConfigFromSettings writes the given settings map to path.
-// Encrypted if OPENLOBSTER_CONFIG_ENCRYPT is 1 (default), plain YAML if 0.
+// Encrypted if MYPAL_CONFIG_ENCRYPT is 1 (default), plain YAML if 0.
 func WriteEncryptedConfigFromSettings(settings map[string]interface{}, path string) error {
 	plain, err := yaml.Marshal(settings)
 	if err != nil {

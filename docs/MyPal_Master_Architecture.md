@@ -1,15 +1,15 @@
 # MyPal — Design Document
 
-**Project**: MyPal (hard-fork of OpenLobster v0.2.0, rebrand)
-**Origin**: OpenLobster (Neirth/OpenLobster) + MyPalClara (BangRocket/mypalclara)
+**Project**: MyPal (hard-fork of MyPal v0.2.0, rebrand)
+**Origin**: MyPal (Neirth/MyPal) + MyPalClara (BangRocket/mypalclara)
 **Language**: Go (primary), with targeted rewrites from Python where needed
-**License**: GPLv3 (inherited from OpenLobster; OpenClaw's MIT is compatible)
+**License**: GPLv3 (inherited from MyPal; OpenClaw's MIT is compatible)
 
 ---
 
 ## 1. Project thesis
 
-OpenLobster provides the infrastructure chassis — multi-user, multi-channel, security-first Go backend with GraphQL API, web dashboard, MCP integration with OAuth 2.1, task scheduler, and encrypted secrets management.
+MyPal provides the infrastructure chassis — multi-user, multi-channel, security-first Go backend with GraphQL API, web dashboard, MCP integration with OAuth 2.1, task scheduler, and encrypted secrets management.
 
 MyPalClara provides the soul — personality system with per-user relationships, organic response behavior, proactive engagement, model tier routing, code execution sandbox, email channel, and a mem0-based memory system with both vector search and graph storage.
 
@@ -45,7 +45,7 @@ MyPal is the union: a personal AI assistant platform that is secure, multi-chann
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### What comes from OpenLobster (keep as-is or extend)
+### What comes from MyPal (keep as-is or extend)
 
 - Go binary / build system
 - GraphQL API via gqlgen
@@ -120,7 +120,7 @@ type UserPersonaRelationship struct {
 
 **Source**: MyPalClara's `!high`/`!mid`/`!low` prefix system
 
-OpenLobster supports multiple providers but only one active at a time. MyPal needs to route individual messages to different model tiers based on complexity, user preference, or explicit prefix.
+MyPal supports multiple providers but only one active at a time. MyPal needs to route individual messages to different model tiers based on complexity, user preference, or explicit prefix.
 
 **Data model**:
 
@@ -153,7 +153,7 @@ type ModelTier struct {
 | OpenAI    | gpt-5.2       | gpt-5.1         | gpt-5          |
 | Ollama    | llama-3.3-70b | llama-3.3-8b    | llama-3.2-3b   |
 
-**Multiple active providers**: Unlike OpenLobster's one-at-a-time constraint, MyPal can have multiple providers configured simultaneously. Each tier can optionally point to a different provider (e.g., high = Anthropic Opus, mid = local Ollama, low = OpenRouter cheap model). This enables cost optimization and offline fallback.
+**Multiple active providers**: Unlike MyPal's one-at-a-time constraint, MyPal can have multiple providers configured simultaneously. Each tier can optionally point to a different provider (e.g., high = Anthropic Opus, mid = local Ollama, low = OpenRouter cheap model). This enables cost optimization and offline fallback.
 
 ### 3.3 Organic response system
 
@@ -198,9 +198,9 @@ type OrganicResponseConfig struct {
 
 ### 4.1 Proactive engine with heartbeat
 
-**Source**: `mypalclara/proactive_engine.py` + OpenLobster's task scheduler + OpenClaw's heartbeat concept (improved)
+**Source**: `mypalclara/proactive_engine.py` + MyPal's task scheduler + OpenClaw's heartbeat concept (improved)
 
-The proactive engine allows MyPal to initiate conversations and take autonomous action based on schedules, triggers, and evolving context. It combines OpenLobster's cron scheduler with a heartbeat file that the bot maintains and modifies.
+The proactive engine allows MyPal to initiate conversations and take autonomous action based on schedules, triggers, and evolving context. It combines MyPal's cron scheduler with a heartbeat file that the bot maintains and modifies.
 
 **Heartbeat system**:
 
@@ -265,7 +265,7 @@ Email becomes a first-class channel alongside Discord, Telegram, WhatsApp, Slack
 
 **Implementation approach**:
 
-The email channel implements the same channel interface as Discord/Telegram/etc. in OpenLobster's abstraction layer.
+The email channel implements the same channel interface as Discord/Telegram/etc. in MyPal's abstraction layer.
 
 ```go
 type EmailChannel struct {
@@ -420,7 +420,7 @@ type MemoryResult struct {
 
 **Supported vector backends**:
 
-- **pgvector**: PostgreSQL extension. Aligns with OpenLobster's existing PostgreSQL usage. Recommended default.
+- **pgvector**: PostgreSQL extension. Aligns with MyPal's existing PostgreSQL usage. Recommended default.
 - **Qdrant**: Standalone vector DB. Higher performance at scale, but another service to run.
 
 **Supported embedding providers**:
@@ -471,7 +471,7 @@ type Relation struct {
 }
 ```
 
-**Per-user isolation**: Every entity and relation is scoped to a user ID. The graph backend enforces this at the query level — User A cannot see User B's memory graph. This extends OpenLobster's existing per-user isolation model.
+**Per-user isolation**: Every entity and relation is scoped to a user ID. The graph backend enforces this at the query level — User A cannot see User B's memory graph. This extends MyPal's existing per-user isolation model.
 
 ### 6.4 Unified memory interface
 
@@ -514,7 +514,7 @@ type UserProfile struct {
 
 ## 7. Dashboard extensions
 
-The OpenLobster web dashboard gets new sections:
+The MyPal web dashboard gets new sections:
 
 | Section                     | Source   | Description                                           |
 | --------------------------- | -------- | ----------------------------------------------------- |
@@ -537,14 +537,14 @@ The OpenLobster web dashboard gets new sections:
 3. **Heartbeat migration**: Convert any existing proactive engine schedules to heartbeat items
 4. **Channel migration**: Discord bot token and config transfer directly; email config maps to new email channel settings
 
-### From OpenLobster to MyPal
+### From MyPal to MyPal
 
 The hard fork means you take the full codebase. Key changes:
 
-1. Rename all `OPENLOBSTER_*` env vars to `MYPAL_*`
+1. Rename all `MYPAL_*` env vars to `MYPAL_*`
 2. Rebrand dashboard UI (logo, name, color scheme)
 3. Update Docker image names, binary name
-4. Preserve OpenLobster's database migration system — add new migrations for MyPal-specific tables
+4. Preserve MyPal's database migration system — add new migrations for MyPal-specific tables
 
 ---
 
@@ -552,7 +552,7 @@ The hard fork means you take the full codebase. Key changes:
 
 ```
 Phase 1a: Fork & rebrand
-  ├── Hard-fork OpenLobster v0.2.0
+  ├── Hard-fork MyPal v0.2.0
   ├── Rename to MyPal (env vars, binary, dashboard branding)
   ├── Verify build, tests, existing functionality
   └── Set up CI/CD (GitHub Actions → VPS deploy)
@@ -637,8 +637,8 @@ services:
 
 ## 11. Resolved design decisions
 
-1. **License**: GPLv3. OpenClaw is MIT (GPL-compatible), OpenLobster is GPLv3. MyPal inherits GPLv3.
-2. **Upstream tracking**: None. MyPal is a full hard fork — a new project, not a downstream consumer. No effort spent on merge compatibility with OpenLobster.
-3. **Dashboard framework**: Keep OpenLobster's existing SolidJS + Vite + vanilla CSS frontend. Extend it with new sections (Personality, Model Tiers, Heartbeat, Sandbox, etc.) rather than replacing it.
+1. **License**: GPLv3. OpenClaw is MIT (GPL-compatible), MyPal is GPLv3. MyPal inherits GPLv3.
+2. **Upstream tracking**: None. MyPal is a full hard fork — a new project, not a downstream consumer. No effort spent on merge compatibility with MyPal.
+3. **Dashboard framework**: Keep MyPal's existing SolidJS + Vite + vanilla CSS frontend. Extend it with new sections (Personality, Model Tiers, Heartbeat, Sandbox, etc.) rather than replacing it.
 4. **Graph memory backend**: FalkorDB as the primary graph backend for production deployments. Kuzu as the lightweight embedded option for small/test deployments. GML file backend and Neo4j are dropped.
 5. **Embedding model**: Pluggable embedding provider interface. OpenAI embeddings as the default (best quality, requires API key). Ollama embeddings as a local-first alternative. Operator selects via configuration.

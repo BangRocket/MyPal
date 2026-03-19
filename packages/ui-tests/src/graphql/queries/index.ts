@@ -1,3 +1,3 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
 
-export * from "@openlobster/ui/graphql/queries";
+export * from "@mypal/ui/graphql/queries";

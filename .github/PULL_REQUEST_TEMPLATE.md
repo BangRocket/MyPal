@@ -18,10 +18,10 @@ Provide a short description of the change and the reason for it.
 Describe manual steps and automated commands to validate the change, e.g.
 
 1. Install workspace dependencies: `pnpm install`
-2. Build backend: `pnpm --filter @openlobster/backend build`
-3. Build frontend: `pnpm --filter @openlobster/frontend build`
-4. Run unit tests: `pnpm --filter @openlobster/frontend test` and `pnpm --filter @openlobster/backend test`
-5. Lint: `pnpm --filter @openlobster/frontend lint` and `pnpm --filter @openlobster/backend lint`
+2. Build backend: `pnpm --filter @mypal/backend build`
+3. Build frontend: `pnpm --filter @mypal/frontend build`
+4. Run unit tests: `pnpm --filter @mypal/frontend test` and `pnpm --filter @mypal/backend test`
+5. Lint: `pnpm --filter @mypal/frontend lint` and `pnpm --filter @mypal/backend lint`
 6. Steps to reproduce the issue (if applicable)
 
 ## Checklist (required before merge)

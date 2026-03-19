@@ -1,4 +1,4 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
 
 /**
  * ChatView — the Chat tab.
@@ -12,10 +12,10 @@
 import type { Component } from 'solid-js';
 import { createSignal, For, Show, Suspense, createEffect, batch, createMemo } from 'solid-js';
 import { createMutation, useQueryClient } from '@tanstack/solid-query';
-import { useConversations, useSubscriptions, useConfig } from '@openlobster/ui/hooks';
-import { SEND_MESSAGE_MUTATION, DELETE_USER_MUTATION } from '@openlobster/ui/graphql/mutations';
-import { MESSAGES_QUERY } from '@openlobster/ui/graphql/queries';
-import type { Message } from '@openlobster/ui/types';
+import { useConversations, useSubscriptions, useConfig } from '@mypal/ui/hooks';
+import { SEND_MESSAGE_MUTATION, DELETE_USER_MUTATION } from '@mypal/ui/graphql/mutations';
+import { MESSAGES_QUERY } from '@mypal/ui/graphql/queries';
+import type { Message } from '@mypal/ui/types';
 import { renderMarkdown } from '../../lib/markdown';
 import { t } from '../../App';
 import { client, GRAPHQL_ENDPOINT } from '../../graphql/client';
@@ -203,7 +203,7 @@ const MessageThread: Component<MessageThreadProps> = (props) => {
     const senderLabel = () => {
       if (msg.role === 'tool') return t('chat.roleTool');
       if (msg.role === 'assistant' || msg.role === 'agent')
-        return config.data?.agent?.name ?? config.data?.agentName ?? 'OpenLobster';
+        return config.data?.agent?.name ?? config.data?.agentName ?? 'MyPal';
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const m: any = msg;
       const perMsgName = m?.senderName ?? m?.sender?.name ?? m?.authorName ?? m?.from;

@@ -1,4 +1,4 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
  
 
 import { describe, it, expect, vi } from "vitest";
@@ -18,16 +18,16 @@ vi.mock("@tanstack/solid-query", () => ({
   }),
 }));
 
-vi.mock("@openlobster/ui/graphql/mutations", () => ({
+vi.mock("@mypal/ui/graphql/mutations", () => ({
   SEND_MESSAGE_MUTATION: "SEND_MESSAGE_MUTATION",
   DELETE_USER_MUTATION: "DELETE_USER_MUTATION",
 }));
 
-vi.mock("@openlobster/ui/graphql/queries", () => ({
+vi.mock("@mypal/ui/graphql/queries", () => ({
   MESSAGES_QUERY: "MESSAGES_QUERY",
 }));
 
-vi.mock("@openlobster/ui/hooks", () => ({
+vi.mock("@mypal/ui/hooks", () => ({
   useConversations: () => ({ data: [], isLoading: false, error: null }),
   useSubscriptions: () => ({
     isConnected: () => false,

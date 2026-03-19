@@ -48,14 +48,14 @@ func (a *HostAdapter) Execute(ctx context.Context, cmd string, opts ...ports.Ter
 	}
 
 	c := exec.CommandContext(ctx, executable, args...)
-	c.Env = FilterOpenLobsterFromEnv(os.Environ())
+	c.Env = FilterMyPalFromEnv(os.Environ())
 	if options.WorkingDir != "" {
 		c.Dir = options.WorkingDir
 	}
 	if len(options.Env) > 0 {
-		// Filter user-provided env so OPENLOBSTER_* (e.g. OPENLOBSTER_SECRET_KEY)
+		// Filter user-provided env so MYPAL_* (e.g. MYPAL_SECRET_KEY)
 		// can never be passed through even if the LLM requests it.
-		c.Env = append(c.Env, FilterOpenLobsterFromEnv(options.Env)...)
+		c.Env = append(c.Env, FilterMyPalFromEnv(options.Env)...)
 	}
 
 	out, err := c.CombinedOutput()
@@ -89,7 +89,7 @@ func (a *HostAdapter) Spawn(ctx context.Context, cmd string) (ports.PtySession, 
 	}
 
 	proc.cmd = exec.CommandContext(ctx, parts[0], parts[1:]...)
-	proc.cmd.Env = FilterOpenLobsterFromEnv(os.Environ())
+	proc.cmd.Env = FilterMyPalFromEnv(os.Environ())
 
 	stdoutPipe, err := proc.cmd.StdoutPipe()
 	if err != nil {
@@ -168,7 +168,7 @@ func (a *HostAdapter) RunBackground(ctx context.Context, cmd string, opts ...por
 	}
 
 	proc.cmd = exec.CommandContext(ctx, parts[0], parts[1:]...)
-	proc.cmd.Env = FilterOpenLobsterFromEnv(os.Environ())
+	proc.cmd.Env = FilterMyPalFromEnv(os.Environ())
 	if options.WorkingDir != "" {
 		proc.cmd.Dir = options.WorkingDir
 	}

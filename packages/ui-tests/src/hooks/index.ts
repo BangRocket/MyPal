@@ -1,13 +1,13 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
 
 /**
  * Mock hooks for testing and E2E preview.
  *
- * Drop-in replacement for @openlobster/ui/hooks — same exports, same
+ * Drop-in replacement for @mypal/ui/hooks — same exports, same
  * signatures (client argument accepted but ignored). Swap the import at
  * the bundler alias level to use these instead of the real GraphQL hooks.
  *
- * IMPORTANT: These mocks use the SAME types as @openlobster/ui to ensure
+ * IMPORTANT: These mocks use the SAME types as @mypal/ui to ensure
  * type compatibility. This forces the application code to work with the
  * real data shapes, making the mocks transparent to the type system.
  */
@@ -25,7 +25,7 @@ import type {
   Skill,
   AppConfig,
   SystemFile,
-} from "@openlobster/ui/types";
+} from "@mypal/ui/types";
 
 export interface PairingRequestEvent {
   requestID: string;
@@ -45,14 +45,14 @@ export interface SubscriptionEvent {
 const systemFiles: SystemFile[] = [
   {
     name: "AGENTS.md",
-    path: "/etc/openlobster/AGENTS.md",
+    path: "/etc/mypal/AGENTS.md",
     content:
       "# Agent Configuration\n\nThis file defines the agent's behavior and capabilities.",
     lastModified: "2026-02-28T10:00:00Z",
   },
   {
     name: "SOUL.md",
-    path: "/etc/openlobster/SOUL.md",
+    path: "/etc/mypal/SOUL.md",
     content:
       "# Agent Soul\n\nThis file contains the agent's personality and values.",
     lastModified: "2026-02-28T10:00:00Z",

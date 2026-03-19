@@ -1,4 +1,4 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
 
 /**
  * Reactive auth store for the access-token gate.
@@ -12,7 +12,7 @@
 
 import { createSignal } from 'solid-js';
 
-const TOKEN_KEY = 'openlobster_access_token';
+const TOKEN_KEY = 'mypal_access_token';
 
 export function getStoredToken(): string | null {
   try {

@@ -1,4 +1,4 @@
-# Contributing to OpenLobster
+# Contributing to MyPal
 
 Thank you for contributing! This document explains how to open issues and pull requests, tests and linting expectations, and other workflows specific to this repository.
 
@@ -48,24 +48,24 @@ Frontend (node/pnpm):
 ```
 pnpm install
 # Run frontend in dev mode
-pnpm --filter @openlobster/frontend dev
+pnpm --filter @mypal/frontend dev
 # Run frontend tests and e2e
-pnpm --filter @openlobster/frontend test
-pnpm --filter @openlobster/frontend test:e2e
+pnpm --filter @mypal/frontend test
+pnpm --filter @mypal/frontend test:e2e
 # Lint and build
-pnpm --filter @openlobster/frontend lint
-pnpm --filter @openlobster/frontend build
+pnpm --filter @mypal/frontend lint
+pnpm --filter @mypal/frontend build
 ```
 
 Backend (Go, via pnpm workspace scripts):
 
 ```
 # Build the Go backend (runs the package's build script)
-pnpm --filter @openlobster/backend build
+pnpm --filter @mypal/backend build
 # Run backend unit tests
-pnpm --filter @openlobster/backend test
+pnpm --filter @mypal/backend test
 # Lint (runs the package lint script which invokes staticcheck)
-pnpm --filter @openlobster/backend lint
+pnpm --filter @mypal/backend lint
 # Formatting
 gofmt -w .
 golangci-lint run

@@ -1,4 +1,4 @@
-// Copyright (C) 2024 OpenLobster contributors
+// Copyright (C) 2024 MyPal contributors
 // SPDX-License-Identifier: see LICENSE
 package twilio
 

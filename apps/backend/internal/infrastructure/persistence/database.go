@@ -1,4 +1,4 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
 
 // Package persistence provides the database connection factory.
 // All repository implementations live in internal/domain/repositories.

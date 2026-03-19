@@ -1,5 +1,5 @@
 {
-  "name": "@openlobster/ui-tests",
+  "name": "@mypal/ui-tests",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -15,7 +15,7 @@
     "src"
   ],
   "dependencies": {
-    "@openlobster/ui": "workspace:*",
+    "@mypal/ui": "workspace:*",
     "solid-js": "^1.9.11"
   }
 }

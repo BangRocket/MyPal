@@ -1,4 +1,4 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
 
 /**
  * Singleton GraphQL client for the web frontend.
@@ -14,7 +14,7 @@
  * @module graphql/client
  */
 
-import { createGraphqlClient } from '@openlobster/ui/graphql';
+import { createGraphqlClient } from '@mypal/ui/graphql';
 import { getStoredToken, setNeedsAuth } from '../stores/authStore';
 
 /** GraphQL endpoint: same-origin /graphql so it works on any domain (e.g. https://agent.hoki-ghoul.ts.net). */

@@ -1,4 +1,4 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
  
 
 import { describe, it, expect, vi } from "vitest";
@@ -40,7 +40,7 @@ describe("Header Component", () => {
   it("renders wordmark", () => {
     const { container } = render(() => <Header activeTab="overview" />);
     expect(container.querySelector(".header__wordmark")?.textContent).toContain(
-      "OPENLOBSTER",
+      "MYPAL",
     );
   });
 

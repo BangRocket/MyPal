@@ -1,12 +1,12 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
  
 
 import { describe, it, expect, vi } from 'vitest';
 import { render } from '@solidjs/testing-library';
 import StatusBadge from './StatusBadge';
 
-// Mock @openlobster/ui/types
-vi.mock('@openlobster/ui/types', () => ({}));
+// Mock @mypal/ui/types
+vi.mock('@mypal/ui/types', () => ({}));
 
 describe('StatusBadge Component', () => {
   it('renders status badge container', () => {

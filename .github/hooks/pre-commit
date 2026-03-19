@@ -23,16 +23,16 @@ fi
 step "Backend: go test"
 (cd apps/backend && go test ./...)
 
-step "Package @openlobster/ui: eslint"
+step "Package @mypal/ui: eslint"
 (cd packages/ui && pnpm exec eslint . --max-warnings 0)
 
-step "Package @openlobster/ui: vitest"
+step "Package @mypal/ui: vitest"
 (cd packages/ui && pnpm exec vitest run)
 
-step "App @openlobster/frontend: eslint"
+step "App @mypal/frontend: eslint"
 (cd apps/frontend && pnpm exec eslint src tests --max-warnings 0)
 
-step "App @openlobster/frontend: vitest"
+step "App @mypal/frontend: vitest"
 (cd apps/frontend && pnpm exec vitest run)
 
 printf '\n\033[1mPre-commit OK\033[0m\n'

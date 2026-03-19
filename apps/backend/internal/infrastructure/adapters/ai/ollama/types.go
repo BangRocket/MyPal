@@ -1,4 +1,4 @@
-// Copyright (c) OpenLobster contributors.
+// Copyright (c) MyPal contributors.
 // SPDX-License-Identifier: see LICENSE
 
 package ollama

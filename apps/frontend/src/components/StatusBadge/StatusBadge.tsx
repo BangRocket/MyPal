@@ -1,4 +1,4 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
 
 /**
  * StatusBadge renders a colored dot with an optional label.
@@ -9,7 +9,7 @@
  */
 
 import type { Component } from 'solid-js';
-import type { ConnectionStatus } from '@openlobster/ui/types';
+import type { ConnectionStatus } from '@mypal/ui/types';
 import './StatusBadge.css';
 
 interface StatusBadgeProps {

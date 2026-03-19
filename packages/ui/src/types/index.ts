@@ -1,7 +1,7 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
 
 /**
- * Shared domain types for the OpenLobster GraphQL API.
+ * Shared domain types for the MyPal GraphQL API.
  *
  * Both the web frontend (apps/frontend) and the terminal frontend
  * (apps/terminal) consume the same GraphQL server. These TypeScript

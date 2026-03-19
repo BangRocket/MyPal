@@ -5,7 +5,7 @@ icon: gear
 
 # Settings
 
-The Settings view is where you configure the OpenLobster agent. Changes made here affect how the agent connects to AI providers, which channels it listens on, what capabilities it has, where it stores data, and how it logs activity.
+The Settings view is where you configure the MyPal agent. Changes made here affect how the agent connects to AI providers, which channels it listens on, what capabilities it has, where it stores data, and how it logs activity.
 
 {% hint style="warning" %}
 Configuration changes apply to the running server and take effect on save. For most backend changes (database driver, memory backend, GraphQL host), a server restart is required for the new values to take effect.

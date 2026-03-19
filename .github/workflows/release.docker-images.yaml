@@ -37,7 +37,7 @@ jobs:
       - name: Common Docker setup and logins
         uses: ./.github/actions/docker-common
         with:
-          app: openlobster
+          app: mypal
           for-push: 'true'
           dhi-registry-username: ${{ secrets.DHI_USERNAME }}
           dhi-registry-password: ${{ secrets.DHI_PASSWORD }}
@@ -46,7 +46,7 @@ jobs:
         run: |
           set -euo pipefail
           REPO_LOWER=$(echo "${GITHUB_REPOSITORY}" | tr '[:upper:]' '[:lower:]')
-          IMAGE=ghcr.io/${REPO_LOWER}/openlobster
+          IMAGE=ghcr.io/${REPO_LOWER}/mypal
           SHORT_SHA=$(echo "${GITHUB_SHA}" | cut -c1-7)
           if [[ "${GITHUB_REF}" == refs/tags/* ]]; then VERSION=${GITHUB_REF#refs/tags/}; else VERSION=${SHORT_SHA}; fi
           if [ "${{ matrix.name }}" = "static" ]; then SUFFIX="-distroless"; else SUFFIX=""; fi
@@ -103,7 +103,7 @@ jobs:
         run: |
           set -euo pipefail
           REPO_LOWER=$(echo "${GITHUB_REPOSITORY}" | tr '[:upper:]' '[:lower:]')
-          IMAGE=ghcr.io/${REPO_LOWER}/openlobster
+          IMAGE=ghcr.io/${REPO_LOWER}/mypal
           SHORT=$(echo "${GITHUB_SHA}" | cut -c1-7)
           if [[ "${GITHUB_REF}" == refs/tags/* ]]; then VERSION=${GITHUB_REF#refs/tags/}; else VERSION=${SHORT}; fi
           if [ "${{ matrix.name }}" = "static" ]; then SUFFIX="-distroless"; else SUFFIX=""; fi

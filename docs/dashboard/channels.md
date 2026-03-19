@@ -1,5 +1,5 @@
 ---
-description: The Channels panel shows the connection status of every messaging platform configured in OpenLobster.
+description: The Channels panel shows the connection status of every messaging platform configured in MyPal.
 icon: plug
 ---
 
@@ -22,7 +22,7 @@ When a channel goes **Offline**, the message processing pipeline is broken at st
 1. User sends message on Telegram/Discord/etc.
 2. Channel Adapter cannot receive it (not connected)
 3. Step 1 fails → entire pipeline stops
-4. User message never reaches OpenLobster
+4. User message never reaches MyPal
 5. Agent never generates a response
 6. User waits indefinitely with no reply
 

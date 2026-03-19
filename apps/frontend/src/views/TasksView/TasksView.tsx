@@ -1,12 +1,12 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
 
 import type { Component } from 'solid-js';
 import { For, Show, createEffect } from 'solid-js';
 import { createSignal } from 'solid-js';
 import { createMutation, useQueryClient } from '@tanstack/solid-query';
-import { useTasks } from '@openlobster/ui/hooks';
-import type { Task } from '@openlobster/ui/types';
-import { ADD_TASK_MUTATION, REMOVE_TASK_MUTATION, TOGGLE_TASK_MUTATION, UPDATE_TASK_MUTATION } from '@openlobster/ui/graphql/mutations';
+import { useTasks } from '@mypal/ui/hooks';
+import type { Task } from '@mypal/ui/types';
+import { ADD_TASK_MUTATION, REMOVE_TASK_MUTATION, TOGGLE_TASK_MUTATION, UPDATE_TASK_MUTATION } from '@mypal/ui/graphql/mutations';
 import { client } from '../../graphql/client';
 import AppShell from '../../components/AppShell';
 import Modal from '../../components/Modal';

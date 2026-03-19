@@ -58,4 +58,4 @@ If the browser blocks the authorization popup, allow popups for this site in you
 
 * **Popup closes without success** — Return to the Manage modal and click **Authorize** again. Check the [Recent Logs](../dashboard/logs.md) panel for server-side error messages.
 * **Server returns to Unauthorized after a while** — The OAuth token may have expired. Repeat the authorization flow to refresh it.
-* **Redirect error page** — If you see an OAuth callback error page, the server's redirect URI may be misconfigured. Verify that the **Server Base URL** in **Settings > GraphQL** is set to the correct public URL of your OpenLobster instance, as it is used for OAuth callbacks.
+* **Redirect error page** — If you see an OAuth callback error page, the server's redirect URI may be misconfigured. Verify that the **Server Base URL** in **Settings > GraphQL** is set to the correct public URL of your MyPal instance, as it is used for OAuth callbacks.

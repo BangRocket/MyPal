@@ -13,11 +13,11 @@ import (
 )
 
 // bindEnvForAllKeys binds Viper keys to environment variable names using the
-// OPENLOBSTER_ prefix and converting dots to underscores. This ensures that
+// MYPAL_ prefix and converting dots to underscores. This ensures that
 // nested keys (e.g. memory.neo4j.uri) are bound to env vars like
-// OPENLOBSTER_MEMORY_NEO4J_URI so that viper.Unmarshal picks them up.
+// MYPAL_MEMORY_NEO4J_URI so that viper.Unmarshal picks them up.
 func bindEnvForAllKeys() {
-	const prefix = "OPENLOBSTER_"
+	const prefix = "MYPAL_"
 	// Bind any keys already present in viper (from config file or defaults).
 	for _, k := range viper.AllKeys() {
 		envKey := prefix + strings.ToUpper(strings.ReplaceAll(k, ".", "_"))
@@ -27,10 +27,10 @@ func bindEnvForAllKeys() {
 	// and viper.AllKeys covers keys present in config files or defaults.
 }
 
-// bindEnvFromOS scans the process environment for OPENLOBSTER_* variables
-// and binds corresponding viper keys (reverse mapping: OPENLOBSTER_FOO_BAR -> foo.bar).
+// bindEnvFromOS scans the process environment for MYPAL_* variables
+// and binds corresponding viper keys (reverse mapping: MYPAL_FOO_BAR -> foo.bar).
 func bindEnvFromOS() {
-	const prefix = "OPENLOBSTER_"
+	const prefix = "MYPAL_"
 	for _, e := range os.Environ() {
 		parts := strings.SplitN(e, "=", 2)
 		if len(parts) != 2 {
@@ -86,7 +86,7 @@ func (c *Config) Validate() error {
 	switch c.Database.Driver {
 	case "sqlite3", "sqlite":
 		if c.Database.DSN == "" {
-			errs = append(errs, "database.dsn is required for sqlite (e.g. ./data/openlobster.db)")
+			errs = append(errs, "database.dsn is required for sqlite (e.g. ./data/mypal.db)")
 		}
 	case "postgres", "pgx", "mysql":
 		if c.Database.DSN == "" {
@@ -150,8 +150,8 @@ func (c *Config) Validate() error {
 
 type Config struct {
 	// BaseDir is the root directory for all runtime data (data/, logs/,
-	// workspace/). Configurable via base_dir in YAML, OPENLOBSTER_BASE_DIR
-	// env var, or the --data-dir CLI flag. Defaults to $HOME/.openlobster.
+	// workspace/). Configurable via base_dir in YAML, MYPAL_BASE_DIR
+	// env var, or the --data-dir CLI flag. Defaults to $HOME/.mypal.
 	BaseDir     string            `mapstructure:"base_dir"`
 	Agent       AgentConfig       `mapstructure:"agent"`
 	Scheduler   SchedulerConfig   `mapstructure:"heartbeat"` // yaml key kept for backwards compat
@@ -344,13 +344,13 @@ type GraphQLConfig struct {
 	Enabled bool   `mapstructure:"enabled"`
 	Port    int    `mapstructure:"port"`
 	Host    string `mapstructure:"host"`
-	// BaseURL is the public URL of the server (e.g. https://openlobster.example.com).
+	// BaseURL is the public URL of the server (e.g. https://mypal.example.com).
 	// Used for OAuth redirect_uri and other callbacks. If empty, derived from host:port.
 	BaseURL string `mapstructure:"base_url"`
 	// AuthEnabled gates the dashboard/API behind a token. Enabled by default.
 	AuthEnabled bool `mapstructure:"auth_enabled"`
 	// AuthToken is the bearer token required to access the GraphQL API when
-	// AuthEnabled is true. The environment variable OPENLOBSTER_GRAPHQL_AUTH_TOKEN takes
+	// AuthEnabled is true. The environment variable MYPAL_GRAPHQL_AUTH_TOKEN takes
 	// precedence over this value at runtime.
 	AuthToken string `mapstructure:"auth_token"`
 }
@@ -391,7 +391,7 @@ type WorkspaceConfig struct {
 
 func setDefaults() {
 	home, _ := os.UserHomeDir()
-	viper.SetDefault("base_dir", filepath.Join(home, ".openlobster"))
+	viper.SetDefault("base_dir", filepath.Join(home, ".mypal"))
 	viper.SetDefault("heartbeat.interval", "30s")
 	viper.SetDefault("heartbeat.enabled", true)
 	viper.SetDefault("heartbeat.memory_interval", "4h")
@@ -460,7 +460,7 @@ func setDefaults() {
 	viper.SetDefault("channels.slack.bot_token", "")
 	viper.SetDefault("channels.slack.app_token", "")
 	// Default agent name (shown in navbar)
-	viper.SetDefault("agent.name", "OpenLobster")
+	viper.SetDefault("agent.name", "MyPal")
 	// Default capabilities: subagents, memory, mcp, filesystem, sessions enabled
 	viper.SetDefault("agent.capabilities.subagents", true)
 	viper.SetDefault("agent.capabilities.memory", true)
@@ -471,7 +471,7 @@ func setDefaults() {
 }
 
 // bootstrapEncryptedConfig creates a default config at path if the file does not exist.
-// Encrypted if OPENLOBSTER_CONFIG_ENCRYPT is 1 (default), plain YAML if 0.
+// Encrypted if MYPAL_CONFIG_ENCRYPT is 1 (default), plain YAML if 0.
 func bootstrapEncryptedConfig(path string) error {
 	if _, err := os.Stat(path); err == nil {
 		return nil // file exists, nothing to do
@@ -494,7 +494,7 @@ func bootstrapEncryptedConfig(path string) error {
 	v.SetDefault("heartbeat.memory_interval", "4h")
 	v.SetDefault("heartbeat.memory_enabled", true)
 	v.SetDefault("database.driver", "sqlite")
-	v.SetDefault("database.dsn", "./data/openlobster.db")
+	v.SetDefault("database.dsn", "./data/mypal.db")
 	v.SetDefault("memory.backend", "file")
 	v.SetDefault("memory.file.path", "./data/memory.gml")
 	v.SetDefault("secrets.backend", "file")
@@ -510,7 +510,7 @@ func bootstrapEncryptedConfig(path string) error {
 	v.SetDefault("subagents.default_timeout", "5m")
 	v.SetDefault("permissions.default_mode", "deny")
 	v.SetDefault("providers.ollama.endpoint", "http://localhost:11434")
-	v.SetDefault("agent.name", "OpenLobster")
+	v.SetDefault("agent.name", "MyPal")
 	v.SetDefault("agent.capabilities.subagents", true)
 	v.SetDefault("agent.capabilities.memory", true)
 	v.SetDefault("agent.capabilities.mcp", true)
@@ -525,8 +525,8 @@ func Load(path string) (*Config, error) {
 	viper.SetConfigType("yaml")
 	setDefaults()
 
-	// Env vars with OPENLOBSTER_ prefix override file config (e.g. OPENLOBSTER_DATABASE_DSN).
-	viper.SetEnvPrefix("OPENLOBSTER")
+	// Env vars with MYPAL_ prefix override file config (e.g. MYPAL_DATABASE_DSN).
+	viper.SetEnvPrefix("MYPAL")
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 	viper.AutomaticEnv()
 
@@ -543,7 +543,7 @@ func Load(path string) (*Config, error) {
 	}
 
 	// Bind environment variables dynamically: first bind keys present in the
-	// config (and defaults), then bind any OPENLOBSTER_* env vars found in
+	// config (and defaults), then bind any MYPAL_* env vars found in
 	// the process environment. This covers both file+env and env-only cases.
 	bindEnvForAllKeys()
 	bindEnvFromOS()
@@ -559,14 +559,14 @@ func Load(path string) (*Config, error) {
 
 func LoadFromEnv() (*Config, error) {
 	viper.AutomaticEnv()
-	viper.SetEnvPrefix("OPENLOBSTER")
+	viper.SetEnvPrefix("MYPAL")
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 
 	// Apply same defaults as Load() so env vars override them and nested keys exist.
 	setDefaults()
 
 	// Bind existing keys (from defaults) to their corresponding env vars, then
-	// bind any OPENLOBSTER_* env vars present so Unmarshal can populate nested
+	// bind any MYPAL_* env vars present so Unmarshal can populate nested
 	// keys from the environment when no config file is used. This mirrors Load().
 	bindEnvForAllKeys()
 	bindEnvFromOS()
@@ -583,8 +583,8 @@ func LoadFromEnv() (*Config, error) {
 func DefaultConfig() *Config {
 	return &Config{
 		Agent: AgentConfig{
-			Name:         "openlobster",
-			SystemPrompt: "You are openlobster, an autonomous messaging agent.",
+			Name:         "mypal",
+			SystemPrompt: "You are mypal, an autonomous messaging agent.",
 		},
 		Scheduler: SchedulerConfig{
 			Interval:       30 * time.Second,
@@ -594,7 +594,7 @@ func DefaultConfig() *Config {
 		},
 		Database: DatabaseConfig{
 			Driver: "sqlite3",
-			DSN:    "./data/openlobster.db",
+			DSN:    "./data/mypal.db",
 		},
 		GraphQL: GraphQLConfig{
 			Enabled: true,

@@ -1672,12 +1672,12 @@ func TestSubAgentConfig(t *testing.T) {
 
 func TestSubAgentInfo(t *testing.T) {
 	info := SubAgentInfo{
-		ID:     "openlobster",
+		ID:     "mypal",
 		Name:   "worker",
 		Status: "running",
 	}
 
-	assert.Equal(t, "openlobster", info.ID)
+	assert.Equal(t, "mypal", info.ID)
 	assert.Equal(t, "worker", info.Name)
 }
 

@@ -1,4 +1,4 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
 
 import type { Component, ParentComponent } from "solid-js";
 import { createSignal, createEffect, onMount, onCleanup, Show, lazy, Suspense } from "solid-js";
@@ -24,8 +24,8 @@ import FirstBootWizard from "./components/FirstBootWizard";
 import { GRAPHQL_ENDPOINT } from "./graphql/client";
 import { getStoredToken } from "./stores/authStore";
 import { effectiveTheme, setSystemTheme } from "./stores/themeStore";
-import "@openlobster/ui/styles/tokens.css";
-import "@openlobster/ui/styles/reset.css";
+import "@mypal/ui/styles/tokens.css";
+import "@mypal/ui/styles/reset.css";
 import "./styles/global.css";
 
 // Exported so that AccessTokenModal can trigger a re-check after saving a token.

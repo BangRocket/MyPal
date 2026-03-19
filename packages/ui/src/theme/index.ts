@@ -1,15 +1,15 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
 
 /**
- * OpenLobster design tokens as TypeScript constants.
+ * MyPal design tokens as TypeScript constants.
  *
  * These values are the canonical source of truth shared between the terminal
- * frontend (@openlobster/terminal) and any non-CSS context. The web frontend
+ * frontend (@mypal/terminal) and any non-CSS context. The web frontend
  * uses the CSS Custom Properties in src/styles/tokens.css, which mirror these
  * exact values.
  *
  * Usage in the terminal (OpenTUI):
- *   import { theme } from '@openlobster/ui/theme';
+ *   import { theme } from '@mypal/ui/theme';
  *   <box backgroundColor={theme.bgBase}>...</box>
  */
 export const theme = {

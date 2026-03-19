@@ -1,7 +1,7 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
 
 /**
- * JSON Schema for OpenLobster configuration
+ * JSON Schema for MyPal configuration
  * Defines all configuration fields with types, validation, and dependencies
  */
 export interface ConfigSchema {
@@ -208,7 +208,7 @@ export const configSchema: ConfigSchema = {
       type: "string",
       title: "Database DSN",
       description: "Database connection string",
-      default: "./data/openlobster.db",
+      default: "./data/mypal.db",
     },
     databaseMaxOpenConns: {
       type: "integer",
@@ -345,7 +345,7 @@ export const configSchema: ConfigSchema = {
     graphqlBaseUrl: {
       type: "string",
       title: "Server Base URL",
-      description: "Public URL of the server (e.g. https://openlobster.example.com). Used for OAuth callbacks and MCP.",
+      description: "Public URL of the server (e.g. https://mypal.example.com). Used for OAuth callbacks and MCP.",
       default: "",
       dependencies: {
         graphqlEnabled: {

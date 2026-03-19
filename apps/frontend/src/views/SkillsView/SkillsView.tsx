@@ -1,10 +1,10 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
 
 import type { Component } from 'solid-js';
 import { For, Show, createSignal } from 'solid-js';
 import { createMutation, useQueryClient } from '@tanstack/solid-query';
-import { useSkills } from '@openlobster/ui/hooks';
-import { IMPORT_SKILL_MUTATION, DELETE_SKILL_MUTATION } from '@openlobster/ui/graphql/mutations';
+import { useSkills } from '@mypal/ui/hooks';
+import { IMPORT_SKILL_MUTATION, DELETE_SKILL_MUTATION } from '@mypal/ui/graphql/mutations';
 import { client } from '../../graphql/client';
 import AppShell from '../../components/AppShell';
 import { t } from '../../App';

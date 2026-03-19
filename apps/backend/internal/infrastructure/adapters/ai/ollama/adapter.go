@@ -1,4 +1,4 @@
-// Copyright (c) OpenLobster contributors.
+// Copyright (c) MyPal contributors.
 // SPDX-License-Identifier: see LICENSE
 
 // Package ollama provides an AI provider adapter backed by a local Ollama instance.

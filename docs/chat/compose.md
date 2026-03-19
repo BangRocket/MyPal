@@ -21,7 +21,7 @@ The message appears in the thread immediately and is delivered to the user on th
 When you (an operator) send a message through the compose box, it goes through similar processing to user messages:
 
 1. **Message created** — Your text is stored with metadata (sent by operator, timestamp)
-2. **Routed to channel** — OpenLobster uses the conversation's channel info to send via Telegram, Discord, etc.
+2. **Routed to channel** — MyPal uses the conversation's channel info to send via Telegram, Discord, etc.
 3. **Delivered** — User receives your message on their platform
 4. **Recorded** — Appears in Chat thread with **OPERATOR** label (so you know it came from a human, not the agent)
 5. **Memory updated** — Your message is stored in the conversation history (like all messages, per step 11 of the pipeline)

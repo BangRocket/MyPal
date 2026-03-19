@@ -1,4 +1,4 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
 
 import { createSignal, onCleanup, createEffect } from "solid-js";
 import type { GraphQLClient } from "graphql-request";

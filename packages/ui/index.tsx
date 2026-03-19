@@ -1,7 +1,7 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
 
 /**
- * @openlobster/ui — Shared UI package
+ * @mypal/ui — Shared UI package
  *
  * This package provides the shared foundation used by both frontends:
  *
@@ -13,9 +13,9 @@
  *
  * CSS design tokens (for the web frontend) are in src/styles/ and must be
  * imported directly by path:
- *   import '@openlobster/ui/styles/tokens.css'
- *   import '@openlobster/ui/styles/reset.css'
- *   import '@openlobster/ui/styles/global.css'
+ *   import '@mypal/ui/styles/tokens.css'
+ *   import '@mypal/ui/styles/reset.css'
+ *   import '@mypal/ui/styles/global.css'
  *
  * Platform-specific components (HTML elements for web, OpenTUI elements for
  * terminal) live in their respective apps, NOT in this package.

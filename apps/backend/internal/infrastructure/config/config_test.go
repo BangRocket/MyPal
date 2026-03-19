@@ -180,13 +180,13 @@ func TestLoadFromEnv(t *testing.T) {
 
 func TestLoadFromEnv_Neo4j(t *testing.T) {
 	// Set env vars as Kubernetes would provide them via EnvPrefix + replacer
-	os.Setenv("OPENLOBSTER_MEMORY_NEO4J_URI", "bolt://env-host:7687")
-	os.Setenv("OPENLOBSTER_MEMORY_NEO4J_USER", "envuser")
-	os.Setenv("OPENLOBSTER_MEMORY_NEO4J_PASSWORD", "envpass")
+	os.Setenv("MYPAL_MEMORY_NEO4J_URI", "bolt://env-host:7687")
+	os.Setenv("MYPAL_MEMORY_NEO4J_USER", "envuser")
+	os.Setenv("MYPAL_MEMORY_NEO4J_PASSWORD", "envpass")
 	defer func() {
-		os.Unsetenv("OPENLOBSTER_MEMORY_NEO4J_URI")
-		os.Unsetenv("OPENLOBSTER_MEMORY_NEO4J_USER")
-		os.Unsetenv("OPENLOBSTER_MEMORY_NEO4J_PASSWORD")
+		os.Unsetenv("MYPAL_MEMORY_NEO4J_URI")
+		os.Unsetenv("MYPAL_MEMORY_NEO4J_USER")
+		os.Unsetenv("MYPAL_MEMORY_NEO4J_PASSWORD")
 	}()
 
 	cfg, err := LoadFromEnv()
@@ -209,72 +209,72 @@ type envMappingCase struct {
 
 func TestLoadFromEnv_AllKeysMapped(t *testing.T) {
 	cases := []envMappingCase{
-		{"OPENLOBSTER_AGENT_NAME", "env-agent", func(c *Config) interface{} { return c.Agent.Name }, "env-agent"},
-		{"OPENLOBSTER_AGENT_CAPABILITIES_BROWSER", "true", func(c *Config) interface{} { return c.Agent.Capabilities.Browser }, true},
-		{"OPENLOBSTER_AGENT_CAPABILITIES_TERMINAL", "true", func(c *Config) interface{} { return c.Agent.Capabilities.Terminal }, true},
-		{"OPENLOBSTER_AGENT_CAPABILITIES_SUBAGENTS", "true", func(c *Config) interface{} { return c.Agent.Capabilities.Subagents }, true},
-		{"OPENLOBSTER_AGENT_CAPABILITIES_MEMORY", "true", func(c *Config) interface{} { return c.Agent.Capabilities.Memory }, true},
-		{"OPENLOBSTER_AGENT_CAPABILITIES_MCP", "true", func(c *Config) interface{} { return c.Agent.Capabilities.MCP }, true},
-		{"OPENLOBSTER_AGENT_CAPABILITIES_FILESYSTEM", "true", func(c *Config) interface{} { return c.Agent.Capabilities.Filesystem }, true},
-		{"OPENLOBSTER_AGENT_CAPABILITIES_SESSIONS", "true", func(c *Config) interface{} { return c.Agent.Capabilities.Sessions }, true},
-		{"OPENLOBSTER_HEARTBEAT_INTERVAL", "10s", func(c *Config) interface{} { return c.Scheduler.Interval }, 10 * time.Second},
-		{"OPENLOBSTER_HEARTBEAT_ENABLED", "true", func(c *Config) interface{} { return c.Scheduler.Enabled }, true},
-		{"OPENLOBSTER_HEARTBEAT_MEMORY_INTERVAL", "1h", func(c *Config) interface{} { return c.Scheduler.MemoryInterval }, 1 * time.Hour},
-		{"OPENLOBSTER_HEARTBEAT_MEMORY_ENABLED", "true", func(c *Config) interface{} { return c.Scheduler.MemoryEnabled }, true},
-		{"OPENLOBSTER_DATABASE_DRIVER", "postgres", func(c *Config) interface{} { return c.Database.Driver }, "postgres"},
-		{"OPENLOBSTER_DATABASE_DSN", "postgres://user:pass@host/db", func(c *Config) interface{} { return c.Database.DSN }, "postgres://user:pass@host/db"},
-		{"OPENLOBSTER_DATABASE_MAX_OPEN_CONNS", "11", func(c *Config) interface{} { return c.Database.MaxOpenConns }, 11},
-		{"OPENLOBSTER_DATABASE_MAX_IDLE_CONNS", "7", func(c *Config) interface{} { return c.Database.MaxIdleConns }, 7},
-		{"OPENLOBSTER_MEMORY_BACKEND", "file", func(c *Config) interface{} { return c.Memory.Backend }, models.MemoryFile},
-		{"OPENLOBSTER_MEMORY_FILE_PATH", "/tmp/memory.gml", func(c *Config) interface{} { return c.Memory.File.Path }, "/tmp/memory.gml"},
-		{"OPENLOBSTER_MEMORY_NEO4J_URI", "bolt://env-host:7687", func(c *Config) interface{} { return c.Memory.Neo4j.URI }, "bolt://env-host:7687"},
-		{"OPENLOBSTER_MEMORY_NEO4J_USER", "envuser-all", func(c *Config) interface{} { return c.Memory.Neo4j.User }, "envuser-all"},
-		{"OPENLOBSTER_MEMORY_NEO4J_PASSWORD", "envpass-all", func(c *Config) interface{} { return c.Memory.Neo4j.Password }, "envpass-all"},
-		{"OPENLOBSTER_MEMORY_POSTGRES_DSN", "postgres://mem:pass@host/memdb", func(c *Config) interface{} { return c.Memory.Postgres.DSN }, "postgres://mem:pass@host/memdb"},
-		{"OPENLOBSTER_PROVIDERS_OPENROUTER_API_KEY", "or-key", func(c *Config) interface{} { return c.Providers.OpenRouter.APIKey }, "or-key"},
-		{"OPENLOBSTER_PROVIDERS_OPENROUTER_DEFAULT_MODEL", "or-model", func(c *Config) interface{} { return c.Providers.OpenRouter.DefaultModel }, "or-model"},
-		{"OPENLOBSTER_PROVIDERS_OLLAMA_ENDPOINT", "http://ollama-host", func(c *Config) interface{} { return c.Providers.Ollama.Endpoint }, "http://ollama-host"},
-		{"OPENLOBSTER_PROVIDERS_OLLAMA_DEFAULT_MODEL", "llama3-env", func(c *Config) interface{} { return c.Providers.Ollama.DefaultModel }, "llama3-env"},
-		{"OPENLOBSTER_PROVIDERS_OPENCODE_API_KEY", "oc-key-env", func(c *Config) interface{} { return c.Providers.OpenCode.APIKey }, "oc-key-env"},
-		{"OPENLOBSTER_PROVIDERS_OPENCODE_MODEL", "oc-model-env", func(c *Config) interface{} { return c.Providers.OpenCode.Model }, "oc-model-env"},
-		{"OPENLOBSTER_PROVIDERS_OPENAI_API_KEY", "oa-key-env", func(c *Config) interface{} { return c.Providers.OpenAI.APIKey }, "oa-key-env"},
-		{"OPENLOBSTER_PROVIDERS_OPENAI_MODEL", "gpt-env", func(c *Config) interface{} { return c.Providers.OpenAI.Model }, "gpt-env"},
-		{"OPENLOBSTER_PROVIDERS_OPENAICOMPAT_MODEL", "oac-model-env", func(c *Config) interface{} { return c.Providers.OpenAICompat.Model }, "oac-model-env"},
-		{"OPENLOBSTER_PROVIDERS_ANTHROPIC_MODEL", "claude-env", func(c *Config) interface{} { return c.Providers.Anthropic.Model }, "claude-env"},
-		{"OPENLOBSTER_CHANNELS_TELEGRAM_ENABLED", "true", func(c *Config) interface{} { return c.Channels.Telegram.Enabled }, true},
-		{"OPENLOBSTER_CHANNELS_TELEGRAM_BOT_TOKEN", "tg-env", func(c *Config) interface{} { return c.Channels.Telegram.BotToken }, "tg-env"},
-		{"OPENLOBSTER_CHANNELS_DISCORD_ENABLED", "true", func(c *Config) interface{} { return c.Channels.Discord.Enabled }, true},
-		{"OPENLOBSTER_CHANNELS_DISCORD_BOT_TOKEN", "dc-env", func(c *Config) interface{} { return c.Channels.Discord.BotToken }, "dc-env"},
-		{"OPENLOBSTER_CHANNELS_WHATSAPP_ENABLED", "true", func(c *Config) interface{} { return c.Channels.WhatsApp.Enabled }, true},
-		{"OPENLOBSTER_CHANNELS_WHATSAPP_PHONE_ID", "wa-phone-env", func(c *Config) interface{} { return c.Channels.WhatsApp.PhoneID }, "wa-phone-env"},
-		{"OPENLOBSTER_CHANNELS_TWILIO_ENABLED", "true", func(c *Config) interface{} { return c.Channels.Twilio.Enabled }, true},
-		{"OPENLOBSTER_CHANNELS_TWILIO_ACCOUNT_SID", "ACenv", func(c *Config) interface{} { return c.Channels.Twilio.AccountSID }, "ACenv"},
-		{"OPENLOBSTER_CHANNELS_TWILIO_AUTH_TOKEN", "tw-auth-env", func(c *Config) interface{} { return c.Channels.Twilio.AuthToken }, "tw-auth-env"},
-		{"OPENLOBSTER_CHANNELS_TWILIO_FROM_NUMBER", "+9999", func(c *Config) interface{} { return c.Channels.Twilio.FromNumber }, "+9999"},
-		{"OPENLOBSTER_CHANNELS_TWILIO_WEBHOOK_PATH", "/twilio-env", func(c *Config) interface{} { return c.Channels.Twilio.WebhookPath }, "/twilio-env"},
-		{"OPENLOBSTER_CHANNELS_SLACK_ENABLED", "true", func(c *Config) interface{} { return c.Channels.Slack.Enabled }, true},
-		{"OPENLOBSTER_GRAPHQL_ENABLED", "true", func(c *Config) interface{} { return c.GraphQL.Enabled }, true},
-		{"OPENLOBSTER_GRAPHQL_PORT", "9090", func(c *Config) interface{} { return c.GraphQL.Port }, 9090},
-		{"OPENLOBSTER_GRAPHQL_HOST", "127.0.0.2", func(c *Config) interface{} { return c.GraphQL.Host }, "127.0.0.2"},
-		{"OPENLOBSTER_GRAPHQL_BASE_URL", "https://graphql-env.local", func(c *Config) interface{} { return c.GraphQL.BaseURL }, "https://graphql-env.local"},
-		{"OPENLOBSTER_GRAPHQL_AUTH_ENABLED", "true", func(c *Config) interface{} { return c.GraphQL.AuthEnabled }, true},
-		{"OPENLOBSTER_GRAPHQL_AUTH_TOKEN", "auth-env-token", func(c *Config) interface{} { return c.GraphQL.AuthToken }, "auth-env-token"},
-		{"OPENLOBSTER_LOGGING_LEVEL", "debug", func(c *Config) interface{} { return c.Logging.Level }, "debug"},
-		{"OPENLOBSTER_LOGGING_PATH", "/var/log/env", func(c *Config) interface{} { return c.Logging.Path }, "/var/log/env"},
-		{"OPENLOBSTER_PERMISSIONS_DEFAULT_MODE", "always", func(c *Config) interface{} { return c.Permissions.DefaultMode }, "always"},
-		{"OPENLOBSTER_SECRETS_BACKEND", "file", func(c *Config) interface{} { return c.Secrets.Backend }, "file"},
-		{"OPENLOBSTER_SECRETS_FILE_PATH", "/tmp/secrets-env.json", func(c *Config) interface{} { return c.Secrets.File.Path }, "/tmp/secrets-env.json"},
-		{"OPENLOBSTER_WORKSPACE_PATH", "/tmp/workspace-env", func(c *Config) interface{} { return c.Workspace.Path }, "/tmp/workspace-env"},
-		{"OPENLOBSTER_WIZARD_COMPLETED", "true", func(c *Config) interface{} { return c.Wizard.Completed }, true},
+		{"MYPAL_AGENT_NAME", "env-agent", func(c *Config) interface{} { return c.Agent.Name }, "env-agent"},
+		{"MYPAL_AGENT_CAPABILITIES_BROWSER", "true", func(c *Config) interface{} { return c.Agent.Capabilities.Browser }, true},
+		{"MYPAL_AGENT_CAPABILITIES_TERMINAL", "true", func(c *Config) interface{} { return c.Agent.Capabilities.Terminal }, true},
+		{"MYPAL_AGENT_CAPABILITIES_SUBAGENTS", "true", func(c *Config) interface{} { return c.Agent.Capabilities.Subagents }, true},
+		{"MYPAL_AGENT_CAPABILITIES_MEMORY", "true", func(c *Config) interface{} { return c.Agent.Capabilities.Memory }, true},
+		{"MYPAL_AGENT_CAPABILITIES_MCP", "true", func(c *Config) interface{} { return c.Agent.Capabilities.MCP }, true},
+		{"MYPAL_AGENT_CAPABILITIES_FILESYSTEM", "true", func(c *Config) interface{} { return c.Agent.Capabilities.Filesystem }, true},
+		{"MYPAL_AGENT_CAPABILITIES_SESSIONS", "true", func(c *Config) interface{} { return c.Agent.Capabilities.Sessions }, true},
+		{"MYPAL_HEARTBEAT_INTERVAL", "10s", func(c *Config) interface{} { return c.Scheduler.Interval }, 10 * time.Second},
+		{"MYPAL_HEARTBEAT_ENABLED", "true", func(c *Config) interface{} { return c.Scheduler.Enabled }, true},
+		{"MYPAL_HEARTBEAT_MEMORY_INTERVAL", "1h", func(c *Config) interface{} { return c.Scheduler.MemoryInterval }, 1 * time.Hour},
+		{"MYPAL_HEARTBEAT_MEMORY_ENABLED", "true", func(c *Config) interface{} { return c.Scheduler.MemoryEnabled }, true},
+		{"MYPAL_DATABASE_DRIVER", "postgres", func(c *Config) interface{} { return c.Database.Driver }, "postgres"},
+		{"MYPAL_DATABASE_DSN", "postgres://user:pass@host/db", func(c *Config) interface{} { return c.Database.DSN }, "postgres://user:pass@host/db"},
+		{"MYPAL_DATABASE_MAX_OPEN_CONNS", "11", func(c *Config) interface{} { return c.Database.MaxOpenConns }, 11},
+		{"MYPAL_DATABASE_MAX_IDLE_CONNS", "7", func(c *Config) interface{} { return c.Database.MaxIdleConns }, 7},
+		{"MYPAL_MEMORY_BACKEND", "file", func(c *Config) interface{} { return c.Memory.Backend }, models.MemoryFile},
+		{"MYPAL_MEMORY_FILE_PATH", "/tmp/memory.gml", func(c *Config) interface{} { return c.Memory.File.Path }, "/tmp/memory.gml"},
+		{"MYPAL_MEMORY_NEO4J_URI", "bolt://env-host:7687", func(c *Config) interface{} { return c.Memory.Neo4j.URI }, "bolt://env-host:7687"},
+		{"MYPAL_MEMORY_NEO4J_USER", "envuser-all", func(c *Config) interface{} { return c.Memory.Neo4j.User }, "envuser-all"},
+		{"MYPAL_MEMORY_NEO4J_PASSWORD", "envpass-all", func(c *Config) interface{} { return c.Memory.Neo4j.Password }, "envpass-all"},
+		{"MYPAL_MEMORY_POSTGRES_DSN", "postgres://mem:pass@host/memdb", func(c *Config) interface{} { return c.Memory.Postgres.DSN }, "postgres://mem:pass@host/memdb"},
+		{"MYPAL_PROVIDERS_OPENROUTER_API_KEY", "or-key", func(c *Config) interface{} { return c.Providers.OpenRouter.APIKey }, "or-key"},
+		{"MYPAL_PROVIDERS_OPENROUTER_DEFAULT_MODEL", "or-model", func(c *Config) interface{} { return c.Providers.OpenRouter.DefaultModel }, "or-model"},
+		{"MYPAL_PROVIDERS_OLLAMA_ENDPOINT", "http://ollama-host", func(c *Config) interface{} { return c.Providers.Ollama.Endpoint }, "http://ollama-host"},
+		{"MYPAL_PROVIDERS_OLLAMA_DEFAULT_MODEL", "llama3-env", func(c *Config) interface{} { return c.Providers.Ollama.DefaultModel }, "llama3-env"},
+		{"MYPAL_PROVIDERS_OPENCODE_API_KEY", "oc-key-env", func(c *Config) interface{} { return c.Providers.OpenCode.APIKey }, "oc-key-env"},
+		{"MYPAL_PROVIDERS_OPENCODE_MODEL", "oc-model-env", func(c *Config) interface{} { return c.Providers.OpenCode.Model }, "oc-model-env"},
+		{"MYPAL_PROVIDERS_OPENAI_API_KEY", "oa-key-env", func(c *Config) interface{} { return c.Providers.OpenAI.APIKey }, "oa-key-env"},
+		{"MYPAL_PROVIDERS_OPENAI_MODEL", "gpt-env", func(c *Config) interface{} { return c.Providers.OpenAI.Model }, "gpt-env"},
+		{"MYPAL_PROVIDERS_OPENAICOMPAT_MODEL", "oac-model-env", func(c *Config) interface{} { return c.Providers.OpenAICompat.Model }, "oac-model-env"},
+		{"MYPAL_PROVIDERS_ANTHROPIC_MODEL", "claude-env", func(c *Config) interface{} { return c.Providers.Anthropic.Model }, "claude-env"},
+		{"MYPAL_CHANNELS_TELEGRAM_ENABLED", "true", func(c *Config) interface{} { return c.Channels.Telegram.Enabled }, true},
+		{"MYPAL_CHANNELS_TELEGRAM_BOT_TOKEN", "tg-env", func(c *Config) interface{} { return c.Channels.Telegram.BotToken }, "tg-env"},
+		{"MYPAL_CHANNELS_DISCORD_ENABLED", "true", func(c *Config) interface{} { return c.Channels.Discord.Enabled }, true},
+		{"MYPAL_CHANNELS_DISCORD_BOT_TOKEN", "dc-env", func(c *Config) interface{} { return c.Channels.Discord.BotToken }, "dc-env"},
+		{"MYPAL_CHANNELS_WHATSAPP_ENABLED", "true", func(c *Config) interface{} { return c.Channels.WhatsApp.Enabled }, true},
+		{"MYPAL_CHANNELS_WHATSAPP_PHONE_ID", "wa-phone-env", func(c *Config) interface{} { return c.Channels.WhatsApp.PhoneID }, "wa-phone-env"},
+		{"MYPAL_CHANNELS_TWILIO_ENABLED", "true", func(c *Config) interface{} { return c.Channels.Twilio.Enabled }, true},
+		{"MYPAL_CHANNELS_TWILIO_ACCOUNT_SID", "ACenv", func(c *Config) interface{} { return c.Channels.Twilio.AccountSID }, "ACenv"},
+		{"MYPAL_CHANNELS_TWILIO_AUTH_TOKEN", "tw-auth-env", func(c *Config) interface{} { return c.Channels.Twilio.AuthToken }, "tw-auth-env"},
+		{"MYPAL_CHANNELS_TWILIO_FROM_NUMBER", "+9999", func(c *Config) interface{} { return c.Channels.Twilio.FromNumber }, "+9999"},
+		{"MYPAL_CHANNELS_TWILIO_WEBHOOK_PATH", "/twilio-env", func(c *Config) interface{} { return c.Channels.Twilio.WebhookPath }, "/twilio-env"},
+		{"MYPAL_CHANNELS_SLACK_ENABLED", "true", func(c *Config) interface{} { return c.Channels.Slack.Enabled }, true},
+		{"MYPAL_GRAPHQL_ENABLED", "true", func(c *Config) interface{} { return c.GraphQL.Enabled }, true},
+		{"MYPAL_GRAPHQL_PORT", "9090", func(c *Config) interface{} { return c.GraphQL.Port }, 9090},
+		{"MYPAL_GRAPHQL_HOST", "127.0.0.2", func(c *Config) interface{} { return c.GraphQL.Host }, "127.0.0.2"},
+		{"MYPAL_GRAPHQL_BASE_URL", "https://graphql-env.local", func(c *Config) interface{} { return c.GraphQL.BaseURL }, "https://graphql-env.local"},
+		{"MYPAL_GRAPHQL_AUTH_ENABLED", "true", func(c *Config) interface{} { return c.GraphQL.AuthEnabled }, true},
+		{"MYPAL_GRAPHQL_AUTH_TOKEN", "auth-env-token", func(c *Config) interface{} { return c.GraphQL.AuthToken }, "auth-env-token"},
+		{"MYPAL_LOGGING_LEVEL", "debug", func(c *Config) interface{} { return c.Logging.Level }, "debug"},
+		{"MYPAL_LOGGING_PATH", "/var/log/env", func(c *Config) interface{} { return c.Logging.Path }, "/var/log/env"},
+		{"MYPAL_PERMISSIONS_DEFAULT_MODE", "always", func(c *Config) interface{} { return c.Permissions.DefaultMode }, "always"},
+		{"MYPAL_SECRETS_BACKEND", "file", func(c *Config) interface{} { return c.Secrets.Backend }, "file"},
+		{"MYPAL_SECRETS_FILE_PATH", "/tmp/secrets-env.json", func(c *Config) interface{} { return c.Secrets.File.Path }, "/tmp/secrets-env.json"},
+		{"MYPAL_WORKSPACE_PATH", "/tmp/workspace-env", func(c *Config) interface{} { return c.Workspace.Path }, "/tmp/workspace-env"},
+		{"MYPAL_WIZARD_COMPLETED", "true", func(c *Config) interface{} { return c.Wizard.Completed }, true},
 	}
 	casesOpenbao := []envMappingCase{
-		{"OPENLOBSTER_SECRETS_OPENBAO_URL", "https://openbao-env.local", func(c *Config) interface{} {
+		{"MYPAL_SECRETS_OPENBAO_URL", "https://openbao-env.local", func(c *Config) interface{} {
 			if c.Secrets.Openbao == nil {
 				return ""
 			}
 			return c.Secrets.Openbao.URL
 		}, "https://openbao-env.local"},
-		{"OPENLOBSTER_SECRETS_OPENBAO_TOKEN", "openbao-token-env", func(c *Config) interface{} {
+		{"MYPAL_SECRETS_OPENBAO_TOKEN", "openbao-token-env", func(c *Config) interface{} {
 			if c.Secrets.Openbao == nil {
 				return ""
 			}
@@ -442,7 +442,7 @@ func TestValidationError_Error(t *testing.T) {
 func TestDefaultConfig(t *testing.T) {
 	cfg := DefaultConfig()
 	assert.NotNil(t, cfg)
-	assert.Equal(t, "openlobster", cfg.Agent.Name)
+	assert.Equal(t, "mypal", cfg.Agent.Name)
 	assert.Equal(t, "sqlite3", cfg.Database.Driver)
 	assert.Equal(t, 8080, cfg.GraphQL.Port)
 	assert.Equal(t, models.MemoryFile, cfg.Memory.Backend)
@@ -456,8 +456,8 @@ func TestLoad_FileNotFound(t *testing.T) {
 }
 
 func TestLoad_BootstrapCreatesEncryptedConfig(t *testing.T) {
-	os.Unsetenv("OPENLOBSTER_CONFIG_ENCRYPT")
-	defer os.Unsetenv("OPENLOBSTER_CONFIG_ENCRYPT")
+	os.Unsetenv("MYPAL_CONFIG_ENCRYPT")
+	defer os.Unsetenv("MYPAL_CONFIG_ENCRYPT")
 	path := t.TempDir() + "/newconfig.yaml"
 	cfg, err := Load(path)
 	assert.NoError(t, err)
@@ -469,8 +469,8 @@ func TestLoad_BootstrapCreatesEncryptedConfig(t *testing.T) {
 }
 
 func TestLoad_BootstrapCreatesPlainConfig_WhenEncryptDisabled(t *testing.T) {
-	os.Setenv("OPENLOBSTER_CONFIG_ENCRYPT", "0")
-	defer os.Unsetenv("OPENLOBSTER_CONFIG_ENCRYPT")
+	os.Setenv("MYPAL_CONFIG_ENCRYPT", "0")
+	defer os.Unsetenv("MYPAL_CONFIG_ENCRYPT")
 	path := t.TempDir() + "/newconfig_plain.yaml"
 	cfg, err := Load(path)
 	assert.NoError(t, err)
@@ -478,6 +478,6 @@ func TestLoad_BootstrapCreatesPlainConfig_WhenEncryptDisabled(t *testing.T) {
 	data, err := os.ReadFile(path)
 	assert.NoError(t, err)
 	assert.False(t, len(data) >= 6 && string(data[:6]) == "OLENC1",
-		"must not be encrypted when OPENLOBSTER_CONFIG_ENCRYPT=0")
+		"must not be encrypted when MYPAL_CONFIG_ENCRYPT=0")
 	assert.Contains(t, string(data), "database", "plain YAML should have default keys")
 }

@@ -10,7 +10,7 @@ The Recent Conversations panel lists the most recent user sessions, giving you a
 ## What each row shows
 
 * **Avatar** — A colored circle showing the first letter of the user's name. Helps you identify users at a glance.
-* **User name** — The display name of the user. This is their identity in OpenLobster (mapped during the [pairing flow](../architecture/processing-messages.md)).
+* **User name** — The display name of the user. This is their identity in MyPal (mapped during the [pairing flow](../architecture/processing-messages.md)).
 * **Channel badge** — The platform: Telegram, Discord, WhatsApp, Slack, or SMS. The agent can connect users from different channels but treats them as one user across all channels.
 * **Status badge** — Either **Active** (user sent a message recently) or **Idle** (no messages for a while). This is real-time, updated as messages arrive.
 

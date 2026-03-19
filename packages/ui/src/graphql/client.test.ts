@@ -1,4 +1,4 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
 
 import { describe, it, expect } from 'vitest';
 import { createGraphqlClient } from './client';

@@ -1,4 +1,4 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
 
 /**
  * Theme store: persisted theme (light/dark) with system fallback.
@@ -11,7 +11,7 @@
 
 import { createSignal, createMemo } from "solid-js";
 
-const THEME_KEY = "openlobster_theme";
+const THEME_KEY = "mypal_theme";
 
 export type Theme = "light" | "dark";
 

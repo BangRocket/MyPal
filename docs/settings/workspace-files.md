@@ -33,7 +33,7 @@ During **step 6** of the [message processing pipeline](../architecture/processin
 ```markdown
 # Identity
 
-I am OpenLobster, a personal AI assistant.
+I am MyPal, a personal AI assistant.
 I help with tasks across multiple channels (Telegram, Discord, etc.).
 I maintain context across conversations and remember what users tell me.
 ```

@@ -1,4 +1,4 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
 
 // Package loopback provides a no-op MessagingPort implementation for the
 // virtual loopback channel used by the Scheduler.

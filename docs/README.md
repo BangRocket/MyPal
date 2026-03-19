@@ -1,17 +1,17 @@
 ---
-description: Welcome to the OpenLobster user guide. Learn how to operate your AI agent from the web interface.
+description: Welcome to the MyPal user guide. Learn how to operate your AI agent from the web interface.
 icon: book-open
 ---
 
-# OpenLobster User Guide
+# MyPal User Guide
 
-OpenLobster is an open-source AI agent platform that connects to your users through messaging channels like Telegram, Discord, WhatsApp, Slack, and SMS. This guide covers the web interface — the tool operators use to monitor activity, manage conversations, configure the agent, and extend its capabilities.
+MyPal is an open-source AI agent platform that connects to your users through messaging channels like Telegram, Discord, WhatsApp, Slack, and SMS. This guide covers the web interface — the tool operators use to monitor activity, manage conversations, configure the agent, and extend its capabilities.
 
 {% hint style="info" %}
 This guide is for end users and operators who interact with the agent through the UI. For installation and developer documentation, refer to the project repository.
 {% endhint %}
 
-## What you can do with OpenLobster
+## What you can do with MyPal
 
 <table data-view="cards">
   <thead>
@@ -62,13 +62,13 @@ This guide is for end users and operators who interact with the agent through th
 
 ## How the agent connects to your users
 
-OpenLobster acts as a backend that sits between your users and an AI model. Users send messages through their preferred platform — Telegram, Discord, WhatsApp, Slack, or SMS — and the agent processes those messages, optionally calling tools, and replies back through the same channel.
+MyPal acts as a backend that sits between your users and an AI model. Users send messages through their preferred platform — Telegram, Discord, WhatsApp, Slack, or SMS — and the agent processes those messages, optionally calling tools, and replies back through the same channel.
 
 The web interface gives you visibility and control over all of this activity without requiring any coding.
 
 ## First time setup
 
-If you are opening OpenLobster for the first time, the setup wizard will guide you through the essential configuration steps.
+If you are opening MyPal for the first time, the setup wizard will guide you through the essential configuration steps.
 
 {% stepper %}
 {% step %}

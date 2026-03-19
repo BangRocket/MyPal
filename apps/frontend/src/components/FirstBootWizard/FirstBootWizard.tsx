@@ -1,4 +1,4 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
 
 import type { Component } from "solid-js";
 import {
@@ -13,12 +13,12 @@ import {
 import { createMutation, useQueryClient } from "@tanstack/solid-query";
 import { t } from "../../App";
 import { getStoredToken, setNeedsAuth } from "../../stores/authStore";
-import { CONFIG_QUERY } from "@openlobster/ui/graphql/queries";
+import { CONFIG_QUERY } from "@mypal/ui/graphql/queries";
 import {
   CONNECT_MCP_MUTATION,
   INITIATE_OAUTH_MUTATION,
-} from "@openlobster/ui/graphql/mutations";
-import { UPDATE_CONFIG_MUTATION } from "@openlobster/ui/graphql/mutations";
+} from "@mypal/ui/graphql/mutations";
+import { UPDATE_CONFIG_MUTATION } from "@mypal/ui/graphql/mutations";
 import { GRAPHQL_ENDPOINT } from "../../graphql/client";
 import { client } from "../../graphql/client";
 import { Input } from "../Input/Input";
@@ -65,7 +65,7 @@ function graphqlHeaders(): Record<string, string> {
 
 function getDefaultFormValues(): Record<string, unknown> {
   return {
-    agentName: "OpenLobster",
+    agentName: "MyPal",
     provider: "ollama",
     model: "llama3.2:latest",
     apiKey: "",
@@ -128,7 +128,7 @@ const CAPABILITIES = [
   { key: "sessions", icon: "forum" },
 ] as const;
 
-const WIZARD_STORAGE_KEY = "openlobster_wizard_completed";
+const WIZARD_STORAGE_KEY = "mypal_wizard_completed";
 
 export function isFirstBoot(): boolean {
   if (typeof window === "undefined") return false;
@@ -276,7 +276,7 @@ const FirstBootWizard: Component<FirstBootWizardProps> = (props) => {
       if (config) {
         setFormValues({
           ...getDefaultFormValues(),
-          agentName: config.agent?.name ?? "OpenLobster",
+          agentName: config.agent?.name ?? "MyPal",
           provider: config.agent?.provider ?? "ollama",
           model: config.agent?.model ?? "llama3.2:latest",
           apiKey: config.agent?.apiKey ?? "",
@@ -459,7 +459,7 @@ const FirstBootWizard: Component<FirstBootWizardProps> = (props) => {
                     type="text"
                     value={(formValues().agentName as string) ?? ""}
                     onInput={(e) => handleFieldChange("agentName", e.currentTarget.value)}
-                    placeholder="OpenLobster"
+                    placeholder="MyPal"
                   />
                   <Input
                     label={t("settings.field.graphqlBaseUrl")}
@@ -467,7 +467,7 @@ const FirstBootWizard: Component<FirstBootWizardProps> = (props) => {
                     type="text"
                     value={(formValues().graphqlBaseUrl as string) ?? ""}
                     onInput={(e) => handleFieldChange("graphqlBaseUrl", e.currentTarget.value)}
-                    placeholder="https://openlobster.example.com"
+                    placeholder="https://mypal.example.com"
                   />
                 </div>
               </div>

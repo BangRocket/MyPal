@@ -1,4 +1,4 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
  
 
 import { test, expect } from '@playwright/test';
@@ -25,7 +25,7 @@ test.describe('Frontend Navigation', () => {
   });
 
   test('loads app successfully', async ({ page }) => {
-    await expect(page).toHaveTitle(/OpenLobster/i);
+    await expect(page).toHaveTitle(/MyPal/i);
   });
 
   test('loads with valid HTML structure', async ({ page }) => {
@@ -77,7 +77,7 @@ test.describe('Page Load Performance', () => {
   test('page title is set correctly', async ({ page }) => {
     await page.goto('/');
     const title = await page.title();
-    expect(title).toContain('OpenLobster');
+    expect(title).toContain('MyPal');
   });
 
   test('page is interactive quickly', async ({ page }) => {

@@ -1,4 +1,4 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
 
 // Package models contains domain-level persistence models.
 // GORM acts as the port adapter; the struct definitions therefore belong in

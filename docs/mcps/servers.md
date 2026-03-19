@@ -65,4 +65,4 @@ If tools from a server do not appear as expected:
 
 1. Check the status indicator — if it shows **Offline** or **Degraded**, the server is not reachable.
 2. Open the [Recent Logs](../dashboard/logs.md) panel and look for errors mentioning the server name.
-3. Verify that the server URL is correct and accessible from the network where OpenLobster is running.
+3. Verify that the server URL is correct and accessible from the network where MyPal is running.

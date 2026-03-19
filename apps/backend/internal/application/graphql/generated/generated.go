@@ -3269,7 +3269,7 @@ type GraphQLConfig {
   enabled:  Boolean
   port:     Int
   host:     String
-  baseUrl:  String  # Public URL of the server (e.g. https://openlobster.example.com). Used for OAuth and callbacks.
+  baseUrl:  String  # Public URL of the server (e.g. https://mypal.example.com). Used for OAuth and callbacks.
 }
 
 type LoggingConfig {
@@ -4210,7 +4210,7 @@ func (ec *executionContext) field_Mutation_toggleTask_args(ctx context.Context, 
 func (ec *executionContext) field_Mutation_updateConfig_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "input", ec.unmarshalNUpdateConfigInput2githubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐUpdateConfigInput)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "input", ec.unmarshalNUpdateConfigInput2githubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐUpdateConfigInput)
 	if err != nil {
 		return nil, err
 	}
@@ -4870,7 +4870,7 @@ func (ec *executionContext) _Agent_channels(ctx context.Context, field graphql.C
 			return obj.Channels, nil
 		},
 		nil,
-		ec.marshalNChannel2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐChannelᚄ,
+		ec.marshalNChannel2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐChannelᚄ,
 		true,
 		true,
 	)
@@ -5236,7 +5236,7 @@ func (ec *executionContext) _AppConfig_agent(ctx context.Context, field graphql.
 			return obj.Agent, nil
 		},
 		nil,
-		ec.marshalOAgentConfig2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐAgentConfig,
+		ec.marshalOAgentConfig2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐAgentConfig,
 		true,
 		false,
 	)
@@ -5289,7 +5289,7 @@ func (ec *executionContext) _AppConfig_capabilities(ctx context.Context, field g
 			return obj.Capabilities, nil
 		},
 		nil,
-		ec.marshalOCapabilitiesConfig2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐCapabilitiesConfig,
+		ec.marshalOCapabilitiesConfig2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐCapabilitiesConfig,
 		true,
 		false,
 	)
@@ -5334,7 +5334,7 @@ func (ec *executionContext) _AppConfig_database(ctx context.Context, field graph
 			return obj.Database, nil
 		},
 		nil,
-		ec.marshalODatabaseConfig2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐDatabaseConfig,
+		ec.marshalODatabaseConfig2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐDatabaseConfig,
 		true,
 		false,
 	)
@@ -5373,7 +5373,7 @@ func (ec *executionContext) _AppConfig_memory(ctx context.Context, field graphql
 			return obj.Memory, nil
 		},
 		nil,
-		ec.marshalOMemoryConfig2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMemoryConfig,
+		ec.marshalOMemoryConfig2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMemoryConfig,
 		true,
 		false,
 	)
@@ -5410,7 +5410,7 @@ func (ec *executionContext) _AppConfig_subagents(ctx context.Context, field grap
 			return obj.Subagents, nil
 		},
 		nil,
-		ec.marshalOSubagentsConfig2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSubagentsConfig,
+		ec.marshalOSubagentsConfig2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSubagentsConfig,
 		true,
 		false,
 	)
@@ -5445,7 +5445,7 @@ func (ec *executionContext) _AppConfig_graphql(ctx context.Context, field graphq
 			return obj.Graphql, nil
 		},
 		nil,
-		ec.marshalOGraphQLConfig2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐGraphQLConfig,
+		ec.marshalOGraphQLConfig2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐGraphQLConfig,
 		true,
 		false,
 	)
@@ -5484,7 +5484,7 @@ func (ec *executionContext) _AppConfig_logging(ctx context.Context, field graphq
 			return obj.Logging, nil
 		},
 		nil,
-		ec.marshalOLoggingConfig2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐLoggingConfig,
+		ec.marshalOLoggingConfig2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐLoggingConfig,
 		true,
 		false,
 	)
@@ -5519,7 +5519,7 @@ func (ec *executionContext) _AppConfig_secrets(ctx context.Context, field graphq
 			return obj.Secrets, nil
 		},
 		nil,
-		ec.marshalOSecretsConfig2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSecretsConfig,
+		ec.marshalOSecretsConfig2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSecretsConfig,
 		true,
 		false,
 	)
@@ -5556,7 +5556,7 @@ func (ec *executionContext) _AppConfig_scheduler(ctx context.Context, field grap
 			return obj.Scheduler, nil
 		},
 		nil,
-		ec.marshalOSchedulerConfig2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSchedulerConfig,
+		ec.marshalOSchedulerConfig2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSchedulerConfig,
 		true,
 		false,
 	)
@@ -5593,7 +5593,7 @@ func (ec *executionContext) _AppConfig_activeSessions(ctx context.Context, field
 			return obj.ActiveSessions, nil
 		},
 		nil,
-		ec.marshalNActiveSession2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐActiveSessionᚄ,
+		ec.marshalNActiveSession2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐActiveSessionᚄ,
 		true,
 		true,
 	)
@@ -5634,7 +5634,7 @@ func (ec *executionContext) _AppConfig_channels(ctx context.Context, field graph
 			return obj.Channels, nil
 		},
 		nil,
-		ec.marshalNChannelConfig2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐChannelConfigᚄ,
+		ec.marshalNChannelConfig2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐChannelConfigᚄ,
 		true,
 		true,
 	)
@@ -5671,7 +5671,7 @@ func (ec *executionContext) _AppConfig_channelSecrets(ctx context.Context, field
 			return obj.ChannelSecrets, nil
 		},
 		nil,
-		ec.marshalOChannelSecretsConfig2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐChannelSecretsConfig,
+		ec.marshalOChannelSecretsConfig2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐChannelSecretsConfig,
 		true,
 		false,
 	)
@@ -5788,7 +5788,7 @@ func (ec *executionContext) _ApprovePairingResult_pairing(ctx context.Context, f
 			return obj.Pairing, nil
 		},
 		nil,
-		ec.marshalOPairingInfo2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐPairingInfo,
+		ec.marshalOPairingInfo2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐPairingInfo,
 		true,
 		false,
 	)
@@ -6258,7 +6258,7 @@ func (ec *executionContext) _Channel_capabilities(ctx context.Context, field gra
 			return obj.Capabilities, nil
 		},
 		nil,
-		ec.marshalOChannelCapabilities2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐChannelCapabilities,
+		ec.marshalOChannelCapabilities2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐChannelCapabilities,
 		true,
 		false,
 	)
@@ -8298,7 +8298,7 @@ func (ec *executionContext) _MCP_tools(ctx context.Context, field graphql.Collec
 			return obj.Tools, nil
 		},
 		nil,
-		ec.marshalNTool2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐToolᚄ,
+		ec.marshalNTool2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐToolᚄ,
 		true,
 		true,
 	)
@@ -9031,7 +9031,7 @@ func (ec *executionContext) _MemoryConfig_neo4j(ctx context.Context, field graph
 			return obj.Neo4j, nil
 		},
 		nil,
-		ec.marshalONeo4jConfig2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐNeo4jConfig,
+		ec.marshalONeo4jConfig2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐNeo4jConfig,
 		true,
 		false,
 	)
@@ -9184,7 +9184,7 @@ func (ec *executionContext) _MemoryGraph_nodes(ctx context.Context, field graphq
 			return obj.Nodes, nil
 		},
 		nil,
-		ec.marshalNMemoryNode2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMemoryNodeᚄ,
+		ec.marshalNMemoryNode2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMemoryNodeᚄ,
 		true,
 		true,
 	)
@@ -9227,7 +9227,7 @@ func (ec *executionContext) _MemoryGraph_edges(ctx context.Context, field graphq
 			return obj.Edges, nil
 		},
 		nil,
-		ec.marshalNMemoryEdge2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMemoryEdgeᚄ,
+		ec.marshalNMemoryEdge2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMemoryEdgeᚄ,
 		true,
 		true,
 	)
@@ -9585,7 +9585,7 @@ func (ec *executionContext) _Message_attachments(ctx context.Context, field grap
 			return obj.Attachments, nil
 		},
 		nil,
-		ec.marshalOMessageAttachment2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMessageAttachmentᚄ,
+		ec.marshalOMessageAttachment2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMessageAttachmentᚄ,
 		true,
 		false,
 	)
@@ -10263,7 +10263,7 @@ func (ec *executionContext) _Mutation_spawnSubAgent(ctx context.Context, field g
 			return ec.Resolvers.Mutation().SpawnSubAgent(ctx, fc.Args["name"].(string), fc.Args["model"].(string), fc.Args["task"].(*string))
 		},
 		nil,
-		ec.marshalNSpawnSubAgentResult2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSpawnSubAgentResult,
+		ec.marshalNSpawnSubAgentResult2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSpawnSubAgentResult,
 		true,
 		true,
 	)
@@ -10312,7 +10312,7 @@ func (ec *executionContext) _Mutation_killSubAgent(ctx context.Context, field gr
 			return ec.Resolvers.Mutation().KillSubAgent(ctx, fc.Args["id"].(string))
 		},
 		nil,
-		ec.marshalNKillSubAgentResult2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐKillSubAgentResult,
+		ec.marshalNKillSubAgentResult2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐKillSubAgentResult,
 		true,
 		true,
 	)
@@ -10359,7 +10359,7 @@ func (ec *executionContext) _Mutation_updateConfig(ctx context.Context, field gr
 			return ec.Resolvers.Mutation().UpdateConfig(ctx, fc.Args["input"].(UpdateConfigInput))
 		},
 		nil,
-		ec.marshalNUpdateConfigResult2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐUpdateConfigResult,
+		ec.marshalNUpdateConfigResult2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐUpdateConfigResult,
 		true,
 		true,
 	)
@@ -10410,7 +10410,7 @@ func (ec *executionContext) _Mutation_deleteUser(ctx context.Context, field grap
 			return ec.Resolvers.Mutation().DeleteUser(ctx, fc.Args["conversationId"].(string))
 		},
 		nil,
-		ec.marshalNMutationResult2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMutationResult,
+		ec.marshalNMutationResult2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMutationResult,
 		true,
 		true,
 	)
@@ -10457,7 +10457,7 @@ func (ec *executionContext) _Mutation_sendMessage(ctx context.Context, field gra
 			return ec.Resolvers.Mutation().SendMessage(ctx, fc.Args["conversationId"].(*string), fc.Args["channelId"].(*string), fc.Args["content"].(string))
 		},
 		nil,
-		ec.marshalNMessageSentResult2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMessageSentResult,
+		ec.marshalNMessageSentResult2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMessageSentResult,
 		true,
 		true,
 	)
@@ -10514,7 +10514,7 @@ func (ec *executionContext) _Mutation_addMemory(ctx context.Context, field graph
 			return ec.Resolvers.Mutation().AddMemory(ctx, fc.Args["content"].(string))
 		},
 		nil,
-		ec.marshalNMutationResult2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMutationResult,
+		ec.marshalNMutationResult2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMutationResult,
 		true,
 		true,
 	)
@@ -10561,7 +10561,7 @@ func (ec *executionContext) _Mutation_addMemoryNode(ctx context.Context, field g
 			return ec.Resolvers.Mutation().AddMemoryNode(ctx, fc.Args["label"].(string), fc.Args["type"].(string), fc.Args["value"].(string))
 		},
 		nil,
-		ec.marshalNMemoryNode2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMemoryNode,
+		ec.marshalNMemoryNode2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMemoryNode,
 		true,
 		true,
 	)
@@ -10616,7 +10616,7 @@ func (ec *executionContext) _Mutation_updateMemoryNode(ctx context.Context, fiel
 			return ec.Resolvers.Mutation().UpdateMemoryNode(ctx, fc.Args["id"].(string), fc.Args["label"].(*string), fc.Args["type"].(*string), fc.Args["value"].(*string), fc.Args["properties"].(*string))
 		},
 		nil,
-		ec.marshalNMemoryNode2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMemoryNode,
+		ec.marshalNMemoryNode2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMemoryNode,
 		true,
 		true,
 	)
@@ -10712,7 +10712,7 @@ func (ec *executionContext) _Mutation_addRelation(ctx context.Context, field gra
 			return ec.Resolvers.Mutation().AddRelation(ctx, fc.Args["from"].(string), fc.Args["to"].(string), fc.Args["relationType"].(string))
 		},
 		nil,
-		ec.marshalNAddRelationResult2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐAddRelationResult,
+		ec.marshalNAddRelationResult2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐAddRelationResult,
 		true,
 		true,
 	)
@@ -10759,7 +10759,7 @@ func (ec *executionContext) _Mutation_executeCypher(ctx context.Context, field g
 			return ec.Resolvers.Mutation().ExecuteCypher(ctx, fc.Args["cypher"].(string))
 		},
 		nil,
-		ec.marshalNCypherResult2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐCypherResult,
+		ec.marshalNCypherResult2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐCypherResult,
 		true,
 		true,
 	)
@@ -10808,7 +10808,7 @@ func (ec *executionContext) _Mutation_connectMcp(ctx context.Context, field grap
 			return ec.Resolvers.Mutation().ConnectMcp(ctx, fc.Args["name"].(string), fc.Args["transport"].(string), fc.Args["url"].(string), fc.Args["clientId"].(*string))
 		},
 		nil,
-		ec.marshalNMCPConnectResult2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMCPConnectResult,
+		ec.marshalNMCPConnectResult2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMCPConnectResult,
 		true,
 		true,
 	)
@@ -10908,7 +10908,7 @@ func (ec *executionContext) _Mutation_initiateOAuth(ctx context.Context, field g
 			return ec.Resolvers.Mutation().InitiateOAuth(ctx, fc.Args["name"].(string), fc.Args["url"].(string))
 		},
 		nil,
-		ec.marshalNOAuthInitiateResult2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐOAuthInitiateResult,
+		ec.marshalNOAuthInitiateResult2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐOAuthInitiateResult,
 		true,
 		true,
 	)
@@ -10957,7 +10957,7 @@ func (ec *executionContext) _Mutation_addTask(ctx context.Context, field graphql
 			return ec.Resolvers.Mutation().AddTask(ctx, fc.Args["prompt"].(string), fc.Args["schedule"].(*string))
 		},
 		nil,
-		ec.marshalNTask2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐTask,
+		ec.marshalNTask2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐTask,
 		true,
 		true,
 	)
@@ -11102,7 +11102,7 @@ func (ec *executionContext) _Mutation_updateTask(ctx context.Context, field grap
 			return ec.Resolvers.Mutation().UpdateTask(ctx, fc.Args["id"].(string), fc.Args["prompt"].(string), fc.Args["schedule"].(*string))
 		},
 		nil,
-		ec.marshalOTask2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐTask,
+		ec.marshalOTask2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐTask,
 		true,
 		false,
 	)
@@ -11165,7 +11165,7 @@ func (ec *executionContext) _Mutation_toggleTask(ctx context.Context, field grap
 			return ec.Resolvers.Mutation().ToggleTask(ctx, fc.Args["id"].(string), fc.Args["enabled"].(bool))
 		},
 		nil,
-		ec.marshalNToggleTaskResult2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐToggleTaskResult,
+		ec.marshalNToggleTaskResult2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐToggleTaskResult,
 		true,
 		true,
 	)
@@ -11339,7 +11339,7 @@ func (ec *executionContext) _Mutation_importSkill(ctx context.Context, field gra
 			return ec.Resolvers.Mutation().ImportSkill(ctx, fc.Args["data"].(string))
 		},
 		nil,
-		ec.marshalNImportSkillResult2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐImportSkillResult,
+		ec.marshalNImportSkillResult2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐImportSkillResult,
 		true,
 		true,
 	)
@@ -11386,7 +11386,7 @@ func (ec *executionContext) _Mutation_writeSystemFile(ctx context.Context, field
 			return ec.Resolvers.Mutation().WriteSystemFile(ctx, fc.Args["name"].(string), fc.Args["content"].(string))
 		},
 		nil,
-		ec.marshalNMutationResult2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMutationResult,
+		ec.marshalNMutationResult2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMutationResult,
 		true,
 		true,
 	)
@@ -11433,7 +11433,7 @@ func (ec *executionContext) _Mutation_setToolPermission(ctx context.Context, fie
 			return ec.Resolvers.Mutation().SetToolPermission(ctx, fc.Args["userId"].(string), fc.Args["toolName"].(string), fc.Args["mode"].(string))
 		},
 		nil,
-		ec.marshalNMutationResult2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMutationResult,
+		ec.marshalNMutationResult2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMutationResult,
 		true,
 		true,
 	)
@@ -11480,7 +11480,7 @@ func (ec *executionContext) _Mutation_deleteToolPermission(ctx context.Context, 
 			return ec.Resolvers.Mutation().DeleteToolPermission(ctx, fc.Args["userId"].(string), fc.Args["toolName"].(string))
 		},
 		nil,
-		ec.marshalNMutationResult2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMutationResult,
+		ec.marshalNMutationResult2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMutationResult,
 		true,
 		true,
 	)
@@ -11527,7 +11527,7 @@ func (ec *executionContext) _Mutation_setAllToolPermissions(ctx context.Context,
 			return ec.Resolvers.Mutation().SetAllToolPermissions(ctx, fc.Args["userId"].(string), fc.Args["mode"].(string))
 		},
 		nil,
-		ec.marshalNMutationResult2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMutationResult,
+		ec.marshalNMutationResult2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMutationResult,
 		true,
 		true,
 	)
@@ -11574,7 +11574,7 @@ func (ec *executionContext) _Mutation_approvePairing(ctx context.Context, field 
 			return ec.Resolvers.Mutation().ApprovePairing(ctx, fc.Args["code"].(string), fc.Args["userID"].(*string), fc.Args["displayName"].(*string))
 		},
 		nil,
-		ec.marshalNApprovePairingResult2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐApprovePairingResult,
+		ec.marshalNApprovePairingResult2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐApprovePairingResult,
 		true,
 		true,
 	)
@@ -11623,7 +11623,7 @@ func (ec *executionContext) _Mutation_denyPairing(ctx context.Context, field gra
 			return ec.Resolvers.Mutation().DenyPairing(ctx, fc.Args["code"].(string), fc.Args["reason"].(*string))
 		},
 		nil,
-		ec.marshalNDenyPairingResult2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐDenyPairingResult,
+		ec.marshalNDenyPairingResult2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐDenyPairingResult,
 		true,
 		true,
 	)
@@ -12224,7 +12224,7 @@ func (ec *executionContext) _Query_agent(ctx context.Context, field graphql.Coll
 			return ec.Resolvers.Query().Agent(ctx)
 		},
 		nil,
-		ec.marshalOAgent2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐAgent,
+		ec.marshalOAgent2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐAgent,
 		true,
 		false,
 	)
@@ -12273,7 +12273,7 @@ func (ec *executionContext) _Query_channels(ctx context.Context, field graphql.C
 			return ec.Resolvers.Query().Channels(ctx)
 		},
 		nil,
-		ec.marshalNChannel2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐChannelᚄ,
+		ec.marshalNChannel2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐChannelᚄ,
 		true,
 		true,
 	)
@@ -12320,7 +12320,7 @@ func (ec *executionContext) _Query_heartbeat(ctx context.Context, field graphql.
 			return ec.Resolvers.Query().Heartbeat(ctx)
 		},
 		nil,
-		ec.marshalOHeartbeat2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐHeartbeat,
+		ec.marshalOHeartbeat2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐHeartbeat,
 		true,
 		false,
 	)
@@ -12355,7 +12355,7 @@ func (ec *executionContext) _Query_tools(ctx context.Context, field graphql.Coll
 			return ec.Resolvers.Query().Tools(ctx)
 		},
 		nil,
-		ec.marshalNTool2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐToolᚄ,
+		ec.marshalNTool2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐToolᚄ,
 		true,
 		true,
 	)
@@ -12392,7 +12392,7 @@ func (ec *executionContext) _Query_subAgents(ctx context.Context, field graphql.
 			return ec.Resolvers.Query().SubAgents(ctx)
 		},
 		nil,
-		ec.marshalNSubAgent2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSubAgentᚄ,
+		ec.marshalNSubAgent2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSubAgentᚄ,
 		true,
 		true,
 	)
@@ -12431,7 +12431,7 @@ func (ec *executionContext) _Query_status(ctx context.Context, field graphql.Col
 			return ec.Resolvers.Query().Status(ctx)
 		},
 		nil,
-		ec.marshalOStatus2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐStatus,
+		ec.marshalOStatus2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐStatus,
 		true,
 		false,
 	)
@@ -12476,7 +12476,7 @@ func (ec *executionContext) _Query_metrics(ctx context.Context, field graphql.Co
 			return ec.Resolvers.Query().Metrics(ctx)
 		},
 		nil,
-		ec.marshalOMetrics2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMetrics,
+		ec.marshalOMetrics2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMetrics,
 		true,
 		false,
 	)
@@ -12529,7 +12529,7 @@ func (ec *executionContext) _Query_config(ctx context.Context, field graphql.Col
 			return ec.Resolvers.Query().Config(ctx)
 		},
 		nil,
-		ec.marshalOAppConfig2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐAppConfig,
+		ec.marshalOAppConfig2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐAppConfig,
 		true,
 		false,
 	)
@@ -12586,7 +12586,7 @@ func (ec *executionContext) _Query_conversations(ctx context.Context, field grap
 			return ec.Resolvers.Query().Conversations(ctx)
 		},
 		nil,
-		ec.marshalNConversation2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐConversationᚄ,
+		ec.marshalNConversation2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐConversationᚄ,
 		true,
 		true,
 	)
@@ -12636,7 +12636,7 @@ func (ec *executionContext) _Query_messages(ctx context.Context, field graphql.C
 			return ec.Resolvers.Query().Messages(ctx, fc.Args["conversationId"].(string), fc.Args["before"].(*string), fc.Args["limit"].(*int))
 		},
 		nil,
-		ec.marshalNMessage2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMessageᚄ,
+		ec.marshalNMessage2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMessageᚄ,
 		true,
 		true,
 	)
@@ -12691,7 +12691,7 @@ func (ec *executionContext) _Query_searchMemory(ctx context.Context, field graph
 			return ec.Resolvers.Query().SearchMemory(ctx, fc.Args["query"].(string))
 		},
 		nil,
-		ec.marshalOSearchMemoryResult2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSearchMemoryResult,
+		ec.marshalOSearchMemoryResult2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSearchMemoryResult,
 		true,
 		false,
 	)
@@ -12740,7 +12740,7 @@ func (ec *executionContext) _Query_userGraph(ctx context.Context, field graphql.
 			return ec.Resolvers.Query().UserGraph(ctx, fc.Args["userId"].(*string))
 		},
 		nil,
-		ec.marshalOUserGraphResult2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐUserGraphResult,
+		ec.marshalOUserGraphResult2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐUserGraphResult,
 		true,
 		false,
 	)
@@ -12790,7 +12790,7 @@ func (ec *executionContext) _Query_memory(ctx context.Context, field graphql.Col
 			return ec.Resolvers.Query().Memory(ctx)
 		},
 		nil,
-		ec.marshalOMemoryGraph2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMemoryGraph,
+		ec.marshalOMemoryGraph2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMemoryGraph,
 		true,
 		false,
 	)
@@ -12825,7 +12825,7 @@ func (ec *executionContext) _Query_mcps(ctx context.Context, field graphql.Colle
 			return ec.Resolvers.Query().Mcps(ctx)
 		},
 		nil,
-		ec.marshalNMCP2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMcpᚄ,
+		ec.marshalNMCP2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMcpᚄ,
 		true,
 		true,
 	)
@@ -12866,7 +12866,7 @@ func (ec *executionContext) _Query_mcpServers(ctx context.Context, field graphql
 			return ec.Resolvers.Query().McpServers(ctx)
 		},
 		nil,
-		ec.marshalNMCPServer2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMCPServerᚄ,
+		ec.marshalNMCPServer2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMCPServerᚄ,
 		true,
 		true,
 	)
@@ -12909,7 +12909,7 @@ func (ec *executionContext) _Query_mcpTools(ctx context.Context, field graphql.C
 			return ec.Resolvers.Query().McpTools(ctx)
 		},
 		nil,
-		ec.marshalNMCPTool2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMCPToolᚄ,
+		ec.marshalNMCPTool2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMCPToolᚄ,
 		true,
 		true,
 	)
@@ -12947,7 +12947,7 @@ func (ec *executionContext) _Query_mcpOAuthStatus(ctx context.Context, field gra
 			return ec.Resolvers.Query().McpOAuthStatus(ctx, fc.Args["name"].(string))
 		},
 		nil,
-		ec.marshalOMCPOAuthStatus2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMCPOAuthStatus,
+		ec.marshalOMCPOAuthStatus2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMCPOAuthStatus,
 		true,
 		false,
 	)
@@ -12993,7 +12993,7 @@ func (ec *executionContext) _Query_tasks(ctx context.Context, field graphql.Coll
 			return ec.Resolvers.Query().Tasks(ctx)
 		},
 		nil,
-		ec.marshalNTask2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐTaskᚄ,
+		ec.marshalNTask2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐTaskᚄ,
 		true,
 		true,
 	)
@@ -13044,7 +13044,7 @@ func (ec *executionContext) _Query_skills(ctx context.Context, field graphql.Col
 			return ec.Resolvers.Query().Skills(ctx)
 		},
 		nil,
-		ec.marshalNSkill2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSkillᚄ,
+		ec.marshalNSkill2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSkillᚄ,
 		true,
 		true,
 	)
@@ -13083,7 +13083,7 @@ func (ec *executionContext) _Query_systemFiles(ctx context.Context, field graphq
 			return ec.Resolvers.Query().SystemFiles(ctx)
 		},
 		nil,
-		ec.marshalNSystemFile2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSystemFileᚄ,
+		ec.marshalNSystemFile2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSystemFileᚄ,
 		true,
 		true,
 	)
@@ -13123,7 +13123,7 @@ func (ec *executionContext) _Query_toolPermissions(ctx context.Context, field gr
 			return ec.Resolvers.Query().ToolPermissions(ctx, fc.Args["userId"].(string))
 		},
 		nil,
-		ec.marshalNToolPermission2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐToolPermissionᚄ,
+		ec.marshalNToolPermission2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐToolPermissionᚄ,
 		true,
 		true,
 	)
@@ -13169,7 +13169,7 @@ func (ec *executionContext) _Query_mcpUsers(ctx context.Context, field graphql.C
 			return ec.Resolvers.Query().McpUsers(ctx)
 		},
 		nil,
-		ec.marshalNMCPUser2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMCPUserᚄ,
+		ec.marshalNMCPUser2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMCPUserᚄ,
 		true,
 		true,
 	)
@@ -13206,7 +13206,7 @@ func (ec *executionContext) _Query_pendingPairings(ctx context.Context, field gr
 			return ec.Resolvers.Query().PendingPairings(ctx)
 		},
 		nil,
-		ec.marshalNPendingPairing2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐPendingPairingᚄ,
+		ec.marshalNPendingPairing2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐPendingPairingᚄ,
 		true,
 		true,
 	)
@@ -13251,7 +13251,7 @@ func (ec *executionContext) _Query_users(ctx context.Context, field graphql.Coll
 			return ec.Resolvers.Query().Users(ctx)
 		},
 		nil,
-		ec.marshalNUser2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐUserᚄ,
+		ec.marshalNUser2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐUserᚄ,
 		true,
 		true,
 	)
@@ -13599,7 +13599,7 @@ func (ec *executionContext) _SecretsConfig_file(ctx context.Context, field graph
 			return obj.File, nil
 		},
 		nil,
-		ec.marshalOFileSecretsConfig2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐFileSecretsConfig,
+		ec.marshalOFileSecretsConfig2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐFileSecretsConfig,
 		true,
 		false,
 	)
@@ -13632,7 +13632,7 @@ func (ec *executionContext) _SecretsConfig_openbao(ctx context.Context, field gr
 			return obj.Openbao, nil
 		},
 		nil,
-		ec.marshalOOpenbaoSecretsConfig2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐOpenbaoSecretsConfig,
+		ec.marshalOOpenbaoSecretsConfig2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐOpenbaoSecretsConfig,
 		true,
 		false,
 	)
@@ -13870,7 +13870,7 @@ func (ec *executionContext) _Status_agent(ctx context.Context, field graphql.Col
 			return obj.Agent, nil
 		},
 		nil,
-		ec.marshalOAgent2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐAgent,
+		ec.marshalOAgent2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐAgent,
 		true,
 		false,
 	)
@@ -13919,7 +13919,7 @@ func (ec *executionContext) _Status_health(ctx context.Context, field graphql.Co
 			return obj.Health, nil
 		},
 		nil,
-		ec.marshalOHeartbeat2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐHeartbeat,
+		ec.marshalOHeartbeat2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐHeartbeat,
 		true,
 		false,
 	)
@@ -13954,7 +13954,7 @@ func (ec *executionContext) _Status_channels(ctx context.Context, field graphql.
 			return obj.Channels, nil
 		},
 		nil,
-		ec.marshalNChannel2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐChannelᚄ,
+		ec.marshalNChannel2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐChannelᚄ,
 		true,
 		true,
 	)
@@ -14001,7 +14001,7 @@ func (ec *executionContext) _Status_tools(ctx context.Context, field graphql.Col
 			return obj.Tools, nil
 		},
 		nil,
-		ec.marshalNTool2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐToolᚄ,
+		ec.marshalNTool2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐToolᚄ,
 		true,
 		true,
 	)
@@ -14038,7 +14038,7 @@ func (ec *executionContext) _Status_subAgents(ctx context.Context, field graphql
 			return obj.SubAgents, nil
 		},
 		nil,
-		ec.marshalNSubAgent2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSubAgentᚄ,
+		ec.marshalNSubAgent2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSubAgentᚄ,
 		true,
 		true,
 	)
@@ -14077,7 +14077,7 @@ func (ec *executionContext) _Status_tasks(ctx context.Context, field graphql.Col
 			return obj.Tasks, nil
 		},
 		nil,
-		ec.marshalNTask2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐTaskᚄ,
+		ec.marshalNTask2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐTaskᚄ,
 		true,
 		true,
 	)
@@ -14128,7 +14128,7 @@ func (ec *executionContext) _Status_mcps(ctx context.Context, field graphql.Coll
 			return obj.Mcps, nil
 		},
 		nil,
-		ec.marshalNMCP2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMcpᚄ,
+		ec.marshalNMCP2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMcpᚄ,
 		true,
 		true,
 	)
@@ -14344,7 +14344,7 @@ func (ec *executionContext) _Subscription_events(ctx context.Context, field grap
 			return ec.Resolvers.Subscription().Events(ctx, fc.Args["eventType"].(*string))
 		},
 		nil,
-		ec.marshalOEventPayload2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEventPayload,
+		ec.marshalOEventPayload2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEventPayload,
 		true,
 		false,
 	)
@@ -14392,7 +14392,7 @@ func (ec *executionContext) _Subscription_onMessageReceived(ctx context.Context,
 			return ec.Resolvers.Subscription().OnMessageReceived(ctx)
 		},
 		nil,
-		ec.marshalOEventPayload2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEventPayload,
+		ec.marshalOEventPayload2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEventPayload,
 		true,
 		false,
 	)
@@ -14429,7 +14429,7 @@ func (ec *executionContext) _Subscription_onMessageSent(ctx context.Context, fie
 			return ec.Resolvers.Subscription().OnMessageSent(ctx)
 		},
 		nil,
-		ec.marshalOEventPayload2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEventPayload,
+		ec.marshalOEventPayload2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEventPayload,
 		true,
 		false,
 	)
@@ -14466,7 +14466,7 @@ func (ec *executionContext) _Subscription_onMessageProcessed(ctx context.Context
 			return ec.Resolvers.Subscription().OnMessageProcessed(ctx)
 		},
 		nil,
-		ec.marshalOEventPayload2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEventPayload,
+		ec.marshalOEventPayload2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEventPayload,
 		true,
 		false,
 	)
@@ -14503,7 +14503,7 @@ func (ec *executionContext) _Subscription_onSessionStarted(ctx context.Context, 
 			return ec.Resolvers.Subscription().OnSessionStarted(ctx)
 		},
 		nil,
-		ec.marshalOEventPayload2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEventPayload,
+		ec.marshalOEventPayload2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEventPayload,
 		true,
 		false,
 	)
@@ -14540,7 +14540,7 @@ func (ec *executionContext) _Subscription_onSessionEnded(ctx context.Context, fi
 			return ec.Resolvers.Subscription().OnSessionEnded(ctx)
 		},
 		nil,
-		ec.marshalOEventPayload2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEventPayload,
+		ec.marshalOEventPayload2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEventPayload,
 		true,
 		false,
 	)
@@ -14577,7 +14577,7 @@ func (ec *executionContext) _Subscription_onUserPaired(ctx context.Context, fiel
 			return ec.Resolvers.Subscription().OnUserPaired(ctx)
 		},
 		nil,
-		ec.marshalOEventPayload2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEventPayload,
+		ec.marshalOEventPayload2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEventPayload,
 		true,
 		false,
 	)
@@ -14614,7 +14614,7 @@ func (ec *executionContext) _Subscription_onUserUnpaired(ctx context.Context, fi
 			return ec.Resolvers.Subscription().OnUserUnpaired(ctx)
 		},
 		nil,
-		ec.marshalOEventPayload2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEventPayload,
+		ec.marshalOEventPayload2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEventPayload,
 		true,
 		false,
 	)
@@ -14651,7 +14651,7 @@ func (ec *executionContext) _Subscription_onPairingRequested(ctx context.Context
 			return ec.Resolvers.Subscription().OnPairingRequested(ctx)
 		},
 		nil,
-		ec.marshalOEventPayload2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEventPayload,
+		ec.marshalOEventPayload2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEventPayload,
 		true,
 		false,
 	)
@@ -14688,7 +14688,7 @@ func (ec *executionContext) _Subscription_onPairingApproved(ctx context.Context,
 			return ec.Resolvers.Subscription().OnPairingApproved(ctx)
 		},
 		nil,
-		ec.marshalOEventPayload2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEventPayload,
+		ec.marshalOEventPayload2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEventPayload,
 		true,
 		false,
 	)
@@ -14725,7 +14725,7 @@ func (ec *executionContext) _Subscription_onPairingDenied(ctx context.Context, f
 			return ec.Resolvers.Subscription().OnPairingDenied(ctx)
 		},
 		nil,
-		ec.marshalOEventPayload2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEventPayload,
+		ec.marshalOEventPayload2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEventPayload,
 		true,
 		false,
 	)
@@ -14762,7 +14762,7 @@ func (ec *executionContext) _Subscription_onTaskAdded(ctx context.Context, field
 			return ec.Resolvers.Subscription().OnTaskAdded(ctx)
 		},
 		nil,
-		ec.marshalOEventPayload2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEventPayload,
+		ec.marshalOEventPayload2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEventPayload,
 		true,
 		false,
 	)
@@ -14799,7 +14799,7 @@ func (ec *executionContext) _Subscription_onTaskCompleted(ctx context.Context, f
 			return ec.Resolvers.Subscription().OnTaskCompleted(ctx)
 		},
 		nil,
-		ec.marshalOEventPayload2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEventPayload,
+		ec.marshalOEventPayload2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEventPayload,
 		true,
 		false,
 	)
@@ -14836,7 +14836,7 @@ func (ec *executionContext) _Subscription_onCronJobExecuted(ctx context.Context,
 			return ec.Resolvers.Subscription().OnCronJobExecuted(ctx)
 		},
 		nil,
-		ec.marshalOEventPayload2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEventPayload,
+		ec.marshalOEventPayload2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEventPayload,
 		true,
 		false,
 	)
@@ -14873,7 +14873,7 @@ func (ec *executionContext) _Subscription_onMCPServerConnected(ctx context.Conte
 			return ec.Resolvers.Subscription().OnMCPServerConnected(ctx)
 		},
 		nil,
-		ec.marshalOEventPayload2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEventPayload,
+		ec.marshalOEventPayload2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEventPayload,
 		true,
 		false,
 	)
@@ -14910,7 +14910,7 @@ func (ec *executionContext) _Subscription_onMCPServerDisconnected(ctx context.Co
 			return ec.Resolvers.Subscription().OnMCPServerDisconnected(ctx)
 		},
 		nil,
-		ec.marshalOEventPayload2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEventPayload,
+		ec.marshalOEventPayload2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEventPayload,
 		true,
 		false,
 	)
@@ -14947,7 +14947,7 @@ func (ec *executionContext) _Subscription_onMemoryUpdated(ctx context.Context, f
 			return ec.Resolvers.Subscription().OnMemoryUpdated(ctx)
 		},
 		nil,
-		ec.marshalOEventPayload2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEventPayload,
+		ec.marshalOEventPayload2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEventPayload,
 		true,
 		false,
 	)
@@ -14984,7 +14984,7 @@ func (ec *executionContext) _Subscription_onCompactionTriggered(ctx context.Cont
 			return ec.Resolvers.Subscription().OnCompactionTriggered(ctx)
 		},
 		nil,
-		ec.marshalOEventPayload2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEventPayload,
+		ec.marshalOEventPayload2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEventPayload,
 		true,
 		false,
 	)
@@ -15021,7 +15021,7 @@ func (ec *executionContext) _Subscription_onCompactionCompleted(ctx context.Cont
 			return ec.Resolvers.Subscription().OnCompactionCompleted(ctx)
 		},
 		nil,
-		ec.marshalOEventPayload2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEventPayload,
+		ec.marshalOEventPayload2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEventPayload,
 		true,
 		false,
 	)
@@ -15812,7 +15812,7 @@ func (ec *executionContext) _UpdateConfigResult_channels(ctx context.Context, fi
 			return obj.Channels, nil
 		},
 		nil,
-		ec.marshalOChannelConfig2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐChannelConfigᚄ,
+		ec.marshalOChannelConfig2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐChannelConfigᚄ,
 		true,
 		false,
 	)
@@ -15965,7 +15965,7 @@ func (ec *executionContext) _UserGraphResult_nodes(ctx context.Context, field gr
 			return obj.Nodes, nil
 		},
 		nil,
-		ec.marshalOGraphNode2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐGraphNodeᚄ,
+		ec.marshalOGraphNode2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐGraphNodeᚄ,
 		true,
 		false,
 	)
@@ -16006,7 +16006,7 @@ func (ec *executionContext) _UserGraphResult_edges(ctx context.Context, field gr
 			return obj.Edges, nil
 		},
 		nil,
-		ec.marshalOGraphEdge2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐGraphEdgeᚄ,
+		ec.marshalOGraphEdge2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐGraphEdgeᚄ,
 		true,
 		false,
 	)
@@ -17669,7 +17669,7 @@ func (ec *executionContext) unmarshalInputUpdateConfigInput(ctx context.Context,
 			it.DockerModelRunnerModel = data
 		case "capabilities":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("capabilities"))
-			data, err := ec.unmarshalOCapabilitiesInput2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐCapabilitiesInput(ctx, v)
+			data, err := ec.unmarshalOCapabilitiesInput2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐCapabilitiesInput(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -22028,11 +22028,11 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 
 // region    ***************************** type.gotpl *****************************
 
-func (ec *executionContext) marshalNActiveSession2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐActiveSessionᚄ(ctx context.Context, sel ast.SelectionSet, v []*ActiveSession) graphql.Marshaler {
+func (ec *executionContext) marshalNActiveSession2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐActiveSessionᚄ(ctx context.Context, sel ast.SelectionSet, v []*ActiveSession) graphql.Marshaler {
 	ret := graphql.MarshalSliceConcurrently(ctx, len(v), 0, false, func(ctx context.Context, i int) graphql.Marshaler {
 		fc := graphql.GetFieldContext(ctx)
 		fc.Result = &v[i]
-		return ec.marshalNActiveSession2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐActiveSession(ctx, sel, v[i])
+		return ec.marshalNActiveSession2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐActiveSession(ctx, sel, v[i])
 	})
 
 	for _, e := range ret {
@@ -22044,7 +22044,7 @@ func (ec *executionContext) marshalNActiveSession2ᚕᚖgithubᚗcomᚋneirthᚋ
 	return ret
 }
 
-func (ec *executionContext) marshalNActiveSession2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐActiveSession(ctx context.Context, sel ast.SelectionSet, v *ActiveSession) graphql.Marshaler {
+func (ec *executionContext) marshalNActiveSession2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐActiveSession(ctx context.Context, sel ast.SelectionSet, v *ActiveSession) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -22054,11 +22054,11 @@ func (ec *executionContext) marshalNActiveSession2ᚖgithubᚗcomᚋneirthᚋope
 	return ec._ActiveSession(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNAddRelationResult2githubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐAddRelationResult(ctx context.Context, sel ast.SelectionSet, v AddRelationResult) graphql.Marshaler {
+func (ec *executionContext) marshalNAddRelationResult2githubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐAddRelationResult(ctx context.Context, sel ast.SelectionSet, v AddRelationResult) graphql.Marshaler {
 	return ec._AddRelationResult(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNAddRelationResult2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐAddRelationResult(ctx context.Context, sel ast.SelectionSet, v *AddRelationResult) graphql.Marshaler {
+func (ec *executionContext) marshalNAddRelationResult2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐAddRelationResult(ctx context.Context, sel ast.SelectionSet, v *AddRelationResult) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -22068,11 +22068,11 @@ func (ec *executionContext) marshalNAddRelationResult2ᚖgithubᚗcomᚋneirth�
 	return ec._AddRelationResult(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNApprovePairingResult2githubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐApprovePairingResult(ctx context.Context, sel ast.SelectionSet, v ApprovePairingResult) graphql.Marshaler {
+func (ec *executionContext) marshalNApprovePairingResult2githubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐApprovePairingResult(ctx context.Context, sel ast.SelectionSet, v ApprovePairingResult) graphql.Marshaler {
 	return ec._ApprovePairingResult(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNApprovePairingResult2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐApprovePairingResult(ctx context.Context, sel ast.SelectionSet, v *ApprovePairingResult) graphql.Marshaler {
+func (ec *executionContext) marshalNApprovePairingResult2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐApprovePairingResult(ctx context.Context, sel ast.SelectionSet, v *ApprovePairingResult) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -22098,11 +22098,11 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
-func (ec *executionContext) marshalNChannel2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐChannelᚄ(ctx context.Context, sel ast.SelectionSet, v []*Channel) graphql.Marshaler {
+func (ec *executionContext) marshalNChannel2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐChannelᚄ(ctx context.Context, sel ast.SelectionSet, v []*Channel) graphql.Marshaler {
 	ret := graphql.MarshalSliceConcurrently(ctx, len(v), 0, false, func(ctx context.Context, i int) graphql.Marshaler {
 		fc := graphql.GetFieldContext(ctx)
 		fc.Result = &v[i]
-		return ec.marshalNChannel2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐChannel(ctx, sel, v[i])
+		return ec.marshalNChannel2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐChannel(ctx, sel, v[i])
 	})
 
 	for _, e := range ret {
@@ -22114,7 +22114,7 @@ func (ec *executionContext) marshalNChannel2ᚕᚖgithubᚗcomᚋneirthᚋopenlo
 	return ret
 }
 
-func (ec *executionContext) marshalNChannel2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐChannel(ctx context.Context, sel ast.SelectionSet, v *Channel) graphql.Marshaler {
+func (ec *executionContext) marshalNChannel2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐChannel(ctx context.Context, sel ast.SelectionSet, v *Channel) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -22124,11 +22124,11 @@ func (ec *executionContext) marshalNChannel2ᚖgithubᚗcomᚋneirthᚋopenlobst
 	return ec._Channel(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNChannelConfig2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐChannelConfigᚄ(ctx context.Context, sel ast.SelectionSet, v []*ChannelConfig) graphql.Marshaler {
+func (ec *executionContext) marshalNChannelConfig2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐChannelConfigᚄ(ctx context.Context, sel ast.SelectionSet, v []*ChannelConfig) graphql.Marshaler {
 	ret := graphql.MarshalSliceConcurrently(ctx, len(v), 0, false, func(ctx context.Context, i int) graphql.Marshaler {
 		fc := graphql.GetFieldContext(ctx)
 		fc.Result = &v[i]
-		return ec.marshalNChannelConfig2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐChannelConfig(ctx, sel, v[i])
+		return ec.marshalNChannelConfig2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐChannelConfig(ctx, sel, v[i])
 	})
 
 	for _, e := range ret {
@@ -22140,7 +22140,7 @@ func (ec *executionContext) marshalNChannelConfig2ᚕᚖgithubᚗcomᚋneirthᚋ
 	return ret
 }
 
-func (ec *executionContext) marshalNChannelConfig2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐChannelConfig(ctx context.Context, sel ast.SelectionSet, v *ChannelConfig) graphql.Marshaler {
+func (ec *executionContext) marshalNChannelConfig2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐChannelConfig(ctx context.Context, sel ast.SelectionSet, v *ChannelConfig) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -22150,11 +22150,11 @@ func (ec *executionContext) marshalNChannelConfig2ᚖgithubᚗcomᚋneirthᚋope
 	return ec._ChannelConfig(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNConversation2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐConversationᚄ(ctx context.Context, sel ast.SelectionSet, v []*Conversation) graphql.Marshaler {
+func (ec *executionContext) marshalNConversation2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐConversationᚄ(ctx context.Context, sel ast.SelectionSet, v []*Conversation) graphql.Marshaler {
 	ret := graphql.MarshalSliceConcurrently(ctx, len(v), 0, false, func(ctx context.Context, i int) graphql.Marshaler {
 		fc := graphql.GetFieldContext(ctx)
 		fc.Result = &v[i]
-		return ec.marshalNConversation2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐConversation(ctx, sel, v[i])
+		return ec.marshalNConversation2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐConversation(ctx, sel, v[i])
 	})
 
 	for _, e := range ret {
@@ -22166,7 +22166,7 @@ func (ec *executionContext) marshalNConversation2ᚕᚖgithubᚗcomᚋneirthᚋo
 	return ret
 }
 
-func (ec *executionContext) marshalNConversation2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐConversation(ctx context.Context, sel ast.SelectionSet, v *Conversation) graphql.Marshaler {
+func (ec *executionContext) marshalNConversation2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐConversation(ctx context.Context, sel ast.SelectionSet, v *Conversation) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -22176,11 +22176,11 @@ func (ec *executionContext) marshalNConversation2ᚖgithubᚗcomᚋneirthᚋopen
 	return ec._Conversation(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNCypherResult2githubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐCypherResult(ctx context.Context, sel ast.SelectionSet, v CypherResult) graphql.Marshaler {
+func (ec *executionContext) marshalNCypherResult2githubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐCypherResult(ctx context.Context, sel ast.SelectionSet, v CypherResult) graphql.Marshaler {
 	return ec._CypherResult(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNCypherResult2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐCypherResult(ctx context.Context, sel ast.SelectionSet, v *CypherResult) graphql.Marshaler {
+func (ec *executionContext) marshalNCypherResult2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐCypherResult(ctx context.Context, sel ast.SelectionSet, v *CypherResult) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -22190,11 +22190,11 @@ func (ec *executionContext) marshalNCypherResult2ᚖgithubᚗcomᚋneirthᚋopen
 	return ec._CypherResult(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNDenyPairingResult2githubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐDenyPairingResult(ctx context.Context, sel ast.SelectionSet, v DenyPairingResult) graphql.Marshaler {
+func (ec *executionContext) marshalNDenyPairingResult2githubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐDenyPairingResult(ctx context.Context, sel ast.SelectionSet, v DenyPairingResult) graphql.Marshaler {
 	return ec._DenyPairingResult(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNDenyPairingResult2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐDenyPairingResult(ctx context.Context, sel ast.SelectionSet, v *DenyPairingResult) graphql.Marshaler {
+func (ec *executionContext) marshalNDenyPairingResult2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐDenyPairingResult(ctx context.Context, sel ast.SelectionSet, v *DenyPairingResult) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -22204,7 +22204,7 @@ func (ec *executionContext) marshalNDenyPairingResult2ᚖgithubᚗcomᚋneirth�
 	return ec._DenyPairingResult(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNGraphEdge2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐGraphEdge(ctx context.Context, sel ast.SelectionSet, v *GraphEdge) graphql.Marshaler {
+func (ec *executionContext) marshalNGraphEdge2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐGraphEdge(ctx context.Context, sel ast.SelectionSet, v *GraphEdge) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -22214,7 +22214,7 @@ func (ec *executionContext) marshalNGraphEdge2ᚖgithubᚗcomᚋneirthᚋopenlob
 	return ec._GraphEdge(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNGraphNode2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐGraphNode(ctx context.Context, sel ast.SelectionSet, v *GraphNode) graphql.Marshaler {
+func (ec *executionContext) marshalNGraphNode2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐGraphNode(ctx context.Context, sel ast.SelectionSet, v *GraphNode) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -22224,11 +22224,11 @@ func (ec *executionContext) marshalNGraphNode2ᚖgithubᚗcomᚋneirthᚋopenlob
 	return ec._GraphNode(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNImportSkillResult2githubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐImportSkillResult(ctx context.Context, sel ast.SelectionSet, v ImportSkillResult) graphql.Marshaler {
+func (ec *executionContext) marshalNImportSkillResult2githubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐImportSkillResult(ctx context.Context, sel ast.SelectionSet, v ImportSkillResult) graphql.Marshaler {
 	return ec._ImportSkillResult(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNImportSkillResult2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐImportSkillResult(ctx context.Context, sel ast.SelectionSet, v *ImportSkillResult) graphql.Marshaler {
+func (ec *executionContext) marshalNImportSkillResult2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐImportSkillResult(ctx context.Context, sel ast.SelectionSet, v *ImportSkillResult) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -22254,11 +22254,11 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 	return res
 }
 
-func (ec *executionContext) marshalNKillSubAgentResult2githubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐKillSubAgentResult(ctx context.Context, sel ast.SelectionSet, v KillSubAgentResult) graphql.Marshaler {
+func (ec *executionContext) marshalNKillSubAgentResult2githubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐKillSubAgentResult(ctx context.Context, sel ast.SelectionSet, v KillSubAgentResult) graphql.Marshaler {
 	return ec._KillSubAgentResult(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNKillSubAgentResult2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐKillSubAgentResult(ctx context.Context, sel ast.SelectionSet, v *KillSubAgentResult) graphql.Marshaler {
+func (ec *executionContext) marshalNKillSubAgentResult2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐKillSubAgentResult(ctx context.Context, sel ast.SelectionSet, v *KillSubAgentResult) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -22268,11 +22268,11 @@ func (ec *executionContext) marshalNKillSubAgentResult2ᚖgithubᚗcomᚋneirth�
 	return ec._KillSubAgentResult(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNMCP2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMcpᚄ(ctx context.Context, sel ast.SelectionSet, v []*Mcp) graphql.Marshaler {
+func (ec *executionContext) marshalNMCP2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMcpᚄ(ctx context.Context, sel ast.SelectionSet, v []*Mcp) graphql.Marshaler {
 	ret := graphql.MarshalSliceConcurrently(ctx, len(v), 0, false, func(ctx context.Context, i int) graphql.Marshaler {
 		fc := graphql.GetFieldContext(ctx)
 		fc.Result = &v[i]
-		return ec.marshalNMCP2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMcp(ctx, sel, v[i])
+		return ec.marshalNMCP2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMcp(ctx, sel, v[i])
 	})
 
 	for _, e := range ret {
@@ -22284,7 +22284,7 @@ func (ec *executionContext) marshalNMCP2ᚕᚖgithubᚗcomᚋneirthᚋopenlobste
 	return ret
 }
 
-func (ec *executionContext) marshalNMCP2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMcp(ctx context.Context, sel ast.SelectionSet, v *Mcp) graphql.Marshaler {
+func (ec *executionContext) marshalNMCP2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMcp(ctx context.Context, sel ast.SelectionSet, v *Mcp) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -22294,11 +22294,11 @@ func (ec *executionContext) marshalNMCP2ᚖgithubᚗcomᚋneirthᚋopenlobster�
 	return ec._MCP(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNMCPConnectResult2githubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMCPConnectResult(ctx context.Context, sel ast.SelectionSet, v MCPConnectResult) graphql.Marshaler {
+func (ec *executionContext) marshalNMCPConnectResult2githubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMCPConnectResult(ctx context.Context, sel ast.SelectionSet, v MCPConnectResult) graphql.Marshaler {
 	return ec._MCPConnectResult(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNMCPConnectResult2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMCPConnectResult(ctx context.Context, sel ast.SelectionSet, v *MCPConnectResult) graphql.Marshaler {
+func (ec *executionContext) marshalNMCPConnectResult2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMCPConnectResult(ctx context.Context, sel ast.SelectionSet, v *MCPConnectResult) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -22308,11 +22308,11 @@ func (ec *executionContext) marshalNMCPConnectResult2ᚖgithubᚗcomᚋneirthᚋ
 	return ec._MCPConnectResult(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNMCPServer2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMCPServerᚄ(ctx context.Context, sel ast.SelectionSet, v []*MCPServer) graphql.Marshaler {
+func (ec *executionContext) marshalNMCPServer2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMCPServerᚄ(ctx context.Context, sel ast.SelectionSet, v []*MCPServer) graphql.Marshaler {
 	ret := graphql.MarshalSliceConcurrently(ctx, len(v), 0, false, func(ctx context.Context, i int) graphql.Marshaler {
 		fc := graphql.GetFieldContext(ctx)
 		fc.Result = &v[i]
-		return ec.marshalNMCPServer2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMCPServer(ctx, sel, v[i])
+		return ec.marshalNMCPServer2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMCPServer(ctx, sel, v[i])
 	})
 
 	for _, e := range ret {
@@ -22324,7 +22324,7 @@ func (ec *executionContext) marshalNMCPServer2ᚕᚖgithubᚗcomᚋneirthᚋopen
 	return ret
 }
 
-func (ec *executionContext) marshalNMCPServer2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMCPServer(ctx context.Context, sel ast.SelectionSet, v *MCPServer) graphql.Marshaler {
+func (ec *executionContext) marshalNMCPServer2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMCPServer(ctx context.Context, sel ast.SelectionSet, v *MCPServer) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -22334,11 +22334,11 @@ func (ec *executionContext) marshalNMCPServer2ᚖgithubᚗcomᚋneirthᚋopenlob
 	return ec._MCPServer(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNMCPTool2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMCPToolᚄ(ctx context.Context, sel ast.SelectionSet, v []*MCPTool) graphql.Marshaler {
+func (ec *executionContext) marshalNMCPTool2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMCPToolᚄ(ctx context.Context, sel ast.SelectionSet, v []*MCPTool) graphql.Marshaler {
 	ret := graphql.MarshalSliceConcurrently(ctx, len(v), 0, false, func(ctx context.Context, i int) graphql.Marshaler {
 		fc := graphql.GetFieldContext(ctx)
 		fc.Result = &v[i]
-		return ec.marshalNMCPTool2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMCPTool(ctx, sel, v[i])
+		return ec.marshalNMCPTool2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMCPTool(ctx, sel, v[i])
 	})
 
 	for _, e := range ret {
@@ -22350,7 +22350,7 @@ func (ec *executionContext) marshalNMCPTool2ᚕᚖgithubᚗcomᚋneirthᚋopenlo
 	return ret
 }
 
-func (ec *executionContext) marshalNMCPTool2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMCPTool(ctx context.Context, sel ast.SelectionSet, v *MCPTool) graphql.Marshaler {
+func (ec *executionContext) marshalNMCPTool2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMCPTool(ctx context.Context, sel ast.SelectionSet, v *MCPTool) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -22360,11 +22360,11 @@ func (ec *executionContext) marshalNMCPTool2ᚖgithubᚗcomᚋneirthᚋopenlobst
 	return ec._MCPTool(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNMCPUser2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMCPUserᚄ(ctx context.Context, sel ast.SelectionSet, v []*MCPUser) graphql.Marshaler {
+func (ec *executionContext) marshalNMCPUser2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMCPUserᚄ(ctx context.Context, sel ast.SelectionSet, v []*MCPUser) graphql.Marshaler {
 	ret := graphql.MarshalSliceConcurrently(ctx, len(v), 0, false, func(ctx context.Context, i int) graphql.Marshaler {
 		fc := graphql.GetFieldContext(ctx)
 		fc.Result = &v[i]
-		return ec.marshalNMCPUser2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMCPUser(ctx, sel, v[i])
+		return ec.marshalNMCPUser2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMCPUser(ctx, sel, v[i])
 	})
 
 	for _, e := range ret {
@@ -22376,7 +22376,7 @@ func (ec *executionContext) marshalNMCPUser2ᚕᚖgithubᚗcomᚋneirthᚋopenlo
 	return ret
 }
 
-func (ec *executionContext) marshalNMCPUser2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMCPUser(ctx context.Context, sel ast.SelectionSet, v *MCPUser) graphql.Marshaler {
+func (ec *executionContext) marshalNMCPUser2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMCPUser(ctx context.Context, sel ast.SelectionSet, v *MCPUser) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -22386,11 +22386,11 @@ func (ec *executionContext) marshalNMCPUser2ᚖgithubᚗcomᚋneirthᚋopenlobst
 	return ec._MCPUser(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNMemoryEdge2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMemoryEdgeᚄ(ctx context.Context, sel ast.SelectionSet, v []*MemoryEdge) graphql.Marshaler {
+func (ec *executionContext) marshalNMemoryEdge2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMemoryEdgeᚄ(ctx context.Context, sel ast.SelectionSet, v []*MemoryEdge) graphql.Marshaler {
 	ret := graphql.MarshalSliceConcurrently(ctx, len(v), 0, false, func(ctx context.Context, i int) graphql.Marshaler {
 		fc := graphql.GetFieldContext(ctx)
 		fc.Result = &v[i]
-		return ec.marshalNMemoryEdge2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMemoryEdge(ctx, sel, v[i])
+		return ec.marshalNMemoryEdge2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMemoryEdge(ctx, sel, v[i])
 	})
 
 	for _, e := range ret {
@@ -22402,7 +22402,7 @@ func (ec *executionContext) marshalNMemoryEdge2ᚕᚖgithubᚗcomᚋneirthᚋope
 	return ret
 }
 
-func (ec *executionContext) marshalNMemoryEdge2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMemoryEdge(ctx context.Context, sel ast.SelectionSet, v *MemoryEdge) graphql.Marshaler {
+func (ec *executionContext) marshalNMemoryEdge2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMemoryEdge(ctx context.Context, sel ast.SelectionSet, v *MemoryEdge) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -22412,15 +22412,15 @@ func (ec *executionContext) marshalNMemoryEdge2ᚖgithubᚗcomᚋneirthᚋopenlo
 	return ec._MemoryEdge(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNMemoryNode2githubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMemoryNode(ctx context.Context, sel ast.SelectionSet, v MemoryNode) graphql.Marshaler {
+func (ec *executionContext) marshalNMemoryNode2githubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMemoryNode(ctx context.Context, sel ast.SelectionSet, v MemoryNode) graphql.Marshaler {
 	return ec._MemoryNode(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNMemoryNode2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMemoryNodeᚄ(ctx context.Context, sel ast.SelectionSet, v []*MemoryNode) graphql.Marshaler {
+func (ec *executionContext) marshalNMemoryNode2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMemoryNodeᚄ(ctx context.Context, sel ast.SelectionSet, v []*MemoryNode) graphql.Marshaler {
 	ret := graphql.MarshalSliceConcurrently(ctx, len(v), 0, false, func(ctx context.Context, i int) graphql.Marshaler {
 		fc := graphql.GetFieldContext(ctx)
 		fc.Result = &v[i]
-		return ec.marshalNMemoryNode2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMemoryNode(ctx, sel, v[i])
+		return ec.marshalNMemoryNode2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMemoryNode(ctx, sel, v[i])
 	})
 
 	for _, e := range ret {
@@ -22432,7 +22432,7 @@ func (ec *executionContext) marshalNMemoryNode2ᚕᚖgithubᚗcomᚋneirthᚋope
 	return ret
 }
 
-func (ec *executionContext) marshalNMemoryNode2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMemoryNode(ctx context.Context, sel ast.SelectionSet, v *MemoryNode) graphql.Marshaler {
+func (ec *executionContext) marshalNMemoryNode2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMemoryNode(ctx context.Context, sel ast.SelectionSet, v *MemoryNode) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -22442,11 +22442,11 @@ func (ec *executionContext) marshalNMemoryNode2ᚖgithubᚗcomᚋneirthᚋopenlo
 	return ec._MemoryNode(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNMessage2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMessageᚄ(ctx context.Context, sel ast.SelectionSet, v []*Message) graphql.Marshaler {
+func (ec *executionContext) marshalNMessage2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMessageᚄ(ctx context.Context, sel ast.SelectionSet, v []*Message) graphql.Marshaler {
 	ret := graphql.MarshalSliceConcurrently(ctx, len(v), 0, false, func(ctx context.Context, i int) graphql.Marshaler {
 		fc := graphql.GetFieldContext(ctx)
 		fc.Result = &v[i]
-		return ec.marshalNMessage2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMessage(ctx, sel, v[i])
+		return ec.marshalNMessage2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMessage(ctx, sel, v[i])
 	})
 
 	for _, e := range ret {
@@ -22458,7 +22458,7 @@ func (ec *executionContext) marshalNMessage2ᚕᚖgithubᚗcomᚋneirthᚋopenlo
 	return ret
 }
 
-func (ec *executionContext) marshalNMessage2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMessage(ctx context.Context, sel ast.SelectionSet, v *Message) graphql.Marshaler {
+func (ec *executionContext) marshalNMessage2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMessage(ctx context.Context, sel ast.SelectionSet, v *Message) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -22468,7 +22468,7 @@ func (ec *executionContext) marshalNMessage2ᚖgithubᚗcomᚋneirthᚋopenlobst
 	return ec._Message(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNMessageAttachment2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMessageAttachment(ctx context.Context, sel ast.SelectionSet, v *MessageAttachment) graphql.Marshaler {
+func (ec *executionContext) marshalNMessageAttachment2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMessageAttachment(ctx context.Context, sel ast.SelectionSet, v *MessageAttachment) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -22478,11 +22478,11 @@ func (ec *executionContext) marshalNMessageAttachment2ᚖgithubᚗcomᚋneirth�
 	return ec._MessageAttachment(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNMessageSentResult2githubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMessageSentResult(ctx context.Context, sel ast.SelectionSet, v MessageSentResult) graphql.Marshaler {
+func (ec *executionContext) marshalNMessageSentResult2githubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMessageSentResult(ctx context.Context, sel ast.SelectionSet, v MessageSentResult) graphql.Marshaler {
 	return ec._MessageSentResult(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNMessageSentResult2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMessageSentResult(ctx context.Context, sel ast.SelectionSet, v *MessageSentResult) graphql.Marshaler {
+func (ec *executionContext) marshalNMessageSentResult2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMessageSentResult(ctx context.Context, sel ast.SelectionSet, v *MessageSentResult) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -22492,11 +22492,11 @@ func (ec *executionContext) marshalNMessageSentResult2ᚖgithubᚗcomᚋneirth�
 	return ec._MessageSentResult(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNMutationResult2githubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMutationResult(ctx context.Context, sel ast.SelectionSet, v MutationResult) graphql.Marshaler {
+func (ec *executionContext) marshalNMutationResult2githubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMutationResult(ctx context.Context, sel ast.SelectionSet, v MutationResult) graphql.Marshaler {
 	return ec._MutationResult(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNMutationResult2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMutationResult(ctx context.Context, sel ast.SelectionSet, v *MutationResult) graphql.Marshaler {
+func (ec *executionContext) marshalNMutationResult2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMutationResult(ctx context.Context, sel ast.SelectionSet, v *MutationResult) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -22506,11 +22506,11 @@ func (ec *executionContext) marshalNMutationResult2ᚖgithubᚗcomᚋneirthᚋop
 	return ec._MutationResult(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNOAuthInitiateResult2githubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐOAuthInitiateResult(ctx context.Context, sel ast.SelectionSet, v OAuthInitiateResult) graphql.Marshaler {
+func (ec *executionContext) marshalNOAuthInitiateResult2githubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐOAuthInitiateResult(ctx context.Context, sel ast.SelectionSet, v OAuthInitiateResult) graphql.Marshaler {
 	return ec._OAuthInitiateResult(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNOAuthInitiateResult2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐOAuthInitiateResult(ctx context.Context, sel ast.SelectionSet, v *OAuthInitiateResult) graphql.Marshaler {
+func (ec *executionContext) marshalNOAuthInitiateResult2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐOAuthInitiateResult(ctx context.Context, sel ast.SelectionSet, v *OAuthInitiateResult) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -22520,11 +22520,11 @@ func (ec *executionContext) marshalNOAuthInitiateResult2ᚖgithubᚗcomᚋneirth
 	return ec._OAuthInitiateResult(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNPendingPairing2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐPendingPairingᚄ(ctx context.Context, sel ast.SelectionSet, v []*PendingPairing) graphql.Marshaler {
+func (ec *executionContext) marshalNPendingPairing2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐPendingPairingᚄ(ctx context.Context, sel ast.SelectionSet, v []*PendingPairing) graphql.Marshaler {
 	ret := graphql.MarshalSliceConcurrently(ctx, len(v), 0, false, func(ctx context.Context, i int) graphql.Marshaler {
 		fc := graphql.GetFieldContext(ctx)
 		fc.Result = &v[i]
-		return ec.marshalNPendingPairing2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐPendingPairing(ctx, sel, v[i])
+		return ec.marshalNPendingPairing2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐPendingPairing(ctx, sel, v[i])
 	})
 
 	for _, e := range ret {
@@ -22536,7 +22536,7 @@ func (ec *executionContext) marshalNPendingPairing2ᚕᚖgithubᚗcomᚋneirth�
 	return ret
 }
 
-func (ec *executionContext) marshalNPendingPairing2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐPendingPairing(ctx context.Context, sel ast.SelectionSet, v *PendingPairing) graphql.Marshaler {
+func (ec *executionContext) marshalNPendingPairing2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐPendingPairing(ctx context.Context, sel ast.SelectionSet, v *PendingPairing) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -22546,11 +22546,11 @@ func (ec *executionContext) marshalNPendingPairing2ᚖgithubᚗcomᚋneirthᚋop
 	return ec._PendingPairing(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNSkill2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSkillᚄ(ctx context.Context, sel ast.SelectionSet, v []*Skill) graphql.Marshaler {
+func (ec *executionContext) marshalNSkill2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSkillᚄ(ctx context.Context, sel ast.SelectionSet, v []*Skill) graphql.Marshaler {
 	ret := graphql.MarshalSliceConcurrently(ctx, len(v), 0, false, func(ctx context.Context, i int) graphql.Marshaler {
 		fc := graphql.GetFieldContext(ctx)
 		fc.Result = &v[i]
-		return ec.marshalNSkill2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSkill(ctx, sel, v[i])
+		return ec.marshalNSkill2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSkill(ctx, sel, v[i])
 	})
 
 	for _, e := range ret {
@@ -22562,7 +22562,7 @@ func (ec *executionContext) marshalNSkill2ᚕᚖgithubᚗcomᚋneirthᚋopenlobs
 	return ret
 }
 
-func (ec *executionContext) marshalNSkill2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSkill(ctx context.Context, sel ast.SelectionSet, v *Skill) graphql.Marshaler {
+func (ec *executionContext) marshalNSkill2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSkill(ctx context.Context, sel ast.SelectionSet, v *Skill) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -22572,11 +22572,11 @@ func (ec *executionContext) marshalNSkill2ᚖgithubᚗcomᚋneirthᚋopenlobster
 	return ec._Skill(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNSpawnSubAgentResult2githubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSpawnSubAgentResult(ctx context.Context, sel ast.SelectionSet, v SpawnSubAgentResult) graphql.Marshaler {
+func (ec *executionContext) marshalNSpawnSubAgentResult2githubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSpawnSubAgentResult(ctx context.Context, sel ast.SelectionSet, v SpawnSubAgentResult) graphql.Marshaler {
 	return ec._SpawnSubAgentResult(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNSpawnSubAgentResult2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSpawnSubAgentResult(ctx context.Context, sel ast.SelectionSet, v *SpawnSubAgentResult) graphql.Marshaler {
+func (ec *executionContext) marshalNSpawnSubAgentResult2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSpawnSubAgentResult(ctx context.Context, sel ast.SelectionSet, v *SpawnSubAgentResult) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -22602,11 +22602,11 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 	return res
 }
 
-func (ec *executionContext) marshalNSubAgent2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSubAgentᚄ(ctx context.Context, sel ast.SelectionSet, v []*SubAgent) graphql.Marshaler {
+func (ec *executionContext) marshalNSubAgent2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSubAgentᚄ(ctx context.Context, sel ast.SelectionSet, v []*SubAgent) graphql.Marshaler {
 	ret := graphql.MarshalSliceConcurrently(ctx, len(v), 0, false, func(ctx context.Context, i int) graphql.Marshaler {
 		fc := graphql.GetFieldContext(ctx)
 		fc.Result = &v[i]
-		return ec.marshalNSubAgent2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSubAgent(ctx, sel, v[i])
+		return ec.marshalNSubAgent2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSubAgent(ctx, sel, v[i])
 	})
 
 	for _, e := range ret {
@@ -22618,7 +22618,7 @@ func (ec *executionContext) marshalNSubAgent2ᚕᚖgithubᚗcomᚋneirthᚋopenl
 	return ret
 }
 
-func (ec *executionContext) marshalNSubAgent2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSubAgent(ctx context.Context, sel ast.SelectionSet, v *SubAgent) graphql.Marshaler {
+func (ec *executionContext) marshalNSubAgent2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSubAgent(ctx context.Context, sel ast.SelectionSet, v *SubAgent) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -22628,11 +22628,11 @@ func (ec *executionContext) marshalNSubAgent2ᚖgithubᚗcomᚋneirthᚋopenlobs
 	return ec._SubAgent(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNSystemFile2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSystemFileᚄ(ctx context.Context, sel ast.SelectionSet, v []*SystemFile) graphql.Marshaler {
+func (ec *executionContext) marshalNSystemFile2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSystemFileᚄ(ctx context.Context, sel ast.SelectionSet, v []*SystemFile) graphql.Marshaler {
 	ret := graphql.MarshalSliceConcurrently(ctx, len(v), 0, false, func(ctx context.Context, i int) graphql.Marshaler {
 		fc := graphql.GetFieldContext(ctx)
 		fc.Result = &v[i]
-		return ec.marshalNSystemFile2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSystemFile(ctx, sel, v[i])
+		return ec.marshalNSystemFile2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSystemFile(ctx, sel, v[i])
 	})
 
 	for _, e := range ret {
@@ -22644,7 +22644,7 @@ func (ec *executionContext) marshalNSystemFile2ᚕᚖgithubᚗcomᚋneirthᚋope
 	return ret
 }
 
-func (ec *executionContext) marshalNSystemFile2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSystemFile(ctx context.Context, sel ast.SelectionSet, v *SystemFile) graphql.Marshaler {
+func (ec *executionContext) marshalNSystemFile2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSystemFile(ctx context.Context, sel ast.SelectionSet, v *SystemFile) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -22654,15 +22654,15 @@ func (ec *executionContext) marshalNSystemFile2ᚖgithubᚗcomᚋneirthᚋopenlo
 	return ec._SystemFile(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNTask2githubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐTask(ctx context.Context, sel ast.SelectionSet, v Task) graphql.Marshaler {
+func (ec *executionContext) marshalNTask2githubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐTask(ctx context.Context, sel ast.SelectionSet, v Task) graphql.Marshaler {
 	return ec._Task(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNTask2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐTaskᚄ(ctx context.Context, sel ast.SelectionSet, v []*Task) graphql.Marshaler {
+func (ec *executionContext) marshalNTask2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐTaskᚄ(ctx context.Context, sel ast.SelectionSet, v []*Task) graphql.Marshaler {
 	ret := graphql.MarshalSliceConcurrently(ctx, len(v), 0, false, func(ctx context.Context, i int) graphql.Marshaler {
 		fc := graphql.GetFieldContext(ctx)
 		fc.Result = &v[i]
-		return ec.marshalNTask2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐTask(ctx, sel, v[i])
+		return ec.marshalNTask2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐTask(ctx, sel, v[i])
 	})
 
 	for _, e := range ret {
@@ -22674,7 +22674,7 @@ func (ec *executionContext) marshalNTask2ᚕᚖgithubᚗcomᚋneirthᚋopenlobst
 	return ret
 }
 
-func (ec *executionContext) marshalNTask2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐTask(ctx context.Context, sel ast.SelectionSet, v *Task) graphql.Marshaler {
+func (ec *executionContext) marshalNTask2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐTask(ctx context.Context, sel ast.SelectionSet, v *Task) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -22684,11 +22684,11 @@ func (ec *executionContext) marshalNTask2ᚖgithubᚗcomᚋneirthᚋopenlobster�
 	return ec._Task(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNToggleTaskResult2githubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐToggleTaskResult(ctx context.Context, sel ast.SelectionSet, v ToggleTaskResult) graphql.Marshaler {
+func (ec *executionContext) marshalNToggleTaskResult2githubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐToggleTaskResult(ctx context.Context, sel ast.SelectionSet, v ToggleTaskResult) graphql.Marshaler {
 	return ec._ToggleTaskResult(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNToggleTaskResult2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐToggleTaskResult(ctx context.Context, sel ast.SelectionSet, v *ToggleTaskResult) graphql.Marshaler {
+func (ec *executionContext) marshalNToggleTaskResult2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐToggleTaskResult(ctx context.Context, sel ast.SelectionSet, v *ToggleTaskResult) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -22698,11 +22698,11 @@ func (ec *executionContext) marshalNToggleTaskResult2ᚖgithubᚗcomᚋneirthᚋ
 	return ec._ToggleTaskResult(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNTool2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐToolᚄ(ctx context.Context, sel ast.SelectionSet, v []*Tool) graphql.Marshaler {
+func (ec *executionContext) marshalNTool2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐToolᚄ(ctx context.Context, sel ast.SelectionSet, v []*Tool) graphql.Marshaler {
 	ret := graphql.MarshalSliceConcurrently(ctx, len(v), 0, false, func(ctx context.Context, i int) graphql.Marshaler {
 		fc := graphql.GetFieldContext(ctx)
 		fc.Result = &v[i]
-		return ec.marshalNTool2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐTool(ctx, sel, v[i])
+		return ec.marshalNTool2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐTool(ctx, sel, v[i])
 	})
 
 	for _, e := range ret {
@@ -22714,7 +22714,7 @@ func (ec *executionContext) marshalNTool2ᚕᚖgithubᚗcomᚋneirthᚋopenlobst
 	return ret
 }
 
-func (ec *executionContext) marshalNTool2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐTool(ctx context.Context, sel ast.SelectionSet, v *Tool) graphql.Marshaler {
+func (ec *executionContext) marshalNTool2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐTool(ctx context.Context, sel ast.SelectionSet, v *Tool) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -22724,11 +22724,11 @@ func (ec *executionContext) marshalNTool2ᚖgithubᚗcomᚋneirthᚋopenlobster�
 	return ec._Tool(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNToolPermission2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐToolPermissionᚄ(ctx context.Context, sel ast.SelectionSet, v []*ToolPermission) graphql.Marshaler {
+func (ec *executionContext) marshalNToolPermission2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐToolPermissionᚄ(ctx context.Context, sel ast.SelectionSet, v []*ToolPermission) graphql.Marshaler {
 	ret := graphql.MarshalSliceConcurrently(ctx, len(v), 0, false, func(ctx context.Context, i int) graphql.Marshaler {
 		fc := graphql.GetFieldContext(ctx)
 		fc.Result = &v[i]
-		return ec.marshalNToolPermission2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐToolPermission(ctx, sel, v[i])
+		return ec.marshalNToolPermission2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐToolPermission(ctx, sel, v[i])
 	})
 
 	for _, e := range ret {
@@ -22740,7 +22740,7 @@ func (ec *executionContext) marshalNToolPermission2ᚕᚖgithubᚗcomᚋneirth�
 	return ret
 }
 
-func (ec *executionContext) marshalNToolPermission2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐToolPermission(ctx context.Context, sel ast.SelectionSet, v *ToolPermission) graphql.Marshaler {
+func (ec *executionContext) marshalNToolPermission2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐToolPermission(ctx context.Context, sel ast.SelectionSet, v *ToolPermission) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -22750,16 +22750,16 @@ func (ec *executionContext) marshalNToolPermission2ᚖgithubᚗcomᚋneirthᚋop
 	return ec._ToolPermission(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNUpdateConfigInput2githubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐUpdateConfigInput(ctx context.Context, v any) (UpdateConfigInput, error) {
+func (ec *executionContext) unmarshalNUpdateConfigInput2githubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐUpdateConfigInput(ctx context.Context, v any) (UpdateConfigInput, error) {
 	res, err := ec.unmarshalInputUpdateConfigInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNUpdateConfigResult2githubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐUpdateConfigResult(ctx context.Context, sel ast.SelectionSet, v UpdateConfigResult) graphql.Marshaler {
+func (ec *executionContext) marshalNUpdateConfigResult2githubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐUpdateConfigResult(ctx context.Context, sel ast.SelectionSet, v UpdateConfigResult) graphql.Marshaler {
 	return ec._UpdateConfigResult(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNUpdateConfigResult2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐUpdateConfigResult(ctx context.Context, sel ast.SelectionSet, v *UpdateConfigResult) graphql.Marshaler {
+func (ec *executionContext) marshalNUpdateConfigResult2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐUpdateConfigResult(ctx context.Context, sel ast.SelectionSet, v *UpdateConfigResult) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -22769,11 +22769,11 @@ func (ec *executionContext) marshalNUpdateConfigResult2ᚖgithubᚗcomᚋneirth�
 	return ec._UpdateConfigResult(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNUser2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐUserᚄ(ctx context.Context, sel ast.SelectionSet, v []*User) graphql.Marshaler {
+func (ec *executionContext) marshalNUser2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐUserᚄ(ctx context.Context, sel ast.SelectionSet, v []*User) graphql.Marshaler {
 	ret := graphql.MarshalSliceConcurrently(ctx, len(v), 0, false, func(ctx context.Context, i int) graphql.Marshaler {
 		fc := graphql.GetFieldContext(ctx)
 		fc.Result = &v[i]
-		return ec.marshalNUser2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐUser(ctx, sel, v[i])
+		return ec.marshalNUser2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐUser(ctx, sel, v[i])
 	})
 
 	for _, e := range ret {
@@ -22785,7 +22785,7 @@ func (ec *executionContext) marshalNUser2ᚕᚖgithubᚗcomᚋneirthᚋopenlobst
 	return ret
 }
 
-func (ec *executionContext) marshalNUser2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐUser(ctx context.Context, sel ast.SelectionSet, v *User) graphql.Marshaler {
+func (ec *executionContext) marshalNUser2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐUser(ctx context.Context, sel ast.SelectionSet, v *User) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -22936,21 +22936,21 @@ func (ec *executionContext) marshalN__TypeKind2string(ctx context.Context, sel a
 	return res
 }
 
-func (ec *executionContext) marshalOAgent2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐAgent(ctx context.Context, sel ast.SelectionSet, v *Agent) graphql.Marshaler {
+func (ec *executionContext) marshalOAgent2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐAgent(ctx context.Context, sel ast.SelectionSet, v *Agent) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Agent(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOAgentConfig2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐAgentConfig(ctx context.Context, sel ast.SelectionSet, v *AgentConfig) graphql.Marshaler {
+func (ec *executionContext) marshalOAgentConfig2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐAgentConfig(ctx context.Context, sel ast.SelectionSet, v *AgentConfig) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._AgentConfig(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOAppConfig2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐAppConfig(ctx context.Context, sel ast.SelectionSet, v *AppConfig) graphql.Marshaler {
+func (ec *executionContext) marshalOAppConfig2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐAppConfig(ctx context.Context, sel ast.SelectionSet, v *AppConfig) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -22987,14 +22987,14 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	return res
 }
 
-func (ec *executionContext) marshalOCapabilitiesConfig2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐCapabilitiesConfig(ctx context.Context, sel ast.SelectionSet, v *CapabilitiesConfig) graphql.Marshaler {
+func (ec *executionContext) marshalOCapabilitiesConfig2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐCapabilitiesConfig(ctx context.Context, sel ast.SelectionSet, v *CapabilitiesConfig) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._CapabilitiesConfig(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOCapabilitiesInput2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐCapabilitiesInput(ctx context.Context, v any) (*CapabilitiesInput, error) {
+func (ec *executionContext) unmarshalOCapabilitiesInput2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐCapabilitiesInput(ctx context.Context, v any) (*CapabilitiesInput, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -23002,21 +23002,21 @@ func (ec *executionContext) unmarshalOCapabilitiesInput2ᚖgithubᚗcomᚋneirth
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOChannelCapabilities2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐChannelCapabilities(ctx context.Context, sel ast.SelectionSet, v *ChannelCapabilities) graphql.Marshaler {
+func (ec *executionContext) marshalOChannelCapabilities2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐChannelCapabilities(ctx context.Context, sel ast.SelectionSet, v *ChannelCapabilities) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._ChannelCapabilities(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOChannelConfig2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐChannelConfigᚄ(ctx context.Context, sel ast.SelectionSet, v []*ChannelConfig) graphql.Marshaler {
+func (ec *executionContext) marshalOChannelConfig2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐChannelConfigᚄ(ctx context.Context, sel ast.SelectionSet, v []*ChannelConfig) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	ret := graphql.MarshalSliceConcurrently(ctx, len(v), 0, false, func(ctx context.Context, i int) graphql.Marshaler {
 		fc := graphql.GetFieldContext(ctx)
 		fc.Result = &v[i]
-		return ec.marshalNChannelConfig2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐChannelConfig(ctx, sel, v[i])
+		return ec.marshalNChannelConfig2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐChannelConfig(ctx, sel, v[i])
 	})
 
 	for _, e := range ret {
@@ -23028,42 +23028,42 @@ func (ec *executionContext) marshalOChannelConfig2ᚕᚖgithubᚗcomᚋneirthᚋ
 	return ret
 }
 
-func (ec *executionContext) marshalOChannelSecretsConfig2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐChannelSecretsConfig(ctx context.Context, sel ast.SelectionSet, v *ChannelSecretsConfig) graphql.Marshaler {
+func (ec *executionContext) marshalOChannelSecretsConfig2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐChannelSecretsConfig(ctx context.Context, sel ast.SelectionSet, v *ChannelSecretsConfig) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._ChannelSecretsConfig(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalODatabaseConfig2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐDatabaseConfig(ctx context.Context, sel ast.SelectionSet, v *DatabaseConfig) graphql.Marshaler {
+func (ec *executionContext) marshalODatabaseConfig2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐDatabaseConfig(ctx context.Context, sel ast.SelectionSet, v *DatabaseConfig) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._DatabaseConfig(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOEventPayload2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEventPayload(ctx context.Context, sel ast.SelectionSet, v *EventPayload) graphql.Marshaler {
+func (ec *executionContext) marshalOEventPayload2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEventPayload(ctx context.Context, sel ast.SelectionSet, v *EventPayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._EventPayload(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOFileSecretsConfig2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐFileSecretsConfig(ctx context.Context, sel ast.SelectionSet, v *FileSecretsConfig) graphql.Marshaler {
+func (ec *executionContext) marshalOFileSecretsConfig2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐFileSecretsConfig(ctx context.Context, sel ast.SelectionSet, v *FileSecretsConfig) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._FileSecretsConfig(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOGraphEdge2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐGraphEdgeᚄ(ctx context.Context, sel ast.SelectionSet, v []*GraphEdge) graphql.Marshaler {
+func (ec *executionContext) marshalOGraphEdge2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐGraphEdgeᚄ(ctx context.Context, sel ast.SelectionSet, v []*GraphEdge) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	ret := graphql.MarshalSliceConcurrently(ctx, len(v), 0, false, func(ctx context.Context, i int) graphql.Marshaler {
 		fc := graphql.GetFieldContext(ctx)
 		fc.Result = &v[i]
-		return ec.marshalNGraphEdge2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐGraphEdge(ctx, sel, v[i])
+		return ec.marshalNGraphEdge2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐGraphEdge(ctx, sel, v[i])
 	})
 
 	for _, e := range ret {
@@ -23075,14 +23075,14 @@ func (ec *executionContext) marshalOGraphEdge2ᚕᚖgithubᚗcomᚋneirthᚋopen
 	return ret
 }
 
-func (ec *executionContext) marshalOGraphNode2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐGraphNodeᚄ(ctx context.Context, sel ast.SelectionSet, v []*GraphNode) graphql.Marshaler {
+func (ec *executionContext) marshalOGraphNode2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐGraphNodeᚄ(ctx context.Context, sel ast.SelectionSet, v []*GraphNode) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	ret := graphql.MarshalSliceConcurrently(ctx, len(v), 0, false, func(ctx context.Context, i int) graphql.Marshaler {
 		fc := graphql.GetFieldContext(ctx)
 		fc.Result = &v[i]
-		return ec.marshalNGraphNode2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐGraphNode(ctx, sel, v[i])
+		return ec.marshalNGraphNode2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐGraphNode(ctx, sel, v[i])
 	})
 
 	for _, e := range ret {
@@ -23094,14 +23094,14 @@ func (ec *executionContext) marshalOGraphNode2ᚕᚖgithubᚗcomᚋneirthᚋopen
 	return ret
 }
 
-func (ec *executionContext) marshalOGraphQLConfig2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐGraphQLConfig(ctx context.Context, sel ast.SelectionSet, v *GraphQLConfig) graphql.Marshaler {
+func (ec *executionContext) marshalOGraphQLConfig2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐGraphQLConfig(ctx context.Context, sel ast.SelectionSet, v *GraphQLConfig) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._GraphQLConfig(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOHeartbeat2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐHeartbeat(ctx context.Context, sel ast.SelectionSet, v *Heartbeat) graphql.Marshaler {
+func (ec *executionContext) marshalOHeartbeat2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐHeartbeat(ctx context.Context, sel ast.SelectionSet, v *Heartbeat) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -23144,42 +23144,42 @@ func (ec *executionContext) marshalOJSON2map(ctx context.Context, sel ast.Select
 	return res
 }
 
-func (ec *executionContext) marshalOLoggingConfig2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐLoggingConfig(ctx context.Context, sel ast.SelectionSet, v *LoggingConfig) graphql.Marshaler {
+func (ec *executionContext) marshalOLoggingConfig2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐLoggingConfig(ctx context.Context, sel ast.SelectionSet, v *LoggingConfig) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._LoggingConfig(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOMCPOAuthStatus2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMCPOAuthStatus(ctx context.Context, sel ast.SelectionSet, v *MCPOAuthStatus) graphql.Marshaler {
+func (ec *executionContext) marshalOMCPOAuthStatus2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMCPOAuthStatus(ctx context.Context, sel ast.SelectionSet, v *MCPOAuthStatus) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._MCPOAuthStatus(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOMemoryConfig2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMemoryConfig(ctx context.Context, sel ast.SelectionSet, v *MemoryConfig) graphql.Marshaler {
+func (ec *executionContext) marshalOMemoryConfig2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMemoryConfig(ctx context.Context, sel ast.SelectionSet, v *MemoryConfig) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._MemoryConfig(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOMemoryGraph2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMemoryGraph(ctx context.Context, sel ast.SelectionSet, v *MemoryGraph) graphql.Marshaler {
+func (ec *executionContext) marshalOMemoryGraph2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMemoryGraph(ctx context.Context, sel ast.SelectionSet, v *MemoryGraph) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._MemoryGraph(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOMessageAttachment2ᚕᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMessageAttachmentᚄ(ctx context.Context, sel ast.SelectionSet, v []*MessageAttachment) graphql.Marshaler {
+func (ec *executionContext) marshalOMessageAttachment2ᚕᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMessageAttachmentᚄ(ctx context.Context, sel ast.SelectionSet, v []*MessageAttachment) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	ret := graphql.MarshalSliceConcurrently(ctx, len(v), 0, false, func(ctx context.Context, i int) graphql.Marshaler {
 		fc := graphql.GetFieldContext(ctx)
 		fc.Result = &v[i]
-		return ec.marshalNMessageAttachment2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMessageAttachment(ctx, sel, v[i])
+		return ec.marshalNMessageAttachment2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMessageAttachment(ctx, sel, v[i])
 	})
 
 	for _, e := range ret {
@@ -23191,56 +23191,56 @@ func (ec *executionContext) marshalOMessageAttachment2ᚕᚖgithubᚗcomᚋneirt
 	return ret
 }
 
-func (ec *executionContext) marshalOMetrics2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMetrics(ctx context.Context, sel ast.SelectionSet, v *Metrics) graphql.Marshaler {
+func (ec *executionContext) marshalOMetrics2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMetrics(ctx context.Context, sel ast.SelectionSet, v *Metrics) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Metrics(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalONeo4jConfig2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐNeo4jConfig(ctx context.Context, sel ast.SelectionSet, v *Neo4jConfig) graphql.Marshaler {
+func (ec *executionContext) marshalONeo4jConfig2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐNeo4jConfig(ctx context.Context, sel ast.SelectionSet, v *Neo4jConfig) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Neo4jConfig(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOOpenbaoSecretsConfig2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐOpenbaoSecretsConfig(ctx context.Context, sel ast.SelectionSet, v *OpenbaoSecretsConfig) graphql.Marshaler {
+func (ec *executionContext) marshalOOpenbaoSecretsConfig2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐOpenbaoSecretsConfig(ctx context.Context, sel ast.SelectionSet, v *OpenbaoSecretsConfig) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._OpenbaoSecretsConfig(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOPairingInfo2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐPairingInfo(ctx context.Context, sel ast.SelectionSet, v *PairingInfo) graphql.Marshaler {
+func (ec *executionContext) marshalOPairingInfo2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐPairingInfo(ctx context.Context, sel ast.SelectionSet, v *PairingInfo) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._PairingInfo(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOSchedulerConfig2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSchedulerConfig(ctx context.Context, sel ast.SelectionSet, v *SchedulerConfig) graphql.Marshaler {
+func (ec *executionContext) marshalOSchedulerConfig2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSchedulerConfig(ctx context.Context, sel ast.SelectionSet, v *SchedulerConfig) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._SchedulerConfig(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOSearchMemoryResult2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSearchMemoryResult(ctx context.Context, sel ast.SelectionSet, v *SearchMemoryResult) graphql.Marshaler {
+func (ec *executionContext) marshalOSearchMemoryResult2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSearchMemoryResult(ctx context.Context, sel ast.SelectionSet, v *SearchMemoryResult) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._SearchMemoryResult(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOSecretsConfig2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSecretsConfig(ctx context.Context, sel ast.SelectionSet, v *SecretsConfig) graphql.Marshaler {
+func (ec *executionContext) marshalOSecretsConfig2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSecretsConfig(ctx context.Context, sel ast.SelectionSet, v *SecretsConfig) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._SecretsConfig(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOStatus2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐStatus(ctx context.Context, sel ast.SelectionSet, v *Status) graphql.Marshaler {
+func (ec *executionContext) marshalOStatus2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐStatus(ctx context.Context, sel ast.SelectionSet, v *Status) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -23265,21 +23265,21 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 	return res
 }
 
-func (ec *executionContext) marshalOSubagentsConfig2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSubagentsConfig(ctx context.Context, sel ast.SelectionSet, v *SubagentsConfig) graphql.Marshaler {
+func (ec *executionContext) marshalOSubagentsConfig2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSubagentsConfig(ctx context.Context, sel ast.SelectionSet, v *SubagentsConfig) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._SubagentsConfig(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOTask2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐTask(ctx context.Context, sel ast.SelectionSet, v *Task) graphql.Marshaler {
+func (ec *executionContext) marshalOTask2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐTask(ctx context.Context, sel ast.SelectionSet, v *Task) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Task(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOUserGraphResult2ᚖgithubᚗcomᚋneirthᚋopenlobsterᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐUserGraphResult(ctx context.Context, sel ast.SelectionSet, v *UserGraphResult) graphql.Marshaler {
+func (ec *executionContext) marshalOUserGraphResult2ᚖgithubᚗcomᚋneirthᚋmypalᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐUserGraphResult(ctx context.Context, sel ast.SelectionSet, v *UserGraphResult) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}

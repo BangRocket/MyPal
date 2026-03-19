@@ -81,19 +81,19 @@ Each capability can be toggled on or off. Disabling a capability removes its too
 **SQLite (local/development):**
 
 ```
-./data/openlobster.db
+./data/mypal.db
 ```
 
 **PostgreSQL (production):**
 
 ```
-postgres://user:password@db-host:5432/openlobster?sslmode=require
+postgres://user:password@db-host:5432/mypal?sslmode=require
 ```
 
 **MySQL:**
 
 ```
-user:password@tcp(db-host:3306)/openlobster
+user:password@tcp(db-host:3306)/mypal
 ```
 
 </details>
@@ -111,7 +111,7 @@ The database driver you choose affects scalability, availability, and data consi
 **Real-world example:**
 - Solo user with 1-10 conversations/day → SQLite is fine
 - Team of 5+ users with 100+ conversations/day → PostgreSQL recommended
-- Multiple OpenLobster instances for failover → PostgreSQL required
+- Multiple MyPal instances for failover → PostgreSQL required
 
 See [Database Configuration](#database-configuration) in the [README](../README.md) for environment variable setup.
 
@@ -136,7 +136,7 @@ The memory backend stores the agent's knowledge graph (facts, entities, relation
 **Real-world example:**
 - Solo agent, testing new prompts → File/GML is fine
 - Team of 10+ users with years of conversations → Neo4j recommended
-- Multiple OpenLobster instances sharing memory → Neo4j required
+- Multiple MyPal instances sharing memory → Neo4j required
 
 **Performance note:** If you're using File/GML and see slowdowns with > 100,000 nodes, switching to Neo4j will make memory operations (search, extraction, updates) 10-100x faster.
 
@@ -170,7 +170,7 @@ When your agent needs to do multiple things in parallel (e.g., analyze 3 differe
 | **GraphQL Enabled** | Set to `false` to disable the GraphQL API entirely. |
 | **Port** | Port the server listens on. Default: `8080`. |
 | **Host** | Bind address. Default: `127.0.0.1` (localhost only). Set to `0.0.0.0` to accept external connections. |
-| **Server Base URL** | Public URL of this OpenLobster instance, e.g. `https://openlobster.example.com`. Required for OAuth callbacks and MCP redirects. |
+| **Server Base URL** | Public URL of this MyPal instance, e.g. `https://mypal.example.com`. Required for OAuth callbacks and MCP redirects. |
 
 ## Logging Configuration
 
@@ -245,8 +245,8 @@ Never commit API keys, channel tokens, or secrets to source control. Use environ
 
 * Restrict permissions on secrets files: `chmod 600 secrets.json`.
 * In production, prefer PostgreSQL or MySQL over SQLite and run the database as a separate service.
-* Set `OPENLOBSTER_SECRET_KEY` (32-byte Base64 or passphrase) as an environment variable to encrypt config and secrets on disk. If not set, a default key derived from "OpenLobster" is used — acceptable for local development only.
-* All `OPENLOBSTER_*` environment variables are never exposed to terminal tools.
+* Set `MYPAL_SECRET_KEY` (32-byte Base64 or passphrase) as an environment variable to encrypt config and secrets on disk. If not set, a default key derived from "MyPal" is used — acceptable for local development only.
+* All `MYPAL_*` environment variables are never exposed to terminal tools.
 
 ## Troubleshooting
 
@@ -266,5 +266,5 @@ nc -zv neo4j-host 7687
 **Follow live logs:**
 
 ```bash
-tail -f ./logs/openlobster.log
+tail -f ./logs/mypal.log
 ```

@@ -74,7 +74,7 @@ func (c *MCPClientSDK) connectHTTP(ctx context.Context, server ServerConfig) err
 		Params: mcp.InitializeParams{
 			ProtocolVersion: mcp.LATEST_PROTOCOL_VERSION,
 			ClientInfo: mcp.Implementation{
-				Name:    "openlobster",
+				Name:    "mypal",
 				Version: "0.1.0",
 			},
 		},

@@ -1,10 +1,10 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
 
 /**
  * Shared GraphQL subscription strings used by both the web frontend and the terminal.
  *
  * Import with:
- *   import { MESSAGE_SUBSCRIPTION } from '@openlobster/ui/graphql/subscriptions';
+ *   import { MESSAGE_SUBSCRIPTION } from '@mypal/ui/graphql/subscriptions';
  */
 
 export const MESSAGE_SUBSCRIPTION = /* GraphQL */ `

@@ -44,7 +44,7 @@ The secrets backend stores sensitive data: channel tokens (Telegram, Discord), A
 
 ### Verify a successful restart
 
-After restarting OpenLobster, check the **Uptime** field. It should show a low value (seconds or minutes). If it shows a large number, the process may not have actually restarted.
+After restarting MyPal, check the **Uptime** field. It should show a low value (seconds or minutes). If it shows a large number, the process may not have actually restarted.
 
 ### Confirm configuration is applied
 

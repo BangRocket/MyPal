@@ -1,4 +1,4 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
  
 
 import { test, expect } from '@playwright/test';
@@ -10,7 +10,7 @@ test.describe('Frontend Application', () => {
 
     // Verify page title
     const title = await page.title();
-    expect(title).toContain('OpenLobster');
+    expect(title).toContain('MyPal');
   });
 
   test('root element exists', async ({ page }) => {

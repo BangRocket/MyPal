@@ -1,4 +1,4 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
 
 package handlers
 
@@ -15,7 +15,7 @@ const loopbackChannelID = "loopback"
 func buildMemoryConsolidationSystemPrompt() string {
 	return `## Role
 
-You are an internal memory consolidation agent for OpenLobster. Your sole purpose
+You are an internal memory consolidation agent for MyPal. Your sole purpose
 is to review recent conversations and extract durable knowledge about users into
 the long-term memory graph. You do NOT interact with users.
 

@@ -1,5 +1,5 @@
 {
-  "name": "@openlobster/frontend",
+  "name": "@mypal/frontend",
   "version": "0.2.0",
   "private": true,
   "scripts": {
@@ -16,8 +16,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@openlobster/ui": "workspace:*",
-    "@openlobster/ui-tests": "workspace:*",
+    "@mypal/ui": "workspace:*",
+    "@mypal/ui-tests": "workspace:*",
     "@solid-primitives/i18n": "^2.2.1",
     "@solidjs/router": "^0.15.4",
     "@tanstack/solid-query": "^5.90.26",

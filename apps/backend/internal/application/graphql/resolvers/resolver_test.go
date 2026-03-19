@@ -309,7 +309,7 @@ func TestMutationResolver_AddMemory(t *testing.T) {
 
 func TestMutationResolver_SpawnSubAgent(t *testing.T) {
 	deps := newTestDeps(nil)
-	deps.SubAgentSvc = &mockSubAgentSvc{id: "openlobster"}
+	deps.SubAgentSvc = &mockSubAgentSvc{id: "mypal"}
 	r := NewResolver(deps)
 
 	task := "task"
@@ -318,7 +318,7 @@ func TestMutationResolver_SpawnSubAgent(t *testing.T) {
 	require.NotNil(t, result)
 	assert.True(t, result.Success)
 	require.NotNil(t, result.ID)
-	assert.Equal(t, "openlobster", *result.ID)
+	assert.Equal(t, "mypal", *result.ID)
 }
 
 func TestMutationResolver_KillSubAgent(t *testing.T) {
@@ -326,7 +326,7 @@ func TestMutationResolver_KillSubAgent(t *testing.T) {
 	deps.SubAgentSvc = &mockSubAgentSvc{}
 	r := NewResolver(deps)
 
-	result, err := r.Mutation().KillSubAgent(context.Background(), "openlobster")
+	result, err := r.Mutation().KillSubAgent(context.Background(), "mypal")
 	require.NoError(t, err)
 	require.NotNil(t, result)
 	assert.True(t, result.Success)
@@ -635,8 +635,8 @@ func TestDeps_Agent_NilAgent(t *testing.T) {
 func TestDeps_Agent_PrefersConfigSnapshot(t *testing.T) {
 	reg := registry.NewAgentRegistry()
 	reg.UpdateAgent(&dto.AgentSnapshot{
-		ID:         "openlobster",
-		Name:       "OpenLobster",
+		ID:         "mypal",
+		Name:       "MyPal",
 		Provider:   "",
 		AIProvider: "",
 		Status:     "running",
@@ -645,7 +645,7 @@ func TestDeps_Agent_PrefersConfigSnapshot(t *testing.T) {
 	// Without ConfigSnapshot: returns values from the registry.
 	agent := deps.Agent(context.Background())
 	require.NotNil(t, agent)
-	assert.Equal(t, "OpenLobster", agent.Name)
+	assert.Equal(t, "MyPal", agent.Name)
 	assert.Equal(t, "", agent.Provider)
 
 	// With ConfigSnapshot: name and provider come from config (post-wizard).

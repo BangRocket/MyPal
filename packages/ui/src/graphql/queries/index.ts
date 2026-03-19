@@ -1,4 +1,4 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
 
 /**
  * Shared GraphQL query strings used by both the web frontend and the terminal.
@@ -8,7 +8,7 @@
  * stay in sync when the schema changes.
  *
  * Import with:
- *   import { METRICS_QUERY } from '@openlobster/ui/graphql/queries';
+ *   import { METRICS_QUERY } from '@mypal/ui/graphql/queries';
  */
 
 // ─── Agent ────────────────────────────────────────────────────────────────────

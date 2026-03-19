@@ -28,7 +28,7 @@ Choose the `.skill` file from your computer. The UI will upload and validate the
 
 ## Confirm success
 
-If the file is valid, the skill appears in the list and a confirmation message is shown. If validation fails, an inline error explains the problem — check that the file is a valid `.skill` package and is compatible with your version of OpenLobster.
+If the file is valid, the skill appears in the list and a confirmation message is shown. If validation fails, an inline error explains the problem — check that the file is a valid `.skill` package and is compatible with your version of MyPal.
 
 {% endstep %}
 {% endstepper %}

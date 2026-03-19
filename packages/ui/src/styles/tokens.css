@@ -1,7 +1,7 @@
 /*
- * Copyright (c) OpenLobster contributors. See LICENSE for details.
+ * Copyright (c) MyPal contributors. See LICENSE for details.
  *
- * Design tokens for the OpenLobster web frontend.
+ * Design tokens for the MyPal web frontend.
  * These are the canonical source of truth for the color palette.
  * The same values are mirrored as TypeScript constants in src/theme/index.ts
  * for use by the terminal frontend (which cannot consume CSS).

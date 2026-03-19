@@ -1,4 +1,4 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
 
 import { createQuery } from "@tanstack/solid-query";
 import type { GraphQLClient } from "graphql-request";
@@ -67,20 +67,20 @@ export function useMetrics(client: GraphQLClient) {
       ) as PromFamily[];
 
       return {
-        uptime: valueOf(families, "openlobster_uptime_seconds"),
+        uptime: valueOf(families, "mypal_uptime_seconds"),
         messagesReceived: valueOf(
           families,
-          "openlobster_messages_received_total",
+          "mypal_messages_received_total",
         ),
-        messagesSent: valueOf(families, "openlobster_messages_sent_total"),
-        activeSessions: valueOf(families, "openlobster_active_sessions"),
-        memoryNodes: valueOf(families, "openlobster_memory_nodes"),
-        memoryEdges: valueOf(families, "openlobster_memory_edges"),
-        mcpTools: valueOf(families, "openlobster_mcp_tools"),
-        tasksPending: valueOf(families, "openlobster_tasks_pending"),
-        tasksRunning: valueOf(families, "openlobster_tasks_running"),
-        tasksDone: valueOf(families, "openlobster_tasks_done_total"),
-        errorsTotal: valueOf(families, "openlobster_errors_total"),
+        messagesSent: valueOf(families, "mypal_messages_sent_total"),
+        activeSessions: valueOf(families, "mypal_active_sessions"),
+        memoryNodes: valueOf(families, "mypal_memory_nodes"),
+        memoryEdges: valueOf(families, "mypal_memory_edges"),
+        mcpTools: valueOf(families, "mypal_mcp_tools"),
+        tasksPending: valueOf(families, "mypal_tasks_pending"),
+        tasksRunning: valueOf(families, "mypal_tasks_running"),
+        tasksDone: valueOf(families, "mypal_tasks_done_total"),
+        errorsTotal: valueOf(families, "mypal_errors_total"),
       } satisfies Metrics;
     },
     refetchInterval: (_query) => {

@@ -1,10 +1,10 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
 
 /**
  * Header renders the 50px top bar shared across all views.
  *
  * Layout:
- *   Left  — smart_toy icon + OPENLOBSTER wordmark
+ *   Left  — smart_toy icon + MYPAL wordmark
  *   Center — tab navigation (absolutely centered)
  *   Right  — status dot + agent name + version + pending pairings button + avatar
  *
@@ -15,7 +15,7 @@ import { For, Show, createMemo, createSignal } from "solid-js";
 import type { Component } from "solid-js";
 import type { GraphQLClient } from "graphql-request";
 import { A } from "@solidjs/router";
-import { useAgent } from "@openlobster/ui/hooks";
+import { useAgent } from "@mypal/ui/hooks";
 import { t } from "../../App";
 import { wsConnected } from "../../stores/wsStore";
 import { pendingPairingsQueue, openPairingRequest } from "../../stores/pairingStore";

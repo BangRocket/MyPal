@@ -26,7 +26,7 @@ Only Streamable HTTP transport is supported. If you want to use a stdio-based MC
 When you enable an MCP server, here's what happens:
 
 1. **Server connects** — You enter the server URL in Tools → Servers
-2. **Tools registered** — OpenLobster contacts the server and loads available tools (e.g., "fetch_calendar", "query_database")
+2. **Tools registered** — MyPal contacts the server and loads available tools (e.g., "fetch_calendar", "query_database")
 3. **Tools appear in built-in list** — You see them under Tools → Built-in, namespaced (e.g., "calendar:fetch_calendar")
 4. **Permissions layer** — You can allow, deny, or ask-before-using each tool per user
 5. **Message arrives** — When a user sends a message, step 5 of the message processing pipeline checks permissions
@@ -39,7 +39,7 @@ When you enable an MCP server, here's what happens:
 
 | Type | Source | When It Runs | Examples |
 |------|--------|--------------|----------|
-| **Built-in** | Part of OpenLobster | Locally (fast) | Browser navigation, file read/write, terminal commands, memory search |
+| **Built-in** | Part of MyPal | Locally (fast) | Browser navigation, file read/write, terminal commands, memory search |
 | **External (MCP)** | Connected servers | Remote HTTP calls | Calendar access, database queries, CRM lookups, Slack messaging |
 
 ## MCP Marketplace

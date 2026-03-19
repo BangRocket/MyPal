@@ -1,4 +1,4 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
 
 /**
  * DashboardView — the Overview tab.
@@ -21,7 +21,7 @@ import {
   useMcpServers,
   useAgent,
   useConfig,
-} from "@openlobster/ui/hooks";
+} from "@mypal/ui/hooks";
 import { client } from "../../graphql/client";
 import AppShell from "../../components/AppShell";
 import "./DashboardView.css";

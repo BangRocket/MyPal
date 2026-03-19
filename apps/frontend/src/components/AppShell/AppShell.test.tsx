@@ -1,4 +1,4 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
  
 
 import { describe, it, expect, vi } from 'vitest';
@@ -16,7 +16,7 @@ vi.mock('../Header/Header', () => ({
   default: () => <header class="header" />,
 }));
 
-// Mock @openlobster/ui utilities
+// Mock @mypal/ui utilities
 vi.mock('../../graphql/client', () => ({
   client: {},
 }));

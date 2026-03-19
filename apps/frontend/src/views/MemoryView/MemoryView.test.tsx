@@ -1,4 +1,4 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
  
 
 import { describe, it, expect, vi } from "vitest";
@@ -32,7 +32,7 @@ vi.mock("../../components/GraphVisualization", () => ({
   default: () => <div class="graph-visualization-mock" />,
 }));
 
-vi.mock("@openlobster/ui/hooks", () => ({
+vi.mock("@mypal/ui/hooks", () => ({
   useMemory: () => ({
     data: mockMemoryData,
     isLoading: false,

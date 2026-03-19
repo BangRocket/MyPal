@@ -1,5 +1,5 @@
 ---
-description: "OpenLobster documentation table of contents and navigation"
+description: "MyPal documentation table of contents and navigation"
 icon: book-open
 ---
 

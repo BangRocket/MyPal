@@ -1,9 +1,9 @@
-# OpenLobster — Personal AI Assistant
+# MyPal — Personal AI Assistant
 
 <p align="center">
     <picture>
-        <source media="(prefers-color-scheme: light)" srcset="https://placehold.co/1600x200/ffffff/000000?text=OpenLobster&font=raleway">
-         <img src="https://placehold.co/800x200/0b6e4f/ffffff?text=OpenLobster&font=raleway" alt="OpenLobster" width="800">
+        <source media="(prefers-color-scheme: light)" srcset="https://placehold.co/1600x200/ffffff/000000?text=MyPal&font=raleway">
+         <img src="https://placehold.co/800x200/0b6e4f/ffffff?text=MyPal&font=raleway" alt="MyPal" width="800">
     </picture>
 </p>
 
@@ -13,14 +13,14 @@
 
 
 <p align="center">
-  <a href="https://github.com/Neirth/OpenLobster/actions/workflows/release.docker-images.yaml?branch=main"><img src="https://img.shields.io/github/actions/workflow/status/Neirth/OpenLobster/release.docker-images.yaml?branch=master&style=for-the-badge" alt="CI status"></a>
-  <a href="https://github.com/Neirth/OpenLobster/releases"><img src="https://img.shields.io/github/v/release/Neirth/OpenLobster?include_prereleases&style=for-the-badge" alt="GitHub release"></a>
-  <a href="https://neirth.gitbook.io/openlobster"><img src="https://img.shields.io/badge/Docs-GitBook-blue?style=for-the-badge" alt="Docs"></a>
+  <a href="https://github.com/Neirth/MyPal/actions/workflows/release.docker-images.yaml?branch=main"><img src="https://img.shields.io/github/actions/workflow/status/Neirth/MyPal/release.docker-images.yaml?branch=master&style=for-the-badge" alt="CI status"></a>
+  <a href="https://github.com/Neirth/MyPal/releases"><img src="https://img.shields.io/github/v/release/Neirth/MyPal?include_prereleases&style=for-the-badge" alt="GitHub release"></a>
+  <a href="https://neirth.gitbook.io/mypal"><img src="https://img.shields.io/badge/Docs-GitBook-blue?style=for-the-badge" alt="Docs"></a>
   <a href="LICENSE.md"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg?style=for-the-badge" alt="GPLv3 License"></a>
 </p>
 
 > [!NOTE]
-> **Migrating from OpenClaw?** A step-by-step migration guide is available in [Discussions #44](https://github.com/Neirth/OpenLobster/discussions/44).
+> **Migrating from OpenClaw?** A step-by-step migration guide is available in [Discussions #44](https://github.com/Neirth/MyPal/discussions/44).
 
 
 An opinionated fork of OpenClaw that actually addresses the things people have been complaining about since the project blew up.
@@ -33,22 +33,22 @@ This fork started as a personal fix for all of that and grew from there.
 
 ## What changed (and why)
 
-* **Memory** — MEMORY.md and a folder of markdown files is not a memory system, it's a wiki. OpenLobster uses a proper graph database (Neo4j) where the agent builds nodes, edges, and typed relationships as it talks to people. You can browse and edit it from the UI. There's also a file backend for local use that doesn't require running Neo4j.
+* **Memory** — MEMORY.md and a folder of markdown files is not a memory system, it's a wiki. MyPal uses a proper graph database (Neo4j) where the agent builds nodes, edges, and typed relationships as it talks to people. You can browse and edit it from the UI. There's also a file backend for local use that doesn't require running Neo4j.
 
 * **Multi-user** — In OpenClaw, curated memory was only loaded in the "main, private session" and never in group contexts. There was no concept of separate users with separate histories. Here, each user across each channel is a proper first-class entity with their own conversation history, their own tool permissions, and their own pairing flow. A Telegram user and a Discord user can talk to the same agent without stepping on each other.
 
 * **Scheduler** — The heartbeat loop reading a HEARTBEAT.md file every 30 minutes is gone. There's a real task scheduler with cron expressions for recurring jobs and ISO 8601 datetimes for one-shot tasks. Status, next-run times, and logs are all visible in the dashboard.
 
-* **MCP** — OpenClaw's MCP integration was essentially a demo. OpenLobster connects to any Streamable HTTP MCP server, handles the full OAuth 2.1 flow, lets you browse tools per server, and gives you a per-user permission matrix so you control exactly what each user can do. There's also a marketplace for one-click integrations.
+* **MCP** — OpenClaw's MCP integration was essentially a demo. MyPal connects to any Streamable HTTP MCP server, handles the full OAuth 2.1 flow, lets you browse tools per server, and gives you a per-user permission matrix so you control exactly what each user can do. There's also a marketplace for one-click integrations.
 
-* **Security** — This is the big one. OpenClaw shipped with authentication disabled by default, which is how you end up with 40,000 exposed instances on Censys. Here, dashboard auth is on by default behind a bearer token (`OPENLOBSTER_GRAPHQL_AUTH_TOKEN`). Config and secrets are encrypted on disk. API keys and channel tokens are stored in a secrets backend (encrypted file or OpenBao), not sitting in plain YAML. `OPENLOBSTER_*` env vars are never leaked to terminal tools. The CVE that let unauthenticated callers hit the agent API directly? Not a thing here.
+* **Security** — This is the big one. OpenClaw shipped with authentication disabled by default, which is how you end up with 40,000 exposed instances on Censys. Here, dashboard auth is on by default behind a bearer token (`MYPAL_GRAPHQL_AUTH_TOKEN`). Config and secrets are encrypted on disk. API keys and channel tokens are stored in a secrets backend (encrypted file or OpenBao), not sitting in plain YAML. `MYPAL_*` env vars are never leaked to terminal tools. The CVE that let unauthenticated callers hit the agent API directly? Not a thing here.
 
 * **Backend** — OpenClaw was Node.js/TypeScript. The entire backend has been rewritten in Go. That means a single static binary with no runtime dependency, faster startup, lower memory footprint, and a proper GraphQL API via gqlgen. It also makes deployment significantly simpler — no npm, no Node version pinning, no `node_modules` to worry about.
 
 * **UI** — The web interface was built with actual usability in mind. First launch drops you into a setup wizard that gets you from zero to a running agent without touching a config file. Settings are a dynamic form that adjusts based on what you enable — you only see the fields that matter for your setup. Everything you'd otherwise need to edit YAML for is accessible from the browser.
 
 > [!NOTE]
-> **Contributors needed** I'm thinking about adding maintainers to this repository. I'm discussing it on [Discussions #68](https://github.com/Neirth/OpenLobster/discussions/68).
+> **Contributors needed** I'm thinking about adding maintainers to this repository. I'm discussing it on [Discussions #68](https://github.com/Neirth/MyPal/discussions/68).
 
 ## Stack
 
@@ -69,16 +69,16 @@ This fork started as a personal fix for all of that and grew from there.
 pnpm install
 
 # Build frontend + backend (frontend embedded into the binary)
-pnpm build --filter=@openlobster/backend
+pnpm build --filter=@mypal/backend
 
 # Build only the frontend
-pnpm build --filter=@openlobster/frontend
+pnpm build --filter=@mypal/frontend
 
 # Build both
 pnpm build
 
 # Run
-./dist/openlobster
+./dist/mypal
 ```
 
 The web dashboard will be at `http://127.0.0.1:8080`. On first launch the setup wizard walks you through the essential config.
@@ -87,29 +87,29 @@ The web dashboard will be at `http://127.0.0.1:8080`. On first launch the setup 
 
 ```bash
 docker run -p 8080:8080 \
-  -e OPENLOBSTER_GRAPHQL_HOST=0.0.0.0 \
-  -e OPENLOBSTER_GRAPHQL_AUTH_TOKEN=your-secret-token \
-  -v ~/.openlobster/data:/app/data \
-  -v ~/.openlobster/workspace:/app/workspace \
-  -d ghcr.io/neirth/openlobster/openlobster:latest
+  -e MYPAL_GRAPHQL_HOST=0.0.0.0 \
+  -e MYPAL_GRAPHQL_AUTH_TOKEN=your-secret-token \
+  -v ~/.mypal/data:/app/data \
+  -v ~/.mypal/workspace:/app/workspace \
+  -d ghcr.io/neirth/mypal/mypal:latest
 ```
 
 Check `.docker/` for the available Dockerfiles (`Dockerfile.basic` for a minimal build, `Dockerfile.static` for a fully static binary).
 
 ## Configuration
 
-Configuration lives in the dashboard under Settings, but you can inject everything via environment variables with the `OPENLOBSTER_` prefix. Viper maps them automatically (dots in YAML keys become underscores).
+Configuration lives in the dashboard under Settings, but you can inject everything via environment variables with the `MYPAL_` prefix. Viper maps them automatically (dots in YAML keys become underscores).
 
 ```bash
 # Minimal example
-OPENLOBSTER_AGENT_NAME=my-agent
-OPENLOBSTER_DATABASE_DRIVER=sqlite
-OPENLOBSTER_DATABASE_DSN=./data/openlobster.db
-OPENLOBSTER_GRAPHQL_AUTH_TOKEN=your-secret-token
+MYPAL_AGENT_NAME=my-agent
+MYPAL_DATABASE_DRIVER=sqlite
+MYPAL_DATABASE_DSN=./data/mypal.db
+MYPAL_GRAPHQL_AUTH_TOKEN=your-secret-token
 
 # AI provider (pick one)
-OPENLOBSTER_PROVIDERS_OLLAMA_ENDPOINT=http://localhost:11434
-OPENLOBSTER_PROVIDERS_OLLAMA_DEFAULT_MODEL=llama3.2:latest
+MYPAL_PROVIDERS_OLLAMA_ENDPOINT=http://localhost:11434
+MYPAL_PROVIDERS_OLLAMA_DEFAULT_MODEL=llama3.2:latest
 ```
 
 <details>
@@ -117,45 +117,45 @@ OPENLOBSTER_PROVIDERS_OLLAMA_DEFAULT_MODEL=llama3.2:latest
 
 | Variable | YAML key | Description |
 | -------- | -------- | ----------- |
-| `OPENLOBSTER_AGENT_NAME` | `agent.name` | Agent display name |
-| `OPENLOBSTER_DATABASE_DRIVER` | `database.driver` | `sqlite`, `postgres`, `mysql` |
-| `OPENLOBSTER_DATABASE_DSN` | `database.dsn` | Connection string |
-| `OPENLOBSTER_DATABASE_MAX_OPEN_CONNS` | `database.max_open_conns` | Max open connections |
-| `OPENLOBSTER_DATABASE_MAX_IDLE_CONNS` | `database.max_idle_conns` | Max idle connections |
-| `OPENLOBSTER_MEMORY_BACKEND` | `memory.backend` | `file` or `neo4j` |
-| `OPENLOBSTER_MEMORY_FILE_PATH` | `memory.file.path` | Path for file backend |
-| `OPENLOBSTER_MEMORY_NEO4J_URI` | `memory.neo4j.uri` | e.g. `bolt://localhost:7687` |
-| `OPENLOBSTER_MEMORY_NEO4J_USER` | `memory.neo4j.user` | Neo4j username |
-| `OPENLOBSTER_MEMORY_NEO4J_PASSWORD` | `memory.neo4j.password` | Neo4j password |
-| `OPENLOBSTER_SECRETS_BACKEND` | `secrets.backend` | `file` or `openbao` |
-| `OPENLOBSTER_SECRETS_FILE_PATH` | `secrets.file.path` | Path for file secrets |
-| `OPENLOBSTER_SECRETS_OPENBAO_URL` | `secrets.openbao.url` | OpenBao server URL |
-| `OPENLOBSTER_SECRETS_OPENBAO_TOKEN` | `secrets.openbao.token` | OpenBao auth token |
-| `OPENLOBSTER_PROVIDERS_OPENAI_API_KEY` | `providers.openai.api_key` | OpenAI key |
-| `OPENLOBSTER_PROVIDERS_OPENAI_MODEL` | `providers.openai.model` | e.g. `gpt-4o` |
-| `OPENLOBSTER_PROVIDERS_OPENAI_BASE_URL` | `providers.openai.base_url` | Custom base URL |
-| `OPENLOBSTER_PROVIDERS_OPENROUTER_API_KEY` | `providers.openrouter.api_key` | OpenRouter key |
-| `OPENLOBSTER_PROVIDERS_OPENROUTER_DEFAULT_MODEL` | `providers.openrouter.default_model` | e.g. `openai/gpt-4o` |
-| `OPENLOBSTER_PROVIDERS_OLLAMA_ENDPOINT` | `providers.ollama.endpoint` | e.g. `http://localhost:11434` |
-| `OPENLOBSTER_PROVIDERS_OLLAMA_DEFAULT_MODEL` | `providers.ollama.default_model` | e.g. `llama3.2:latest` |
-| `OPENLOBSTER_PROVIDERS_OLLAMA_API_KEY` | `providers.ollama.api_key` | Optional auth |
-| `OPENLOBSTER_PROVIDERS_ANTHROPIC_API_KEY` | `providers.anthropic.api_key` | Anthropic key |
-| `OPENLOBSTER_PROVIDERS_ANTHROPIC_MODEL` | `providers.anthropic.model` | e.g. `claude-sonnet-4-6` |
-| `OPENLOBSTER_PROVIDERS_OPENAICOMPAT_API_KEY` | `providers.openaicompat.api_key` | OpenAI-compatible key |
-| `OPENLOBSTER_PROVIDERS_OPENAICOMPAT_BASE_URL` | `providers.openaicompat.base_url` | Base URL |
-| `OPENLOBSTER_PROVIDERS_OPENAICOMPAT_MODEL` | `providers.openaicompat.model` | Model name |
-| `OPENLOBSTER_PROVIDERS_DOCKER_MODEL_RUNNER_ENDPOINT` | `providers.docker_model_runner.endpoint` | DMR endpoint |
-| `OPENLOBSTER_PROVIDERS_DOCKER_MODEL_RUNNER_DEFAULT_MODEL` | `providers.docker_model_runner.default_model` | DMR model |
-| `OPENLOBSTER_GRAPHQL_ENABLED` | `graphql.enabled` | Enable GraphQL API |
-| `OPENLOBSTER_GRAPHQL_PORT` | `graphql.port` | Default `8080` |
-| `OPENLOBSTER_GRAPHQL_HOST` | `graphql.host` | Default `127.0.0.1` |
-| `OPENLOBSTER_GRAPHQL_BASE_URL` | `graphql.base_url` | Public URL for OAuth callbacks |
-| `OPENLOBSTER_GRAPHQL_AUTH_ENABLED` | `graphql.auth_enabled` | Require token for dashboard |
-| `OPENLOBSTER_GRAPHQL_AUTH_TOKEN` | `graphql.auth_token` | Bearer token |
-| `OPENLOBSTER_LOGGING_LEVEL` | `logging.level` | `debug`, `info`, `warn`, `error` |
-| `OPENLOBSTER_LOGGING_PATH` | `logging.path` | Log directory |
-| `OPENLOBSTER_WORKSPACE_PATH` | `workspace.path` | Workspace directory |
-| `OPENLOBSTER_CONFIG_ENCRYPT` | — | `1` (default) encrypts config on disk, `0` uses plain YAML |
+| `MYPAL_AGENT_NAME` | `agent.name` | Agent display name |
+| `MYPAL_DATABASE_DRIVER` | `database.driver` | `sqlite`, `postgres`, `mysql` |
+| `MYPAL_DATABASE_DSN` | `database.dsn` | Connection string |
+| `MYPAL_DATABASE_MAX_OPEN_CONNS` | `database.max_open_conns` | Max open connections |
+| `MYPAL_DATABASE_MAX_IDLE_CONNS` | `database.max_idle_conns` | Max idle connections |
+| `MYPAL_MEMORY_BACKEND` | `memory.backend` | `file` or `neo4j` |
+| `MYPAL_MEMORY_FILE_PATH` | `memory.file.path` | Path for file backend |
+| `MYPAL_MEMORY_NEO4J_URI` | `memory.neo4j.uri` | e.g. `bolt://localhost:7687` |
+| `MYPAL_MEMORY_NEO4J_USER` | `memory.neo4j.user` | Neo4j username |
+| `MYPAL_MEMORY_NEO4J_PASSWORD` | `memory.neo4j.password` | Neo4j password |
+| `MYPAL_SECRETS_BACKEND` | `secrets.backend` | `file` or `openbao` |
+| `MYPAL_SECRETS_FILE_PATH` | `secrets.file.path` | Path for file secrets |
+| `MYPAL_SECRETS_OPENBAO_URL` | `secrets.openbao.url` | OpenBao server URL |
+| `MYPAL_SECRETS_OPENBAO_TOKEN` | `secrets.openbao.token` | OpenBao auth token |
+| `MYPAL_PROVIDERS_OPENAI_API_KEY` | `providers.openai.api_key` | OpenAI key |
+| `MYPAL_PROVIDERS_OPENAI_MODEL` | `providers.openai.model` | e.g. `gpt-4o` |
+| `MYPAL_PROVIDERS_OPENAI_BASE_URL` | `providers.openai.base_url` | Custom base URL |
+| `MYPAL_PROVIDERS_OPENROUTER_API_KEY` | `providers.openrouter.api_key` | OpenRouter key |
+| `MYPAL_PROVIDERS_OPENROUTER_DEFAULT_MODEL` | `providers.openrouter.default_model` | e.g. `openai/gpt-4o` |
+| `MYPAL_PROVIDERS_OLLAMA_ENDPOINT` | `providers.ollama.endpoint` | e.g. `http://localhost:11434` |
+| `MYPAL_PROVIDERS_OLLAMA_DEFAULT_MODEL` | `providers.ollama.default_model` | e.g. `llama3.2:latest` |
+| `MYPAL_PROVIDERS_OLLAMA_API_KEY` | `providers.ollama.api_key` | Optional auth |
+| `MYPAL_PROVIDERS_ANTHROPIC_API_KEY` | `providers.anthropic.api_key` | Anthropic key |
+| `MYPAL_PROVIDERS_ANTHROPIC_MODEL` | `providers.anthropic.model` | e.g. `claude-sonnet-4-6` |
+| `MYPAL_PROVIDERS_OPENAICOMPAT_API_KEY` | `providers.openaicompat.api_key` | OpenAI-compatible key |
+| `MYPAL_PROVIDERS_OPENAICOMPAT_BASE_URL` | `providers.openaicompat.base_url` | Base URL |
+| `MYPAL_PROVIDERS_OPENAICOMPAT_MODEL` | `providers.openaicompat.model` | Model name |
+| `MYPAL_PROVIDERS_DOCKER_MODEL_RUNNER_ENDPOINT` | `providers.docker_model_runner.endpoint` | DMR endpoint |
+| `MYPAL_PROVIDERS_DOCKER_MODEL_RUNNER_DEFAULT_MODEL` | `providers.docker_model_runner.default_model` | DMR model |
+| `MYPAL_GRAPHQL_ENABLED` | `graphql.enabled` | Enable GraphQL API |
+| `MYPAL_GRAPHQL_PORT` | `graphql.port` | Default `8080` |
+| `MYPAL_GRAPHQL_HOST` | `graphql.host` | Default `127.0.0.1` |
+| `MYPAL_GRAPHQL_BASE_URL` | `graphql.base_url` | Public URL for OAuth callbacks |
+| `MYPAL_GRAPHQL_AUTH_ENABLED` | `graphql.auth_enabled` | Require token for dashboard |
+| `MYPAL_GRAPHQL_AUTH_TOKEN` | `graphql.auth_token` | Bearer token |
+| `MYPAL_LOGGING_LEVEL` | `logging.level` | `debug`, `info`, `warn`, `error` |
+| `MYPAL_LOGGING_PATH` | `logging.path` | Log directory |
+| `MYPAL_WORKSPACE_PATH` | `workspace.path` | Workspace directory |
+| `MYPAL_CONFIG_ENCRYPT` | — | `1` (default) encrypts config on disk, `0` uses plain YAML |
 
 </details>
 
@@ -181,7 +181,7 @@ No. The architecture is different enough that OpenClaw configs won't map cleanly
 
 **Can I run it without Neo4j?**
 
-Yes. Set `OPENLOBSTER_MEMORY_BACKEND=file` and point `OPENLOBSTER_MEMORY_FILE_PATH` at a directory. The file backend stores the graph in GML format locally. It's perfectly usable for personal setups; Neo4j is there when you need multi-instance or want proper graph queries.
+Yes. Set `MYPAL_MEMORY_BACKEND=file` and point `MYPAL_MEMORY_FILE_PATH` at a directory. The file backend stores the graph in GML format locally. It's perfectly usable for personal setups; Neo4j is there when you need multi-instance or want proper graph queries.
 
 ### Can I run this on small devices?
 
@@ -204,7 +204,7 @@ OpenAI, Anthropic, Ollama, OpenRouter, Docker Model Runner, and any OpenAI-compa
 
 **Is the GraphQL API public?**
 
-By default, yes — the API is open. To protect it, set `OPENLOBSTER_GRAPHQL_AUTH_TOKEN` to a strong secret. Once set, every request to the API and dashboard must include it as a bearer token. If you're exposing the instance on a public IP, do this before you do anything else. The API is intended for the web UI and is not versioned as a public API — it may change between releases.
+By default, yes — the API is open. To protect it, set `MYPAL_GRAPHQL_AUTH_TOKEN` to a strong secret. Once set, every request to the API and dashboard must include it as a bearer token. If you're exposing the instance on a public IP, do this before you do anything else. The API is intended for the web UI and is not versioned as a public API — it may change between releases.
 
 **I am a company, How do I add an MCP server to the marketplace?**
 
@@ -216,7 +216,7 @@ Open an issue and describe what the server does and why it would be useful. If t
 
 **What does "pairing" mean?**
 
-When a user contacts the agent for the first time through any channel, they go through a pairing flow that associates their platform identity (Telegram user ID, Discord user ID, etc.) with an account in OpenLobster. This is what allows per-user permissions, conversation history, and memory to work correctly across channels.
+When a user contacts the agent for the first time through any channel, they go through a pairing flow that associates their platform identity (Telegram user ID, Discord user ID, etc.) with an account in MyPal. This is what allows per-user permissions, conversation history, and memory to work correctly across channels.
 
 **How do I update?**
 

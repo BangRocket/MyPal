@@ -1,4 +1,4 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
  
 
 import { describe, it, expect, vi } from "vitest";
@@ -25,7 +25,7 @@ vi.mock("@tanstack/solid-query", () => {
   };
 });
 
-vi.mock("@openlobster/ui/graphql/mutations", () => ({
+vi.mock("@mypal/ui/graphql/mutations", () => ({
   SEND_MESSAGE_MUTATION: "SEND_MESSAGE_MUTATION",
 }));
 

@@ -5,7 +5,7 @@ icon: terminal
 
 # Recent Logs Panel
 
-The Recent Logs panel shows a live feed of messages from the OpenLobster backend. It updates in real time as the agent processes conversations, runs tasks, and connects to external services.
+The Recent Logs panel shows a live feed of messages from the MyPal backend. It updates in real time as the agent processes conversations, runs tasks, and connects to external services.
 
 ## Log levels
 

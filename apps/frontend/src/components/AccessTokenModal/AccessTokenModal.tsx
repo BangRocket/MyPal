@@ -1,4 +1,4 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
 
 import type { Component } from "solid-js";
 import { createSignal, Show } from "solid-js";
@@ -48,7 +48,7 @@ const AccessTokenModal: Component = () => {
           {t("accessToken.description1")}
           <code>graphql.auth_token</code>
           {t("accessToken.description2")}
-          <code>OPENLOBSTER_GRAPHQL_AUTH_TOKEN</code>
+          <code>MYPAL_GRAPHQL_AUTH_TOKEN</code>
           {t("accessToken.description3")}
         </p>
 

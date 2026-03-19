@@ -1,11 +1,11 @@
 ---
-description: "OpenLobster supports two scheduling formats for tasks: cron expressions for recurring jobs and ISO 8601 datetimes for one-shot jobs."
+description: "MyPal supports two scheduling formats for tasks: cron expressions for recurring jobs and ISO 8601 datetimes for one-shot jobs."
 icon: calendar
 ---
 
 # Scheduling Formats
 
-OpenLobster supports two formats for scheduling tasks. The format you use depends on whether the task should run once or repeat.
+MyPal supports two formats for scheduling tasks. The format you use depends on whether the task should run once or repeat.
 
 ## Cron expressions (cyclic tasks)
 

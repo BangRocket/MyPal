@@ -1,4 +1,4 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
 
 export { useAgent } from "./useAgent";
 export { useMetrics } from "./useMetrics";

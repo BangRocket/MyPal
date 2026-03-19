@@ -1,10 +1,10 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
 
 /**
  * Shared GraphQL mutation strings used by both the web frontend and the terminal.
  *
  * Import with:
- *   import { SEND_MESSAGE_MUTATION } from '@openlobster/ui/graphql/mutations';
+ *   import { SEND_MESSAGE_MUTATION } from '@mypal/ui/graphql/mutations';
  */
 
 // ─── Chat ──────────────────────────────────────────────────────────────────────

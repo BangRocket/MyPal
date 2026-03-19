@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2026 Neirth Intellectual Services
  *
- * This file is part of OpenLobster and is licensed under the MIT License.
+ * This file is part of MyPal and is licensed under the MIT License.
  * See the LICENSE file in the project root for license information.
  */
 
 import { onMount, onCleanup, createEffect, createSignal, Show } from 'solid-js';
 import type { Core } from 'cytoscape';
-import type { MemoryNode, MemoryEdge } from '@openlobster/ui';
+import type { MemoryNode, MemoryEdge } from '@mypal/ui';
 import './GraphVisualization.css';
 
 interface GraphVisualizationProps {

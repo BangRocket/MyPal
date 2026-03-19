@@ -14,7 +14,7 @@ It's easy to confuse these three, so here's the breakdown:
 | Type | What it is | Where it comes from | How it integrates | Used for |
 |------|-----------|-------------------|-------------------|-----------|
 | **Skills** | Reusable instruction/behavior packages (prompts, chains, templates) | Installed locally from files or imported | Merged into system prompt before conversations | Repeatable workflows, behavioral patterns |
-| **Capabilities** | Built-in tool categories (browser, terminal, filesystem, memory, audio) | Part of OpenLobster | Toggled on/off globally in step 5 of pipeline | Core functionality groups |
+| **Capabilities** | Built-in tool categories (browser, terminal, filesystem, memory, audio) | Part of MyPal | Toggled on/off globally in step 5 of pipeline | Core functionality groups |
 | **MCP Servers** | External services exposing tools via HTTP | Remote servers you connect | Step 5-9 of pipeline (tool discovery and execution) | External integrations (APIs, databases, etc.) |
 
 All three are tools the agent can use, but they're different things.

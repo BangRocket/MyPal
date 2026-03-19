@@ -7,7 +7,7 @@ icon: database
 
 ## How the agent learns and remembers
 
-OpenLobster doesn't just process messages — it builds a **knowledge graph** that grows with every conversation. This is how the agent remembers facts about users, recognizes patterns, and makes connections across different conversations.
+MyPal doesn't just process messages — it builds a **knowledge graph** that grows with every conversation. This is how the agent remembers facts about users, recognizes patterns, and makes connections across different conversations.
 
 Think of it like a web of connected notes. When you talk to the agent about "my customer Apple and my employee Bob," the agent:
 
@@ -35,7 +35,7 @@ Each piece of knowledge is a **node** with connections (called **edges**) to oth
 
 Neo4j is a real graph database. It's excellent for:
 
-- **Multi-instance deployments** — If you're running multiple OpenLobster instances, they can all safely write to the same Neo4j server
+- **Multi-instance deployments** — If you're running multiple MyPal instances, they can all safely write to the same Neo4j server
 - **Complex queries** — You can ask "show me everyone Alice knows" or "find all decisions made in Q4"
 - **Scale** — Handles millions of nodes and relationships
 - **Consistency** — ACID transactions mean concurrent writes don't corrupt the graph
@@ -50,7 +50,7 @@ GML is a file-based graph format. It's great for:
 - **Testing** — Simple to set up and tear down
 - **Small deployments** — If you have one instance and moderate conversation volume
 
-Limitations: Only one OpenLobster instance can write to it at a time. If you try to run 2 instances writing to the same file, you'll lose data.
+Limitations: Only one MyPal instance can write to it at a time. If you try to run 2 instances writing to the same file, you'll lose data.
 
 ## How to choose
 
@@ -59,7 +59,7 @@ Limitations: Only one OpenLobster instance can write to it at a time. If you try
 | Solo personal setup, few conversations per day | File/GML |
 | Local development & testing | File/GML |
 | Multiple users, production use | Neo4j |
-| Multiple OpenLobster instances (high availability) | Neo4j required |
+| Multiple MyPal instances (high availability) | Neo4j required |
 | Very large knowledge base (1M+ nodes) | Neo4j |
 
 ## What happens when you look at Memory
@@ -70,7 +70,7 @@ In the Memory view, you see:
 2. **Right panel** — When you click a node, its details and connected nodes appear
 3. **Graph visualization** — A visual representation showing how nodes connect
 
-When you search for something, OpenLobster searches the graph for matching nodes and their relationships.
+When you search for something, MyPal searches the graph for matching nodes and their relationships.
 
 ## Memory growth and space
 

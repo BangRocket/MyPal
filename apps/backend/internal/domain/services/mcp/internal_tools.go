@@ -242,7 +242,7 @@ type SendMessageTool struct {
 func (t *SendMessageTool) Definition() ToolDefinition {
 	return ToolDefinition{
 		Name:        "send_message",
-		Description: "Send a message to a specific recipient. Use exactly one of: user_name (OpenLobster display name), username (handle stored in DB on user_channels — any platform), or channel+channel_type. Optional username_platform disambiguates when the same handle exists on several platforms. Never infer the recipient from who is asking.",
+		Description: "Send a message to a specific recipient. Use exactly one of: user_name (MyPal display name), username (handle stored in DB on user_channels — any platform), or channel+channel_type. Optional username_platform disambiguates when the same handle exists on several platforms. Never infer the recipient from who is asking.",
 		InputSchema: json.RawMessage(`{
 			"type": "object",
 			"properties": {
@@ -1328,14 +1328,14 @@ func (t *ReadFileTool) Definition() ToolDefinition {
 	}
 }
 
-// openlobsterBlocks is the wire format used to pass multimodal content blocks
+// mypalBlocks is the wire format used to pass multimodal content blocks
 // through the json.RawMessage tool result boundary. The handler layer detects
 // this key and converts it into ports.ContentBlock slices on the message.
-type openlobsterBlocks struct {
-	Blocks []openlobsterBlock `json:"_openlobster_blocks"`
+type mypalBlocks struct {
+	Blocks []mypalBlock `json:"_mypal_blocks"`
 }
 
-type openlobsterBlock struct {
+type mypalBlock struct {
 	Type     string `json:"type"`
 	MIMEType string `json:"mime_type,omitempty"`
 	Data     string `json:"data,omitempty"` // base64-encoded
@@ -1356,8 +1356,8 @@ func (t *ReadFileTool) Execute(ctx context.Context, params map[string]interface{
 		if err != nil {
 			return nil, err
 		}
-		payload := openlobsterBlocks{
-			Blocks: []openlobsterBlock{
+		payload := mypalBlocks{
+			Blocks: []mypalBlock{
 				{
 					Type:     "image",
 					MIMEType: mimeType,
@@ -1374,8 +1374,8 @@ func (t *ReadFileTool) Execute(ctx context.Context, params map[string]interface{
 		if err != nil {
 			return nil, err
 		}
-		payload := openlobsterBlocks{
-			Blocks: []openlobsterBlock{
+		payload := mypalBlocks{
+			Blocks: []mypalBlock{
 				{
 					Type:     "audio",
 					MIMEType: mimeType,

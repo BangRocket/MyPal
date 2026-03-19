@@ -9,20 +9,20 @@ import (
 	"strings"
 )
 
-const envSecretKey = "OPENLOBSTER_SECRET_KEY"
+const envSecretKey = "MYPAL_SECRET_KEY"
 
-const envConfigEncrypt = "OPENLOBSTER_CONFIG_ENCRYPT"
+const envConfigEncrypt = "MYPAL_CONFIG_ENCRYPT"
 
-// DefaultKey returns a fallback 32-byte key when OPENLOBSTER_SECRET_KEY is not set.
-// Uses a deterministic derivation from "OpenLobster" so config and secrets are
-// always encrypted on disk, even without env. For production, set OPENLOBSTER_SECRET_KEY.
+// DefaultKey returns a fallback 32-byte key when MYPAL_SECRET_KEY is not set.
+// Uses a deterministic derivation from "MyPal" so config and secrets are
+// always encrypted on disk, even without env. For production, set MYPAL_SECRET_KEY.
 func DefaultKey() []byte {
-	h := sha256.Sum256([]byte("OpenLobster"))
+	h := sha256.Sum256([]byte("MyPal"))
 	return h[:]
 }
 
 // SecretKey returns the 32-byte encryption key for config and secrets.
-// Reads OPENLOBSTER_SECRET_KEY from env; if unset, uses DefaultKey().
+// Reads MYPAL_SECRET_KEY from env; if unset, uses DefaultKey().
 // Config and local secrets (secrets.json) both use this same key.
 // Accepted formats:
 //   - Base64 (44 chars, 32 bytes decoded)
@@ -51,7 +51,7 @@ func SecretKey() []byte {
 }
 
 // ConfigEncryptEnabled returns whether config should be stored encrypted on disk.
-// Reads OPENLOBSTER_CONFIG_ENCRYPT from env; if unset or invalid, defaults to 1 (enabled).
+// Reads MYPAL_CONFIG_ENCRYPT from env; if unset or invalid, defaults to 1 (enabled).
 // Use 0 to disable encryption (plain YAML).
 func ConfigEncryptEnabled() bool {
 	s := strings.TrimSpace(os.Getenv(envConfigEncrypt))

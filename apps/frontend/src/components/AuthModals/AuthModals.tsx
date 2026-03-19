@@ -1,4 +1,4 @@
-// Copyright (c) OpenLobster contributors. See LICENSE for details.
+// Copyright (c) MyPal contributors. See LICENSE for details.
 
 import type { Component, JSX } from "solid-js";
 import { createSignal, onMount, onCleanup, Show } from "solid-js";
@@ -6,7 +6,7 @@ import { t } from "../../App";
 import {
   createSubscriptionManager,
   type PairingRequestEvent,
-} from "@openlobster/ui/hooks";
+} from "@mypal/ui/hooks";
 import { client, GRAPHQL_ENDPOINT } from "../../graphql/client";
 import { useWsConnection } from "../../stores/wsStore";
 import { needsAuth, getStoredToken } from "../../stores/authStore";

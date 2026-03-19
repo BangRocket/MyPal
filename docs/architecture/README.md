@@ -1,13 +1,13 @@
 ---
-description: How OpenLobster works — understand the message processing flow, memory system, security, and task scheduling behind the scenes
+description: How MyPal works — understand the message processing flow, memory system, security, and task scheduling behind the scenes
 icon: diagram-project
 ---
 
-# How OpenLobster Works
+# How MyPal Works
 
-This section explains the inner workings of OpenLobster — how messages flow from your users to the AI model, how the agent remembers conversations, how security is handled, and how tasks are scheduled.
+This section explains the inner workings of MyPal — how messages flow from your users to the AI model, how the agent remembers conversations, how security is handled, and how tasks are scheduled.
 
-You don't need to understand this to use OpenLobster, but it helps explain why things work the way they do.
+You don't need to understand this to use MyPal, but it helps explain why things work the way they do.
 
 ## The big picture
 
