@@ -224,6 +224,12 @@ type PersonalityRepositoryPort interface {
 	SetDefault(ctx context.Context, id string) error // unset all other defaults, set this one
 }
 
+// OrganicResponseConfigRepositoryPort manages per-channel organic response settings.
+type OrganicResponseConfigRepositoryPort interface {
+	GetByChannel(ctx context.Context, channelID string) (*models.OrganicResponseConfigModel, error)
+	Upsert(ctx context.Context, cfg *models.OrganicResponseConfigModel) error
+}
+
 // UserPersonaRelationshipRepositoryPort manages per-user familiarity with personalities.
 type UserPersonaRelationshipRepositoryPort interface {
 	GetOrCreate(ctx context.Context, userID, personalityID string) (*models.UserPersonaRelationshipModel, error)

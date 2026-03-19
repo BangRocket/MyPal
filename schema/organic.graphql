@@ -1,0 +1,30 @@
+type OrganicResponseConfig {
+  channelId: String!
+  enabled: Boolean!
+  cooldownSeconds: Int!
+  relevanceThreshold: Float!
+  maxDailyOrganic: Int!
+  allowReactions: Boolean!
+  threadPolicy: String!
+  quietHoursStart: String
+  quietHoursEnd: String
+}
+
+input OrganicResponseConfigInput {
+  enabled: Boolean
+  cooldownSeconds: Int
+  relevanceThreshold: Float
+  maxDailyOrganic: Int
+  allowReactions: Boolean
+  threadPolicy: String
+  quietHoursStart: String
+  quietHoursEnd: String
+}
+
+extend type Query {
+  organicConfig(channelId: String!): OrganicResponseConfig
+}
+
+extend type Mutation {
+  updateOrganicConfig(channelId: String!, input: OrganicResponseConfigInput!): OrganicResponseConfig!
+}

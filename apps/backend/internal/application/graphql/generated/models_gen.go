@@ -319,6 +319,20 @@ type Metrics struct {
 	ErrorsTotal      int `json:"errorsTotal"`
 }
 
+type ModelTier struct {
+	Name      string   `json:"name"`
+	Provider  string   `json:"provider"`
+	Model     string   `json:"model"`
+	Prefix    string   `json:"prefix"`
+	CostCap   *float64 `json:"costCap,omitempty"`
+	IsDefault bool     `json:"isDefault"`
+}
+
+type ModelTiersConfig struct {
+	Enabled bool         `json:"enabled"`
+	Tiers   []*ModelTier `json:"tiers"`
+}
+
 type Mutation struct {
 }
 
@@ -342,6 +356,29 @@ type OAuthInitiateResult struct {
 type OpenbaoSecretsConfig struct {
 	URL   *string `json:"url,omitempty"`
 	Token *string `json:"token,omitempty"`
+}
+
+type OrganicResponseConfig struct {
+	ChannelID          string  `json:"channelId"`
+	Enabled            bool    `json:"enabled"`
+	CooldownSeconds    int     `json:"cooldownSeconds"`
+	RelevanceThreshold float64 `json:"relevanceThreshold"`
+	MaxDailyOrganic    int     `json:"maxDailyOrganic"`
+	AllowReactions     bool    `json:"allowReactions"`
+	ThreadPolicy       string  `json:"threadPolicy"`
+	QuietHoursStart    *string `json:"quietHoursStart,omitempty"`
+	QuietHoursEnd      *string `json:"quietHoursEnd,omitempty"`
+}
+
+type OrganicResponseConfigInput struct {
+	Enabled            *bool    `json:"enabled,omitempty"`
+	CooldownSeconds    *int     `json:"cooldownSeconds,omitempty"`
+	RelevanceThreshold *float64 `json:"relevanceThreshold,omitempty"`
+	MaxDailyOrganic    *int     `json:"maxDailyOrganic,omitempty"`
+	AllowReactions     *bool    `json:"allowReactions,omitempty"`
+	ThreadPolicy       *string  `json:"threadPolicy,omitempty"`
+	QuietHoursStart    *string  `json:"quietHoursStart,omitempty"`
+	QuietHoursEnd      *string  `json:"quietHoursEnd,omitempty"`
 }
 
 type PairingInfo struct {

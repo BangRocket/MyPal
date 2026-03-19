@@ -78,6 +78,7 @@ type App struct {
 	SubAgentSvc    *domainservices.SubAgentService
 	PersonalityRepo     ports.PersonalityRepositoryPort
 	RelationshipRepo    ports.UserPersonaRelationshipRepositoryPort
+	OrganicConfigRepo   ports.OrganicResponseConfigRepositoryPort
 	CtxInjector   appcontext.ContextInjector
 	MsgHandler    *domainhandlers.MessageHandler
 	SkillsAdapter *filesystem.SkillsAdapter

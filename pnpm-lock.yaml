@@ -42,16 +42,16 @@ importers:
 
   apps/backend:
     dependencies:
-      '@openlobster/frontend':
+      '@mypal/frontend':
         specifier: workspace:*
         version: link:../frontend
 
   apps/frontend:
     dependencies:
-      '@openlobster/ui':
+      '@mypal/ui':
         specifier: workspace:*
         version: link:../../packages/ui
-      '@openlobster/ui-tests':
+      '@mypal/ui-tests':
         specifier: workspace:*
         version: link:../../packages/ui-tests
       '@solid-primitives/i18n':
@@ -185,7 +185,7 @@ importers:
 
   packages/ui-tests:
     dependencies:
-      '@openlobster/ui':
+      '@mypal/ui':
         specifier: workspace:*
         version: link:../ui
       solid-js:

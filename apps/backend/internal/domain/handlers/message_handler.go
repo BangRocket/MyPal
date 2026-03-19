@@ -20,7 +20,10 @@ import (
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/services"
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/services/mcp"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/services/modeltier"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/services/organic"
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/services/permissions"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/services/personality"
 )
 
 // CapabilitiesChecker returns whether a capability is enabled. If nil, all capabilities
@@ -290,6 +293,9 @@ type MessageHandler struct {
 	groupReg        groupRegistrar
 	platformReg     platformEnsurer
 	skillsProvider  mcp.SkillsService
+	personalitySvc  *personality.Service
+	tierRouter      *modeltier.Router
+	organicSvc      *organic.Service
 }
 
 // NewMessageHandler constructs a MessageHandler.
@@ -343,6 +349,21 @@ func (h *MessageHandler) SetSkillsProvider(sp mcp.SkillsService) {
 	h.skillsProvider = sp
 }
 
+// SetPersonalityService wires the personality service for prompt enrichment.
+func (h *MessageHandler) SetPersonalityService(svc *personality.Service) {
+	h.personalitySvc = svc
+}
+
+// SetTierRouter wires the model tier router for prefix-based provider selection.
+func (h *MessageHandler) SetTierRouter(r *modeltier.Router) {
+	h.tierRouter = r
+}
+
+// SetOrganicService wires the organic response service for group chat heuristics.
+func (h *MessageHandler) SetOrganicService(svc *organic.Service) {
+	h.organicSvc = svc
+}
+
 // SetAIProvider updates the AI provider (used after config soft-reboot).
 func (h *MessageHandler) SetAIProvider(p ports.AIProviderPort) {
 	h.runner.aiProvider = p
@@ -365,7 +386,19 @@ func (h *MessageHandler) Handle(ctx context.Context, input HandleMessageInput) e
 	isInternal := isLoopback || isDashboard
 
 	if input.IsGroup && !input.IsMentioned {
-		return nil
+		if h.organicSvc == nil {
+			return nil
+		}
+		shouldRespond := h.organicSvc.ShouldRespond(ctx, organic.OrganicInput{
+			ChannelID:   input.ChannelID,
+			Message:     input.Content,
+			SenderName:  input.SenderName,
+			IsGroup:     input.IsGroup,
+			IsMentioned: input.IsMentioned,
+		})
+		if !shouldRespond {
+			return nil
+		}
 	}
 
 	pairKey := input.ChannelID
@@ -590,6 +623,18 @@ func (h *MessageHandler) Handle(ctx context.Context, input HandleMessageInput) e
 			systemPrompt = buildSystemPromptFromContext(agentCtx)
 		}
 	}
+	// Prepend personality prompt when the personality service is available and we
+	// are not using an override system prompt (e.g. internal dispatchers).
+	personalityID := "" // default personality
+	if h.personalitySvc != nil && input.SystemPrompt == "" {
+		pPrompt, pErr := h.personalitySvc.BuildPersonalityPrompt(ctx, personalityID, senderUserID, input.ChannelType)
+		if pErr != nil {
+			log.Printf("handlers: personality prompt build failed: %v (proceeding without)", pErr)
+		} else if pPrompt != "" {
+			systemPrompt = pPrompt + "\n\n" + systemPrompt
+		}
+	}
+
 	memoryPresent := h.memory != nil
 	if memoryPresent && memoryDigest == "" {
 		memoryDigest = "No relevant memories found for this user."
@@ -796,13 +841,52 @@ func (h *MessageHandler) Handle(ctx context.Context, input HandleMessageInput) e
 		ctxWithUser = context.WithValue(ctxWithUser, mcp.ContextKeyChannelType, input.ChannelType)
 	}
 
-	response, err := h.runner.runAgenticLoop(ctxWithUser, messages, tools, saveFn)
+	// Tier routing: if a tier router is configured, check for a prefix in the
+	// user's message to select a different AI provider for this request.
+	activeRunner := h.runner
+	if h.tierRouter != nil {
+		routedProvider, cleanedMsg := h.tierRouter.Route(input.Content)
+		if routedProvider != nil {
+			activeRunner = agenticRunner{
+				aiProvider:        routedProvider,
+				toolRegistry:      h.runner.toolRegistry,
+				permManager:       h.runner.permManager,
+				capabilitiesCheck: h.runner.capabilitiesCheck,
+			}
+			// If the message was cleaned (prefix stripped), update the last user
+			// message in the messages slice so the LLM sees the cleaned text.
+			if cleanedMsg != input.Content {
+				for i := len(messages) - 1; i >= 0; i-- {
+					if messages[i].Role == "user" {
+						messages[i].Content = cleanedMsg
+						// Also update blocks if present (multimodal text block).
+						for j := range messages[i].Blocks {
+							if messages[i].Blocks[j].Type == ports.ContentBlockText {
+								messages[i].Blocks[j].Text = cleanedMsg
+								break
+							}
+						}
+						break
+					}
+				}
+			}
+		}
+	}
+
+	response, err := activeRunner.runAgenticLoop(ctxWithUser, messages, tools, saveFn)
 	if err != nil {
 		return err
 	}
 
 	if mcp.ContainsNO_REPLY(response) {
 		return nil
+	}
+
+	// Record the interaction with the personality service for familiarity tracking.
+	if h.personalitySvc != nil && senderUserID != "" && input.SystemPrompt == "" {
+		if recErr := h.personalitySvc.RecordInteraction(ctx, senderUserID, personalityID); recErr != nil {
+			log.Printf("handlers: personality record interaction failed: %v", recErr)
+		}
 	}
 
 	// For groups, ChannelID must be the platform group chat ID (e.g. Telegram -100xxx, Discord channel snowflake).

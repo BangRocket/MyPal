@@ -39,6 +39,7 @@ func Migrate(db *gorm.DB, driver string) error {
 		&domainmodels.ToolPermissionModel{},
 		&domainmodels.PersonalityModel{},
 		&domainmodels.UserPersonaRelationshipModel{},
+		&domainmodels.OrganicResponseConfigModel{},
 	); err != nil {
 		return fmt.Errorf("AutoMigrate: %w", err)
 	}

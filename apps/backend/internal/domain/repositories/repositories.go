@@ -9,6 +9,7 @@ import (
 	conversationPkg "github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories/conversation"
 	groupPkg "github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories/group"
 	mcpServerPkg "github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories/mcp_server"
+	organicPkg "github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories/organic"
 	messagePkg "github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories/message"
 	pairingPkg "github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories/pairing"
 	sessionPkg "github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories/session"
@@ -31,7 +32,8 @@ var (
 	NewUserChannelRepository      = userChannelPkg.NewUserChannelRepository
 	NewToolPermissionRepository   = toolPermissionPkg.NewToolPermissionRepository
 	NewMCPServerRepository        = mcpServerPkg.NewMCPServerRepository
-	NewDashboardMessageRepository = messagePkg.NewDashboardMessageRepository
+	NewDashboardMessageRepository      = messagePkg.NewDashboardMessageRepository
+	NewOrganicResponseConfigRepository = organicPkg.NewOrganicResponseConfigRepository
 	NewDashboardTaskRepository    = taskPkg.NewDashboardTaskRepository
 )
 

@@ -18,6 +18,8 @@ schema:
   - ../../schema/skills.graphql
   - ../../schema/tools.graphql
   - ../../schema/personality.graphql
+  - ../../schema/modeltiers.graphql
+  - ../../schema/organic.graphql
   - ../../schema/subscriptions.graphql
 
 exec:

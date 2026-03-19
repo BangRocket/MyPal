@@ -86,6 +86,8 @@ func (a *App) initGraphQL() {
 		ConfigSnapshot:    configSnapshot,
 		ConfigPath:        a.CfgPath,
 		PersonalitySvc:    pSvc,
+		ModelTiers:        cfg.ModelTiers,
+		OrganicConfigRepo: a.OrganicConfigRepo,
 	}
 
 	a.MsgHandler.SetCapabilitiesChecker(func(cap string) bool {
@@ -148,6 +150,7 @@ func (a *App) initGraphQL() {
 				return
 			}
 			a.Deps.ConfigSnapshot = dto.BuildConfigSnapshot(reloaded, aifactory.ProviderName)
+			a.Deps.ModelTiers = reloaded.ModelTiers
 			if cur := a.AgentRegistry.GetAgent(); cur != nil {
 				name := reloaded.Agent.Name
 				if name == "" {

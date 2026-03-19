@@ -342,6 +342,20 @@ type ComplexityRoot struct {
 		Uptime           func(childComplexity int) int
 	}
 
+	ModelTier struct {
+		CostCap   func(childComplexity int) int
+		IsDefault func(childComplexity int) int
+		Model     func(childComplexity int) int
+		Name      func(childComplexity int) int
+		Prefix    func(childComplexity int) int
+		Provider  func(childComplexity int) int
+	}
+
+	ModelTiersConfig struct {
+		Enabled func(childComplexity int) int
+		Tiers   func(childComplexity int) int
+	}
+
 	Mutation struct {
 		AddMemory             func(childComplexity int, content string) int
 		AddMemoryNode         func(childComplexity int, label string, typeArg string, value string) int
@@ -373,6 +387,7 @@ type ComplexityRoot struct {
 		ToggleTask            func(childComplexity int, id string, enabled bool) int
 		UpdateConfig          func(childComplexity int, input UpdateConfigInput) int
 		UpdateMemoryNode      func(childComplexity int, id string, label *string, typeArg *string, value *string, properties *string) int
+		UpdateOrganicConfig   func(childComplexity int, channelID string, input OrganicResponseConfigInput) int
 		UpdatePersonality     func(childComplexity int, id string, input PersonalityInput) int
 		UpdateTask            func(childComplexity int, id string, prompt string, schedule *string) int
 		WriteSystemFile       func(childComplexity int, name string, content string) int
@@ -398,6 +413,18 @@ type ComplexityRoot struct {
 	OpenbaoSecretsConfig struct {
 		Token func(childComplexity int) int
 		URL   func(childComplexity int) int
+	}
+
+	OrganicResponseConfig struct {
+		AllowReactions     func(childComplexity int) int
+		ChannelID          func(childComplexity int) int
+		CooldownSeconds    func(childComplexity int) int
+		Enabled            func(childComplexity int) int
+		MaxDailyOrganic    func(childComplexity int) int
+		QuietHoursEnd      func(childComplexity int) int
+		QuietHoursStart    func(childComplexity int) int
+		RelevanceThreshold func(childComplexity int) int
+		ThreadPolicy       func(childComplexity int) int
 	}
 
 	PairingInfo struct {
@@ -443,6 +470,8 @@ type ComplexityRoot struct {
 		Memory            func(childComplexity int) int
 		Messages          func(childComplexity int, conversationID string, before *string, limit *int) int
 		Metrics           func(childComplexity int) int
+		ModelTiers        func(childComplexity int) int
+		OrganicConfig     func(childComplexity int, channelID string) int
 		PendingPairings   func(childComplexity int) int
 		Personalities     func(childComplexity int) int
 		Personality       func(childComplexity int, id string) int
@@ -636,6 +665,7 @@ type MutationResolver interface {
 	UpdatePersonality(ctx context.Context, id string, input PersonalityInput) (*Personality, error)
 	DeletePersonality(ctx context.Context, id string) (bool, error)
 	SetDefaultPersonality(ctx context.Context, id string) (bool, error)
+	UpdateOrganicConfig(ctx context.Context, channelID string, input OrganicResponseConfigInput) (*OrganicResponseConfig, error)
 }
 type QueryResolver interface {
 	Agent(ctx context.Context) (*Agent, error)
@@ -665,6 +695,8 @@ type QueryResolver interface {
 	Personalities(ctx context.Context) ([]*Personality, error)
 	Personality(ctx context.Context, id string) (*Personality, error)
 	UserRelationships(ctx context.Context, userID string) ([]*UserRelationship, error)
+	ModelTiers(ctx context.Context) (*ModelTiersConfig, error)
+	OrganicConfig(ctx context.Context, channelID string) (*OrganicResponseConfig, error)
 }
 type SubscriptionResolver interface {
 	Events(ctx context.Context, eventType *string) (<-chan *EventPayload, error)
@@ -1898,6 +1930,56 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.ComplexityRoot.Metrics.Uptime(childComplexity), true
 
+	case "ModelTier.costCap":
+		if e.ComplexityRoot.ModelTier.CostCap == nil {
+			break
+		}
+
+		return e.ComplexityRoot.ModelTier.CostCap(childComplexity), true
+	case "ModelTier.isDefault":
+		if e.ComplexityRoot.ModelTier.IsDefault == nil {
+			break
+		}
+
+		return e.ComplexityRoot.ModelTier.IsDefault(childComplexity), true
+	case "ModelTier.model":
+		if e.ComplexityRoot.ModelTier.Model == nil {
+			break
+		}
+
+		return e.ComplexityRoot.ModelTier.Model(childComplexity), true
+	case "ModelTier.name":
+		if e.ComplexityRoot.ModelTier.Name == nil {
+			break
+		}
+
+		return e.ComplexityRoot.ModelTier.Name(childComplexity), true
+	case "ModelTier.prefix":
+		if e.ComplexityRoot.ModelTier.Prefix == nil {
+			break
+		}
+
+		return e.ComplexityRoot.ModelTier.Prefix(childComplexity), true
+	case "ModelTier.provider":
+		if e.ComplexityRoot.ModelTier.Provider == nil {
+			break
+		}
+
+		return e.ComplexityRoot.ModelTier.Provider(childComplexity), true
+
+	case "ModelTiersConfig.enabled":
+		if e.ComplexityRoot.ModelTiersConfig.Enabled == nil {
+			break
+		}
+
+		return e.ComplexityRoot.ModelTiersConfig.Enabled(childComplexity), true
+	case "ModelTiersConfig.tiers":
+		if e.ComplexityRoot.ModelTiersConfig.Tiers == nil {
+			break
+		}
+
+		return e.ComplexityRoot.ModelTiersConfig.Tiers(childComplexity), true
+
 	case "Mutation.addMemory":
 		if e.ComplexityRoot.Mutation.AddMemory == nil {
 			break
@@ -2228,6 +2310,17 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.ComplexityRoot.Mutation.UpdateMemoryNode(childComplexity, args["id"].(string), args["label"].(*string), args["type"].(*string), args["value"].(*string), args["properties"].(*string)), true
+	case "Mutation.updateOrganicConfig":
+		if e.ComplexityRoot.Mutation.UpdateOrganicConfig == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateOrganicConfig_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.ComplexityRoot.Mutation.UpdateOrganicConfig(childComplexity, args["channelId"].(string), args["input"].(OrganicResponseConfigInput)), true
 	case "Mutation.updatePersonality":
 		if e.ComplexityRoot.Mutation.UpdatePersonality == nil {
 			break
@@ -2325,6 +2418,61 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.ComplexityRoot.OpenbaoSecretsConfig.URL(childComplexity), true
+
+	case "OrganicResponseConfig.allowReactions":
+		if e.ComplexityRoot.OrganicResponseConfig.AllowReactions == nil {
+			break
+		}
+
+		return e.ComplexityRoot.OrganicResponseConfig.AllowReactions(childComplexity), true
+	case "OrganicResponseConfig.channelId":
+		if e.ComplexityRoot.OrganicResponseConfig.ChannelID == nil {
+			break
+		}
+
+		return e.ComplexityRoot.OrganicResponseConfig.ChannelID(childComplexity), true
+	case "OrganicResponseConfig.cooldownSeconds":
+		if e.ComplexityRoot.OrganicResponseConfig.CooldownSeconds == nil {
+			break
+		}
+
+		return e.ComplexityRoot.OrganicResponseConfig.CooldownSeconds(childComplexity), true
+	case "OrganicResponseConfig.enabled":
+		if e.ComplexityRoot.OrganicResponseConfig.Enabled == nil {
+			break
+		}
+
+		return e.ComplexityRoot.OrganicResponseConfig.Enabled(childComplexity), true
+	case "OrganicResponseConfig.maxDailyOrganic":
+		if e.ComplexityRoot.OrganicResponseConfig.MaxDailyOrganic == nil {
+			break
+		}
+
+		return e.ComplexityRoot.OrganicResponseConfig.MaxDailyOrganic(childComplexity), true
+	case "OrganicResponseConfig.quietHoursEnd":
+		if e.ComplexityRoot.OrganicResponseConfig.QuietHoursEnd == nil {
+			break
+		}
+
+		return e.ComplexityRoot.OrganicResponseConfig.QuietHoursEnd(childComplexity), true
+	case "OrganicResponseConfig.quietHoursStart":
+		if e.ComplexityRoot.OrganicResponseConfig.QuietHoursStart == nil {
+			break
+		}
+
+		return e.ComplexityRoot.OrganicResponseConfig.QuietHoursStart(childComplexity), true
+	case "OrganicResponseConfig.relevanceThreshold":
+		if e.ComplexityRoot.OrganicResponseConfig.RelevanceThreshold == nil {
+			break
+		}
+
+		return e.ComplexityRoot.OrganicResponseConfig.RelevanceThreshold(childComplexity), true
+	case "OrganicResponseConfig.threadPolicy":
+		if e.ComplexityRoot.OrganicResponseConfig.ThreadPolicy == nil {
+			break
+		}
+
+		return e.ComplexityRoot.OrganicResponseConfig.ThreadPolicy(childComplexity), true
 
 	case "PairingInfo.code":
 		if e.ComplexityRoot.PairingInfo.Code == nil {
@@ -2538,6 +2686,23 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.ComplexityRoot.Query.Metrics(childComplexity), true
+	case "Query.modelTiers":
+		if e.ComplexityRoot.Query.ModelTiers == nil {
+			break
+		}
+
+		return e.ComplexityRoot.Query.ModelTiers(childComplexity), true
+	case "Query.organicConfig":
+		if e.ComplexityRoot.Query.OrganicConfig == nil {
+			break
+		}
+
+		args, err := ec.field_Query_organicConfig_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.ComplexityRoot.Query.OrganicConfig(childComplexity, args["channelId"].(string)), true
 	case "Query.pendingPairings":
 		if e.ComplexityRoot.Query.PendingPairings == nil {
 			break
@@ -3208,6 +3373,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	ec := newExecutionContext(opCtx, e, make(chan graphql.DeferredResult))
 	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
 		ec.unmarshalInputCapabilitiesInput,
+		ec.unmarshalInputOrganicResponseConfigInput,
 		ec.unmarshalInputPersonalityInput,
 		ec.unmarshalInputUpdateConfigInput,
 	)
@@ -4043,6 +4209,57 @@ extend type Mutation {
   setDefaultPersonality(id: String!): Boolean!
 }
 `, BuiltIn: false},
+	{Name: "../../../../../../schema/modeltiers.graphql", Input: `# ─── Model Tiers ─────────────────────────────────────────────────────────────
+
+type ModelTier {
+  name: String!
+  provider: String!
+  model: String!
+  prefix: String!
+  costCap: Float
+  isDefault: Boolean!
+}
+
+type ModelTiersConfig {
+  enabled: Boolean!
+  tiers: [ModelTier!]!
+}
+
+extend type Query {
+  modelTiers: ModelTiersConfig!
+}
+`, BuiltIn: false},
+	{Name: "../../../../../../schema/organic.graphql", Input: `type OrganicResponseConfig {
+  channelId: String!
+  enabled: Boolean!
+  cooldownSeconds: Int!
+  relevanceThreshold: Float!
+  maxDailyOrganic: Int!
+  allowReactions: Boolean!
+  threadPolicy: String!
+  quietHoursStart: String
+  quietHoursEnd: String
+}
+
+input OrganicResponseConfigInput {
+  enabled: Boolean
+  cooldownSeconds: Int
+  relevanceThreshold: Float
+  maxDailyOrganic: Int
+  allowReactions: Boolean
+  threadPolicy: String
+  quietHoursStart: String
+  quietHoursEnd: String
+}
+
+extend type Query {
+  organicConfig(channelId: String!): OrganicResponseConfig
+}
+
+extend type Mutation {
+  updateOrganicConfig(channelId: String!, input: OrganicResponseConfigInput!): OrganicResponseConfig!
+}
+`, BuiltIn: false},
 	{Name: "../../../../../../schema/subscriptions.graphql", Input: `# ─── Subscription ─────────────────────────────────────────────────────────────
 
 type EventPayload {
@@ -4536,6 +4753,22 @@ func (ec *executionContext) field_Mutation_updateMemoryNode_args(ctx context.Con
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_updateOrganicConfig_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "channelId", ec.unmarshalNString2string)
+	if err != nil {
+		return nil, err
+	}
+	args["channelId"] = arg0
+	arg1, err := graphql.ProcessArgField(ctx, rawArgs, "input", ec.unmarshalNOrganicResponseConfigInput2githubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐOrganicResponseConfigInput)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg1
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_updatePersonality_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
@@ -4629,6 +4862,17 @@ func (ec *executionContext) field_Query_messages_args(ctx context.Context, rawAr
 		return nil, err
 	}
 	args["limit"] = arg2
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_organicConfig_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "channelId", ec.unmarshalNString2string)
+	if err != nil {
+		return nil, err
+	}
+	args["channelId"] = arg0
 	return args, nil
 }
 
@@ -10577,6 +10821,252 @@ func (ec *executionContext) fieldContext_Metrics_errorsTotal(_ context.Context, 
 	return fc, nil
 }
 
+func (ec *executionContext) _ModelTier_name(ctx context.Context, field graphql.CollectedField, obj *ModelTier) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_ModelTier_name,
+		func(ctx context.Context) (any, error) {
+			return obj.Name, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_ModelTier_name(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ModelTier",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ModelTier_provider(ctx context.Context, field graphql.CollectedField, obj *ModelTier) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_ModelTier_provider,
+		func(ctx context.Context) (any, error) {
+			return obj.Provider, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_ModelTier_provider(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ModelTier",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ModelTier_model(ctx context.Context, field graphql.CollectedField, obj *ModelTier) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_ModelTier_model,
+		func(ctx context.Context) (any, error) {
+			return obj.Model, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_ModelTier_model(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ModelTier",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ModelTier_prefix(ctx context.Context, field graphql.CollectedField, obj *ModelTier) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_ModelTier_prefix,
+		func(ctx context.Context) (any, error) {
+			return obj.Prefix, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_ModelTier_prefix(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ModelTier",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ModelTier_costCap(ctx context.Context, field graphql.CollectedField, obj *ModelTier) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_ModelTier_costCap,
+		func(ctx context.Context) (any, error) {
+			return obj.CostCap, nil
+		},
+		nil,
+		ec.marshalOFloat2ᚖfloat64,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_ModelTier_costCap(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ModelTier",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Float does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ModelTier_isDefault(ctx context.Context, field graphql.CollectedField, obj *ModelTier) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_ModelTier_isDefault,
+		func(ctx context.Context) (any, error) {
+			return obj.IsDefault, nil
+		},
+		nil,
+		ec.marshalNBoolean2bool,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_ModelTier_isDefault(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ModelTier",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ModelTiersConfig_enabled(ctx context.Context, field graphql.CollectedField, obj *ModelTiersConfig) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_ModelTiersConfig_enabled,
+		func(ctx context.Context) (any, error) {
+			return obj.Enabled, nil
+		},
+		nil,
+		ec.marshalNBoolean2bool,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_ModelTiersConfig_enabled(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ModelTiersConfig",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ModelTiersConfig_tiers(ctx context.Context, field graphql.CollectedField, obj *ModelTiersConfig) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_ModelTiersConfig_tiers,
+		func(ctx context.Context) (any, error) {
+			return obj.Tiers, nil
+		},
+		nil,
+		ec.marshalNModelTier2ᚕᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐModelTierᚄ,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_ModelTiersConfig_tiers(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ModelTiersConfig",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "name":
+				return ec.fieldContext_ModelTier_name(ctx, field)
+			case "provider":
+				return ec.fieldContext_ModelTier_provider(ctx, field)
+			case "model":
+				return ec.fieldContext_ModelTier_model(ctx, field)
+			case "prefix":
+				return ec.fieldContext_ModelTier_prefix(ctx, field)
+			case "costCap":
+				return ec.fieldContext_ModelTier_costCap(ctx, field)
+			case "isDefault":
+				return ec.fieldContext_ModelTier_isDefault(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ModelTier", field.Name)
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Mutation_spawnSubAgent(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	return graphql.ResolveField(
 		ctx,
@@ -12200,6 +12690,67 @@ func (ec *executionContext) fieldContext_Mutation_setDefaultPersonality(ctx cont
 	return fc, nil
 }
 
+func (ec *executionContext) _Mutation_updateOrganicConfig(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Mutation_updateOrganicConfig,
+		func(ctx context.Context) (any, error) {
+			fc := graphql.GetFieldContext(ctx)
+			return ec.Resolvers.Mutation().UpdateOrganicConfig(ctx, fc.Args["channelId"].(string), fc.Args["input"].(OrganicResponseConfigInput))
+		},
+		nil,
+		ec.marshalNOrganicResponseConfig2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐOrganicResponseConfig,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Mutation_updateOrganicConfig(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "channelId":
+				return ec.fieldContext_OrganicResponseConfig_channelId(ctx, field)
+			case "enabled":
+				return ec.fieldContext_OrganicResponseConfig_enabled(ctx, field)
+			case "cooldownSeconds":
+				return ec.fieldContext_OrganicResponseConfig_cooldownSeconds(ctx, field)
+			case "relevanceThreshold":
+				return ec.fieldContext_OrganicResponseConfig_relevanceThreshold(ctx, field)
+			case "maxDailyOrganic":
+				return ec.fieldContext_OrganicResponseConfig_maxDailyOrganic(ctx, field)
+			case "allowReactions":
+				return ec.fieldContext_OrganicResponseConfig_allowReactions(ctx, field)
+			case "threadPolicy":
+				return ec.fieldContext_OrganicResponseConfig_threadPolicy(ctx, field)
+			case "quietHoursStart":
+				return ec.fieldContext_OrganicResponseConfig_quietHoursStart(ctx, field)
+			case "quietHoursEnd":
+				return ec.fieldContext_OrganicResponseConfig_quietHoursEnd(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type OrganicResponseConfig", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_updateOrganicConfig_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _MutationResult_success(ctx context.Context, field graphql.CollectedField, obj *MutationResult) (ret graphql.Marshaler) {
 	return graphql.ResolveField(
 		ctx,
@@ -12480,6 +13031,267 @@ func (ec *executionContext) _OpenbaoSecretsConfig_token(ctx context.Context, fie
 func (ec *executionContext) fieldContext_OpenbaoSecretsConfig_token(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "OpenbaoSecretsConfig",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _OrganicResponseConfig_channelId(ctx context.Context, field graphql.CollectedField, obj *OrganicResponseConfig) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_OrganicResponseConfig_channelId,
+		func(ctx context.Context) (any, error) {
+			return obj.ChannelID, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_OrganicResponseConfig_channelId(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "OrganicResponseConfig",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _OrganicResponseConfig_enabled(ctx context.Context, field graphql.CollectedField, obj *OrganicResponseConfig) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_OrganicResponseConfig_enabled,
+		func(ctx context.Context) (any, error) {
+			return obj.Enabled, nil
+		},
+		nil,
+		ec.marshalNBoolean2bool,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_OrganicResponseConfig_enabled(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "OrganicResponseConfig",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _OrganicResponseConfig_cooldownSeconds(ctx context.Context, field graphql.CollectedField, obj *OrganicResponseConfig) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_OrganicResponseConfig_cooldownSeconds,
+		func(ctx context.Context) (any, error) {
+			return obj.CooldownSeconds, nil
+		},
+		nil,
+		ec.marshalNInt2int,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_OrganicResponseConfig_cooldownSeconds(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "OrganicResponseConfig",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _OrganicResponseConfig_relevanceThreshold(ctx context.Context, field graphql.CollectedField, obj *OrganicResponseConfig) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_OrganicResponseConfig_relevanceThreshold,
+		func(ctx context.Context) (any, error) {
+			return obj.RelevanceThreshold, nil
+		},
+		nil,
+		ec.marshalNFloat2float64,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_OrganicResponseConfig_relevanceThreshold(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "OrganicResponseConfig",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Float does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _OrganicResponseConfig_maxDailyOrganic(ctx context.Context, field graphql.CollectedField, obj *OrganicResponseConfig) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_OrganicResponseConfig_maxDailyOrganic,
+		func(ctx context.Context) (any, error) {
+			return obj.MaxDailyOrganic, nil
+		},
+		nil,
+		ec.marshalNInt2int,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_OrganicResponseConfig_maxDailyOrganic(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "OrganicResponseConfig",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _OrganicResponseConfig_allowReactions(ctx context.Context, field graphql.CollectedField, obj *OrganicResponseConfig) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_OrganicResponseConfig_allowReactions,
+		func(ctx context.Context) (any, error) {
+			return obj.AllowReactions, nil
+		},
+		nil,
+		ec.marshalNBoolean2bool,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_OrganicResponseConfig_allowReactions(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "OrganicResponseConfig",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _OrganicResponseConfig_threadPolicy(ctx context.Context, field graphql.CollectedField, obj *OrganicResponseConfig) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_OrganicResponseConfig_threadPolicy,
+		func(ctx context.Context) (any, error) {
+			return obj.ThreadPolicy, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_OrganicResponseConfig_threadPolicy(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "OrganicResponseConfig",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _OrganicResponseConfig_quietHoursStart(ctx context.Context, field graphql.CollectedField, obj *OrganicResponseConfig) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_OrganicResponseConfig_quietHoursStart,
+		func(ctx context.Context) (any, error) {
+			return obj.QuietHoursStart, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_OrganicResponseConfig_quietHoursStart(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "OrganicResponseConfig",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _OrganicResponseConfig_quietHoursEnd(ctx context.Context, field graphql.CollectedField, obj *OrganicResponseConfig) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_OrganicResponseConfig_quietHoursEnd,
+		func(ctx context.Context) (any, error) {
+			return obj.QuietHoursEnd, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_OrganicResponseConfig_quietHoursEnd(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "OrganicResponseConfig",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -14301,6 +15113,102 @@ func (ec *executionContext) fieldContext_Query_userRelationships(ctx context.Con
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Query_userRelationships_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_modelTiers(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Query_modelTiers,
+		func(ctx context.Context) (any, error) {
+			return ec.Resolvers.Query().ModelTiers(ctx)
+		},
+		nil,
+		ec.marshalNModelTiersConfig2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐModelTiersConfig,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Query_modelTiers(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "enabled":
+				return ec.fieldContext_ModelTiersConfig_enabled(ctx, field)
+			case "tiers":
+				return ec.fieldContext_ModelTiersConfig_tiers(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ModelTiersConfig", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_organicConfig(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Query_organicConfig,
+		func(ctx context.Context) (any, error) {
+			fc := graphql.GetFieldContext(ctx)
+			return ec.Resolvers.Query().OrganicConfig(ctx, fc.Args["channelId"].(string))
+		},
+		nil,
+		ec.marshalOOrganicResponseConfig2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐOrganicResponseConfig,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_Query_organicConfig(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "channelId":
+				return ec.fieldContext_OrganicResponseConfig_channelId(ctx, field)
+			case "enabled":
+				return ec.fieldContext_OrganicResponseConfig_enabled(ctx, field)
+			case "cooldownSeconds":
+				return ec.fieldContext_OrganicResponseConfig_cooldownSeconds(ctx, field)
+			case "relevanceThreshold":
+				return ec.fieldContext_OrganicResponseConfig_relevanceThreshold(ctx, field)
+			case "maxDailyOrganic":
+				return ec.fieldContext_OrganicResponseConfig_maxDailyOrganic(ctx, field)
+			case "allowReactions":
+				return ec.fieldContext_OrganicResponseConfig_allowReactions(ctx, field)
+			case "threadPolicy":
+				return ec.fieldContext_OrganicResponseConfig_threadPolicy(ctx, field)
+			case "quietHoursStart":
+				return ec.fieldContext_OrganicResponseConfig_quietHoursStart(ctx, field)
+			case "quietHoursEnd":
+				return ec.fieldContext_OrganicResponseConfig_quietHoursEnd(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type OrganicResponseConfig", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_organicConfig_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -18783,6 +19691,85 @@ func (ec *executionContext) unmarshalInputCapabilitiesInput(ctx context.Context,
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputOrganicResponseConfigInput(ctx context.Context, obj any) (OrganicResponseConfigInput, error) {
+	var it OrganicResponseConfigInput
+	if obj == nil {
+		return it, nil
+	}
+
+	asMap := map[string]any{}
+	for k, v := range obj.(map[string]any) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"enabled", "cooldownSeconds", "relevanceThreshold", "maxDailyOrganic", "allowReactions", "threadPolicy", "quietHoursStart", "quietHoursEnd"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "enabled":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("enabled"))
+			data, err := ec.unmarshalOBoolean2ᚖbool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Enabled = data
+		case "cooldownSeconds":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cooldownSeconds"))
+			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CooldownSeconds = data
+		case "relevanceThreshold":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("relevanceThreshold"))
+			data, err := ec.unmarshalOFloat2ᚖfloat64(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.RelevanceThreshold = data
+		case "maxDailyOrganic":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("maxDailyOrganic"))
+			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.MaxDailyOrganic = data
+		case "allowReactions":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("allowReactions"))
+			data, err := ec.unmarshalOBoolean2ᚖbool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.AllowReactions = data
+		case "threadPolicy":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("threadPolicy"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ThreadPolicy = data
+		case "quietHoursStart":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("quietHoursStart"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.QuietHoursStart = data
+		case "quietHoursEnd":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("quietHoursEnd"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.QuietHoursEnd = data
+		}
+	}
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputPersonalityInput(ctx context.Context, obj any) (PersonalityInput, error) {
 	var it PersonalityInput
 	if obj == nil {
@@ -21132,6 +22119,111 @@ func (ec *executionContext) _Metrics(ctx context.Context, sel ast.SelectionSet, 
 	return out
 }
 
+var modelTierImplementors = []string{"ModelTier"}
+
+func (ec *executionContext) _ModelTier(ctx context.Context, sel ast.SelectionSet, obj *ModelTier) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, modelTierImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ModelTier")
+		case "name":
+			out.Values[i] = ec._ModelTier_name(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "provider":
+			out.Values[i] = ec._ModelTier_provider(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "model":
+			out.Values[i] = ec._ModelTier_model(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "prefix":
+			out.Values[i] = ec._ModelTier_prefix(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "costCap":
+			out.Values[i] = ec._ModelTier_costCap(ctx, field, obj)
+		case "isDefault":
+			out.Values[i] = ec._ModelTier_isDefault(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.Deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.ProcessDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var modelTiersConfigImplementors = []string{"ModelTiersConfig"}
+
+func (ec *executionContext) _ModelTiersConfig(ctx context.Context, sel ast.SelectionSet, obj *ModelTiersConfig) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, modelTiersConfigImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ModelTiersConfig")
+		case "enabled":
+			out.Values[i] = ec._ModelTiersConfig_enabled(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "tiers":
+			out.Values[i] = ec._ModelTiersConfig_tiers(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.Deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.ProcessDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
 var mutationImplementors = []string{"Mutation"}
 
 func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet) graphql.Marshaler {
@@ -21379,6 +22471,13 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
+		case "updateOrganicConfig":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateOrganicConfig(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -21541,6 +22640,79 @@ func (ec *executionContext) _OpenbaoSecretsConfig(ctx context.Context, sel ast.S
 			out.Values[i] = ec._OpenbaoSecretsConfig_url(ctx, field, obj)
 		case "token":
 			out.Values[i] = ec._OpenbaoSecretsConfig_token(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.Deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.ProcessDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var organicResponseConfigImplementors = []string{"OrganicResponseConfig"}
+
+func (ec *executionContext) _OrganicResponseConfig(ctx context.Context, sel ast.SelectionSet, obj *OrganicResponseConfig) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, organicResponseConfigImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("OrganicResponseConfig")
+		case "channelId":
+			out.Values[i] = ec._OrganicResponseConfig_channelId(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "enabled":
+			out.Values[i] = ec._OrganicResponseConfig_enabled(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "cooldownSeconds":
+			out.Values[i] = ec._OrganicResponseConfig_cooldownSeconds(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "relevanceThreshold":
+			out.Values[i] = ec._OrganicResponseConfig_relevanceThreshold(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "maxDailyOrganic":
+			out.Values[i] = ec._OrganicResponseConfig_maxDailyOrganic(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "allowReactions":
+			out.Values[i] = ec._OrganicResponseConfig_allowReactions(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "threadPolicy":
+			out.Values[i] = ec._OrganicResponseConfig_threadPolicy(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "quietHoursStart":
+			out.Values[i] = ec._OrganicResponseConfig_quietHoursStart(ctx, field, obj)
+		case "quietHoursEnd":
+			out.Values[i] = ec._OrganicResponseConfig_quietHoursEnd(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -22322,6 +23494,47 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "modelTiers":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_modelTiers(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "organicConfig":
+			field := field
+
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_organicConfig(ctx, field)
 				return res
 			}
 
@@ -24033,6 +25246,46 @@ func (ec *executionContext) marshalNMessageSentResult2ᚖgithubᚗcomᚋBangRock
 	return ec._MessageSentResult(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNModelTier2ᚕᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐModelTierᚄ(ctx context.Context, sel ast.SelectionSet, v []*ModelTier) graphql.Marshaler {
+	ret := graphql.MarshalSliceConcurrently(ctx, len(v), 0, false, func(ctx context.Context, i int) graphql.Marshaler {
+		fc := graphql.GetFieldContext(ctx)
+		fc.Result = &v[i]
+		return ec.marshalNModelTier2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐModelTier(ctx, sel, v[i])
+	})
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNModelTier2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐModelTier(ctx context.Context, sel ast.SelectionSet, v *ModelTier) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._ModelTier(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNModelTiersConfig2githubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐModelTiersConfig(ctx context.Context, sel ast.SelectionSet, v ModelTiersConfig) graphql.Marshaler {
+	return ec._ModelTiersConfig(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNModelTiersConfig2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐModelTiersConfig(ctx context.Context, sel ast.SelectionSet, v *ModelTiersConfig) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._ModelTiersConfig(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNMutationResult2githubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMutationResult(ctx context.Context, sel ast.SelectionSet, v MutationResult) graphql.Marshaler {
 	return ec._MutationResult(ctx, sel, &v)
 }
@@ -24059,6 +25312,25 @@ func (ec *executionContext) marshalNOAuthInitiateResult2ᚖgithubᚗcomᚋBangRo
 		return graphql.Null
 	}
 	return ec._OAuthInitiateResult(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNOrganicResponseConfig2githubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐOrganicResponseConfig(ctx context.Context, sel ast.SelectionSet, v OrganicResponseConfig) graphql.Marshaler {
+	return ec._OrganicResponseConfig(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNOrganicResponseConfig2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐOrganicResponseConfig(ctx context.Context, sel ast.SelectionSet, v *OrganicResponseConfig) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._OrganicResponseConfig(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNOrganicResponseConfigInput2githubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐOrganicResponseConfigInput(ctx context.Context, v any) (OrganicResponseConfigInput, error) {
+	res, err := ec.unmarshalInputOrganicResponseConfigInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNPendingPairing2ᚕᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐPendingPairingᚄ(ctx context.Context, sel ast.SelectionSet, v []*PendingPairing) graphql.Marshaler {
@@ -24688,6 +25960,23 @@ func (ec *executionContext) marshalOFileSecretsConfig2ᚖgithubᚗcomᚋBangRock
 	return ec._FileSecretsConfig(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalOFloat2ᚖfloat64(ctx context.Context, v any) (*float64, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := graphql.UnmarshalFloatContext(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOFloat2ᚖfloat64(ctx context.Context, sel ast.SelectionSet, v *float64) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	_ = sel
+	res := graphql.MarshalFloatContext(*v)
+	return graphql.WrapContextMarshaler(ctx, res)
+}
+
 func (ec *executionContext) marshalOGraphEdge2ᚕᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐGraphEdgeᚄ(ctx context.Context, sel ast.SelectionSet, v []*GraphEdge) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -24842,6 +26131,13 @@ func (ec *executionContext) marshalOOpenbaoSecretsConfig2ᚖgithubᚗcomᚋBangR
 		return graphql.Null
 	}
 	return ec._OpenbaoSecretsConfig(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOOrganicResponseConfig2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐOrganicResponseConfig(ctx context.Context, sel ast.SelectionSet, v *OrganicResponseConfig) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._OrganicResponseConfig(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOPairingInfo2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐPairingInfo(ctx context.Context, sel ast.SelectionSet, v *PairingInfo) graphql.Marshaler {

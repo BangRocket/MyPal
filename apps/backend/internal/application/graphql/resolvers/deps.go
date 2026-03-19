@@ -10,6 +10,7 @@ import (
 	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/dto"
 	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/generated"
 	"github.com/BangRocket/MyPal/apps/backend/internal/application/registry"
+	"github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/config"
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/handlers"
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/models"
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
@@ -52,6 +53,8 @@ type Deps struct {
 	ConfigPath        string
 	ConfigWriter      dto.ConfigUpdatePort
 	PersonalitySvc    *personalitysvc.Service
+	ModelTiers        config.ModelTiersConfig
+	OrganicConfigRepo ports.OrganicResponseConfigRepositoryPort
 }
 
 // Agent implements agent.Provider.
@@ -1127,4 +1130,87 @@ func strPtrIfNotEmpty(s string) *string {
 		return nil
 	}
 	return &s
+}
+
+// ─── Organic response provider ───────────────────────────────────────────────
+
+// OrganicConfig returns the organic response configuration for a channel.
+func (d *Deps) OrganicConfig(ctx context.Context, channelID string) (*generated.OrganicResponseConfig, error) {
+	if d.OrganicConfigRepo == nil {
+		return nil, nil
+	}
+	cfg, err := d.OrganicConfigRepo.GetByChannel(ctx, channelID)
+	if err != nil {
+		return nil, nil // not found → nil
+	}
+	return organicConfigModelToGenerated(cfg), nil
+}
+
+// UpdateOrganicConfig upserts the organic response configuration for a channel.
+func (d *Deps) UpdateOrganicConfig(ctx context.Context, channelID string, input generated.OrganicResponseConfigInput) (*generated.OrganicResponseConfig, error) {
+	if d.OrganicConfigRepo == nil {
+		return nil, fmt.Errorf("organic config repository not configured")
+	}
+
+	// Load existing or create new.
+	cfg, err := d.OrganicConfigRepo.GetByChannel(ctx, channelID)
+	if err != nil {
+		now := time.Now().UTC()
+		cfg = &models.OrganicResponseConfigModel{
+			ChannelID:          channelID,
+			Enabled:            false,
+			CooldownSeconds:    300,
+			RelevanceThreshold: 0.7,
+			MaxDailyOrganic:    20,
+			AllowReactions:     false,
+			ThreadPolicy:       "joined_only",
+			CreatedAt:          now,
+			UpdatedAt:          now,
+		}
+	}
+
+	// Apply input fields.
+	if input.Enabled != nil {
+		cfg.Enabled = *input.Enabled
+	}
+	if input.CooldownSeconds != nil {
+		cfg.CooldownSeconds = *input.CooldownSeconds
+	}
+	if input.RelevanceThreshold != nil {
+		cfg.RelevanceThreshold = *input.RelevanceThreshold
+	}
+	if input.MaxDailyOrganic != nil {
+		cfg.MaxDailyOrganic = *input.MaxDailyOrganic
+	}
+	if input.AllowReactions != nil {
+		cfg.AllowReactions = *input.AllowReactions
+	}
+	if input.ThreadPolicy != nil {
+		cfg.ThreadPolicy = *input.ThreadPolicy
+	}
+	if input.QuietHoursStart != nil {
+		cfg.QuietHoursStart = *input.QuietHoursStart
+	}
+	if input.QuietHoursEnd != nil {
+		cfg.QuietHoursEnd = *input.QuietHoursEnd
+	}
+
+	if err := d.OrganicConfigRepo.Upsert(ctx, cfg); err != nil {
+		return nil, err
+	}
+	return organicConfigModelToGenerated(cfg), nil
+}
+
+func organicConfigModelToGenerated(m *models.OrganicResponseConfigModel) *generated.OrganicResponseConfig {
+	return &generated.OrganicResponseConfig{
+		ChannelID:          m.ChannelID,
+		Enabled:            m.Enabled,
+		CooldownSeconds:    m.CooldownSeconds,
+		RelevanceThreshold: m.RelevanceThreshold,
+		MaxDailyOrganic:    m.MaxDailyOrganic,
+		AllowReactions:     m.AllowReactions,
+		ThreadPolicy:       m.ThreadPolicy,
+		QuietHoursStart:    strPtrIfNotEmpty(m.QuietHoursStart),
+		QuietHoursEnd:      strPtrIfNotEmpty(m.QuietHoursEnd),
+	}
 }

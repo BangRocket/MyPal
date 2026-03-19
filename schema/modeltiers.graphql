@@ -1,0 +1,19 @@
+# ─── Model Tiers ─────────────────────────────────────────────────────────────
+
+type ModelTier {
+  name: String!
+  provider: String!
+  model: String!
+  prefix: String!
+  costCap: Float
+  isDefault: Boolean!
+}
+
+type ModelTiersConfig {
+  enabled: Boolean!
+  tiers: [ModelTier!]!
+}
+
+extend type Query {
+  modelTiers: ModelTiersConfig!
+}

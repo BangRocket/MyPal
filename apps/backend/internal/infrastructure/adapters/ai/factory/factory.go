@@ -75,6 +75,36 @@ func BuildFromConfig(cfg *config.Config) ports.AIProviderPort {
 	return nil
 }
 
+// BuildProvider creates an AI provider for a specific provider name and model.
+// Used by the tier router to create one provider per tier.
+func BuildProvider(cfg *config.Config, providerName, model string) ports.AIProviderPort {
+	switch providerName {
+	case "openai":
+		if baseURL := cfg.Providers.OpenAI.BaseURL; baseURL != "" {
+			return aiopenai.NewAdapterWithEndpoint(baseURL, cfg.Providers.OpenAI.APIKey, model, MaxOutputTokens)
+		}
+		return aiopenai.NewAdapter(cfg.Providers.OpenAI.APIKey, model, MaxOutputTokens)
+	case "openrouter":
+		return aiopenrouter.NewAdapter(cfg.Providers.OpenRouter.APIKey, model, MaxOutputTokens)
+	case "openai-compatible", "openaicompat":
+		return aiopenaicompat.NewAdapter(
+			cfg.Providers.OpenAICompat.BaseURL,
+			cfg.Providers.OpenAICompat.APIKey,
+			model,
+			MaxOutputTokens,
+		)
+	case "ollama":
+		return aiollama.NewAdapterWithOptions(cfg.Providers.Ollama.Endpoint, cfg.Providers.Ollama.APIKey, model, MaxOutputTokens, cfg.Logging.Level)
+	case "anthropic":
+		return aianthropicadapter.NewAdapter(cfg.Providers.Anthropic.APIKey, model, MaxOutputTokens)
+	case "opencode-zen", "opencode":
+		return aizenadapter.NewAdapter(cfg.Providers.OpenCode.APIKey, model, MaxOutputTokens)
+	case "docker-model-runner", "docker_model_runner":
+		return aidockermodelrunner.NewAdapter(cfg.Providers.DockerModelRunner.Endpoint, model, MaxOutputTokens)
+	}
+	return nil
+}
+
 // ProviderName returns the active AI provider name. When cfg.Agent.Provider is
 // explicitly set it is honoured; otherwise the first provider with valid
 // credentials is returned.

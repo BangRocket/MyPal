@@ -6,6 +6,7 @@ import (
 	svccompaction "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/compaction"
 	svccontext "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/context_builder"
 	svcdashboard "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/dashboard"
+	svcorganic "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/organic"
 	svcpersonality "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/personality"
 	svcmsgcompaction "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/message_compaction"
 	svcmsgprocessor "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/message_processor"
@@ -79,6 +80,11 @@ type MemoryDigestCache = svccontext.MemoryDigestCache
 
 var NewContextBuilderService = svccontext.NewService
 var NewMemoryDigestService = svccontext.NewMemoryDigestService
+
+// Organic response
+type OrganicResponseService = svcorganic.Service
+
+var NewOrganicResponseService = svcorganic.NewService
 
 // Personality
 type PersonalityService = svcpersonality.Service

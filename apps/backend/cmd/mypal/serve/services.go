@@ -22,6 +22,9 @@ import (
 	"github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/terminal"
 
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/models"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/services/modeltier"
+	organicsvc "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/organic"
 	personalitysvc "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/personality"
 )
 
@@ -187,6 +190,25 @@ func (a *App) initServices() {
 	// Personality service — used for seeding and message pipeline integration.
 	pSvc := personalitysvc.NewService(a.PersonalityRepo, a.RelationshipRepo)
 	a.MsgHandler.SetPersonalityService(pSvc)
+
+	// Organic response service — decides when to respond to un-mentioned group messages.
+	organicRepo := repositories.NewOrganicResponseConfigRepository(gormDB)
+	a.OrganicConfigRepo = organicRepo
+	agentName := cfg.Agent.Name
+	if agentName == "" {
+		agentName = "MyPal"
+	}
+	oSvc := organicsvc.NewService(organicRepo, agentName)
+	a.MsgHandler.SetOrganicService(oSvc)
+
+	// Model tier router — optional prefix-based routing to different providers.
+	if cfg.ModelTiers.Enabled {
+		tierRouter := modeltier.NewRouter(cfg.ModelTiers, func(providerName, model string) ports.AIProviderPort {
+			return aifactory.BuildProvider(cfg, providerName, model)
+		})
+		a.MsgHandler.SetTierRouter(tierRouter)
+		log.Printf("model tiers: enabled with %d tier(s)", len(cfg.ModelTiers.Tiers))
+	}
 
 	// Seed the default personality if none exist yet.
 	seedDefaultPersonality(context.Background(), pSvc)
