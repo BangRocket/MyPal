@@ -3,7 +3,7 @@ package resolvers
 import (
 	"context"
 
-	"github.com/neirth/openlobster/internal/domain/events"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/events"
 )
 
 // Resolver delegates to Deps (AgentRegistry + services) and event subscriptions.

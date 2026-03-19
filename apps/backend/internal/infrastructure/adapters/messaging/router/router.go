@@ -10,8 +10,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/neirth/openlobster/internal/domain/models"
-	"github.com/neirth/openlobster/internal/domain/ports"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/models"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
 )
 
 // Registry is a thread-safe registry of active messaging adapters keyed by

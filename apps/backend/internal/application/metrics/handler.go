@@ -3,8 +3,8 @@ package metrics
 import (
 	"net/http"
 
-	"github.com/neirth/openlobster/internal/application/graphql/dto"
-	"github.com/neirth/openlobster/internal/application/graphql/resolvers"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/dto"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/resolvers"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )

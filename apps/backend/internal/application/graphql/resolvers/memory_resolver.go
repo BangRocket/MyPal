@@ -9,9 +9,9 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"github.com/neirth/openlobster/internal/application/graphql/generated"
-	"github.com/neirth/openlobster/internal/application/graphql/resolvers/mappers"
-	"github.com/neirth/openlobster/internal/application/graphql/resolvers/utils"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/generated"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/resolvers/mappers"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/resolvers/utils"
 )
 
 // AddMemory is the resolver for the addMemory field.

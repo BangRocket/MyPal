@@ -13,8 +13,8 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/google/uuid"
 
-	"github.com/neirth/openlobster/internal/domain/models"
-	"github.com/neirth/openlobster/internal/domain/ports"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/models"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
 )
 
 // ---------------------------------------------------------------------------

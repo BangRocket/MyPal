@@ -4,10 +4,10 @@ import (
 	"context"
 	"strings"
 
-	ctxutil "github.com/neirth/openlobster/internal/domain/context"
-	"github.com/neirth/openlobster/internal/domain/events"
-	"github.com/neirth/openlobster/internal/domain/models"
-	"github.com/neirth/openlobster/internal/domain/ports"
+	ctxutil "github.com/BangRocket/MyPal/apps/backend/internal/domain/context"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/events"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/models"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
 )
 
 // MessageProcessorService processes incoming messages.

@@ -6,8 +6,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/neirth/openlobster/internal/domain/ports"
-	"github.com/neirth/openlobster/internal/domain/services/mcp"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/services/mcp"
 )
 
 type ContextInjector interface {

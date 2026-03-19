@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/neirth/openlobster/internal/application/graphql/resolvers"
-	"github.com/neirth/openlobster/internal/application/registry"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/resolvers"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/registry"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

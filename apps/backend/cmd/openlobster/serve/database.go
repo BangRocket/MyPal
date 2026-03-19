@@ -4,9 +4,9 @@ import (
 	"context"
 	"log"
 
-	"github.com/neirth/openlobster/internal/domain/repositories"
-	"github.com/neirth/openlobster/internal/domain/services/permissions"
-	"github.com/neirth/openlobster/internal/infrastructure/persistence"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/services/permissions"
+	"github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/persistence"
 )
 
 // initDatabase opens the database, runs migrations and instantiates every

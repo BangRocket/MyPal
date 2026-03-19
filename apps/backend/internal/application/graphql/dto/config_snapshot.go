@@ -3,7 +3,7 @@
 package dto
 
 import (
-	"github.com/neirth/openlobster/internal/infrastructure/config"
+	"github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/config"
 )
 
 // BuildConfigSnapshot builds an AppConfigSnapshot from a loaded Config.

@@ -5,7 +5,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/neirth/openlobster/internal/infrastructure/config"
+	"github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/config"
 	"github.com/spf13/viper"
 )
 

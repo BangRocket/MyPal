@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	domainmodels "github.com/neirth/openlobster/internal/domain/models"
-	"github.com/neirth/openlobster/internal/domain/ports"
+	domainmodels "github.com/BangRocket/MyPal/apps/backend/internal/domain/models"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
 	"gorm.io/gorm"
 )
 

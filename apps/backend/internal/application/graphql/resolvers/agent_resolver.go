@@ -9,8 +9,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/neirth/openlobster/internal/application/graphql/generated"
-	"github.com/neirth/openlobster/internal/application/graphql/resolvers/mappers"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/generated"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/resolvers/mappers"
 )
 
 // SpawnSubAgent is the resolver for the spawnSubAgent field.

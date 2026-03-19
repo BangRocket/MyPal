@@ -4,11 +4,11 @@ import (
 	"context"
 	"strings"
 
-	"github.com/neirth/openlobster/internal/application/graphql/dto"
-	"github.com/neirth/openlobster/internal/application/graphql/resolvers"
-	"github.com/neirth/openlobster/internal/application/registry"
-	"github.com/neirth/openlobster/internal/domain/ports"
-	svcdashboard "github.com/neirth/openlobster/internal/domain/services/dashboard"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/dto"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/resolvers"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/registry"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
+	svcdashboard "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/dashboard"
 )
 
 // NewTestDeps builds minimal Deps for tests. Pass nil for optional services to use defaults.

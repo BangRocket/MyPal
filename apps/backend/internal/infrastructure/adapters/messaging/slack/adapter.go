@@ -25,8 +25,8 @@ import (
 	"github.com/slack-go/slack/slackevents"
 	"github.com/slack-go/slack/socketmode"
 
-	"github.com/neirth/openlobster/internal/domain/models"
-	"github.com/neirth/openlobster/internal/domain/ports"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/models"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
 )
 
 // Adapter implements ports.MessagingPort for Slack via Socket Mode.

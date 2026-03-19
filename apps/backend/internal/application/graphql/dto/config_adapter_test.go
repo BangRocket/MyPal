@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/neirth/openlobster/internal/infrastructure/config"
+	"github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/config"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

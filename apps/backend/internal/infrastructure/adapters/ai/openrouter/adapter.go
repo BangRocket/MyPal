@@ -9,8 +9,8 @@
 package openrouter
 
 import (
-	"github.com/neirth/openlobster/internal/domain/ports"
-	aiopenai "github.com/neirth/openlobster/internal/infrastructure/adapters/ai/openai"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
+	aiopenai "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/ai/openai"
 )
 
 const baseURL = "https://openrouter.ai/api/v1"

@@ -4,7 +4,7 @@ import (
 	"context"
 	"strings"
 
-	"github.com/neirth/openlobster/internal/domain/ports"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
 )
 
 // Service builds agent context from workspace files and memory.

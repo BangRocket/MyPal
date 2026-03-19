@@ -12,11 +12,11 @@ import (
 	"sync"
 	"time"
 
-	browser "github.com/neirth/openlobster/internal/infrastructure/adapters/browser/chromedp"
-	"github.com/neirth/openlobster/internal/domain/models"
-	"github.com/neirth/openlobster/internal/domain/ports"
-	"github.com/neirth/openlobster/internal/domain/repositories"
-	svmcp "github.com/neirth/openlobster/internal/domain/services/mcp"
+	browser "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/browser/chromedp"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/models"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories"
+	svmcp "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/mcp"
 )
 
 // ---------------------------------------------------------------------------

@@ -23,7 +23,7 @@ import (
 
 	"golang.org/x/crypto/ssh"
 
-	"github.com/neirth/openlobster/internal/domain/ports"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
 )
 
 var ensureKeyOnce sync.Once

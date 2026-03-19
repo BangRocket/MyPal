@@ -2,15 +2,15 @@
 package factory
 
 import (
-	aianthropicadapter "github.com/neirth/openlobster/internal/infrastructure/adapters/ai/anthropic"
-	aidockermodelrunner "github.com/neirth/openlobster/internal/infrastructure/adapters/ai/docker"
-	aiollama "github.com/neirth/openlobster/internal/infrastructure/adapters/ai/ollama"
-	aiopenai "github.com/neirth/openlobster/internal/infrastructure/adapters/ai/openai"
-	aiopenaicompat "github.com/neirth/openlobster/internal/infrastructure/adapters/ai/openaicompat"
-	aiopenrouter "github.com/neirth/openlobster/internal/infrastructure/adapters/ai/openrouter"
-	aizenadapter "github.com/neirth/openlobster/internal/infrastructure/adapters/ai/zen"
-	"github.com/neirth/openlobster/internal/domain/ports"
-	"github.com/neirth/openlobster/internal/infrastructure/config"
+	aianthropicadapter "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/ai/anthropic"
+	aidockermodelrunner "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/ai/docker"
+	aiollama "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/ai/ollama"
+	aiopenai "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/ai/openai"
+	aiopenaicompat "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/ai/openaicompat"
+	aiopenrouter "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/ai/openrouter"
+	aizenadapter "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/ai/zen"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
+	"github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/config"
 )
 
 // MaxOutputTokens is the fixed output-token limit for AI completions (~2000 chars, fits Discord).

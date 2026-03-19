@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/neirth/openlobster/internal/domain/services/permissions"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/services/permissions"
 )
 
 type InternalTool interface {

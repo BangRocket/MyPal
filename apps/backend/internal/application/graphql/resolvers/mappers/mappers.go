@@ -1,8 +1,8 @@
 package mappers
 
 import (
-	"github.com/neirth/openlobster/internal/application/graphql/dto"
-	"github.com/neirth/openlobster/internal/application/graphql/generated"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/dto"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/generated"
 )
 
 func StrPtr(s string) *string { return &s }

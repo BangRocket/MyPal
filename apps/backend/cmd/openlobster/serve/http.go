@@ -9,17 +9,17 @@ import (
 	"strings"
 	"time"
 
-	appmcp "github.com/neirth/openlobster/internal/application/mcp"
-	"github.com/neirth/openlobster/internal/application/webhooks"
-	"github.com/neirth/openlobster/internal/application/health"
-	"github.com/neirth/openlobster/internal/application/metrics"
-	"github.com/neirth/openlobster/internal/domain/services/mcp"
-	"github.com/neirth/openlobster/internal/infrastructure/logging"
+	appmcp "github.com/BangRocket/MyPal/apps/backend/internal/application/mcp"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/webhooks"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/health"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/metrics"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/services/mcp"
+	"github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/logging"
 
 	"github.com/99designs/gqlgen/graphql/handler"
-	"github.com/neirth/openlobster/internal/application/graphql/dto"
-	"github.com/neirth/openlobster/internal/application/graphql/generated"
-	"github.com/neirth/openlobster/internal/application/graphql/resolvers"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/dto"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/generated"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/resolvers"
 )
 
 // initHTTP builds the HTTP mux, registers all routes (GraphQL, WebSocket

@@ -10,7 +10,7 @@ import (
 	mcpc "github.com/mark3labs/mcp-go/client"
 	"github.com/mark3labs/mcp-go/client/transport"
 	"github.com/mark3labs/mcp-go/mcp"
-	"github.com/neirth/openlobster/internal/infrastructure/secrets"
+	"github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/secrets"
 )
 
 type MCPClientSDK struct {

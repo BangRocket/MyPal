@@ -10,11 +10,11 @@ import (
 	"log"
 	"strings"
 
-	"github.com/neirth/openlobster/internal/application/graphql/dto"
-	"github.com/neirth/openlobster/internal/application/registry"
-	"github.com/neirth/openlobster/internal/domain/events"
-	"github.com/neirth/openlobster/internal/domain/repositories"
-	svmcp "github.com/neirth/openlobster/internal/domain/services/mcp"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/dto"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/registry"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/events"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories"
+	svmcp "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/mcp"
 )
 
 // SyncToolsToRegistry copies all tools from reg into agentReg so that the

@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/neirth/openlobster/internal/application/graphql/dto"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/dto"
 )
 
 // AllowedWorkspaceFiles are the workspace files exposed for read/write via the dashboard.

@@ -9,8 +9,8 @@ import (
 	"context"
 	"log"
 
-	"github.com/neirth/openlobster/internal/application/graphql/generated"
-	"github.com/neirth/openlobster/internal/application/graphql/resolvers/mappers"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/generated"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/resolvers/mappers"
 )
 
 // ConnectMcp is the resolver for the connectMcp field.

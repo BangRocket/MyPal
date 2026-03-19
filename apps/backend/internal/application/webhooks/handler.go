@@ -8,8 +8,8 @@ import (
 	"log"
 	"net/http"
 
-	domainhandlers "github.com/neirth/openlobster/internal/domain/handlers"
-	"github.com/neirth/openlobster/internal/domain/ports"
+	domainhandlers "github.com/BangRocket/MyPal/apps/backend/internal/domain/handlers"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
 )
 
 // AdapterRegistry returns the MessagingPort for a channel type.

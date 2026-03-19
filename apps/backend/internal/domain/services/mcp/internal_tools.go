@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/neirth/openlobster/internal/domain/ports"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
 )
 
 // contextKey is used to avoid collisions in context keys.

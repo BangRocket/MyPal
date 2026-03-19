@@ -8,11 +8,11 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/neirth/openlobster/internal/domain/events"
-	"github.com/neirth/openlobster/internal/domain/models"
-	"github.com/neirth/openlobster/internal/domain/ports"
-	"github.com/neirth/openlobster/internal/domain/repositories"
-	domainservices "github.com/neirth/openlobster/internal/domain/services"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/events"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/models"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories"
+	domainservices "github.com/BangRocket/MyPal/apps/backend/internal/domain/services"
 )
 
 // ---------------------------------------------------------------------------

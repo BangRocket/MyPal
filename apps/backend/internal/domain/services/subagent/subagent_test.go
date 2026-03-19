@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/neirth/openlobster/internal/domain/ports"
-	"github.com/neirth/openlobster/internal/domain/services/mcp"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/services/mcp"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

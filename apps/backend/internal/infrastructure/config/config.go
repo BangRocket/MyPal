@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/neirth/openlobster/internal/domain/models"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/models"
 	"github.com/spf13/viper"
 )
 

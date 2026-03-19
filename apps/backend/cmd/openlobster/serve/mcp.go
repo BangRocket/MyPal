@@ -6,11 +6,11 @@ import (
 	"log"
 	"strings"
 
-	appmcp "github.com/neirth/openlobster/internal/application/mcp"
-	"github.com/neirth/openlobster/internal/application/graphql/dto"
-	"github.com/neirth/openlobster/internal/domain/services/mcp"
-	"github.com/neirth/openlobster/internal/infrastructure/config"
-	"github.com/neirth/openlobster/internal/infrastructure/secrets"
+	appmcp "github.com/BangRocket/MyPal/apps/backend/internal/application/mcp"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/dto"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/services/mcp"
+	"github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/config"
+	"github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/secrets"
 )
 
 // initMCP configures the secrets provider, MCP client SDK and OAuth 2.1

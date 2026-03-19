@@ -13,8 +13,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/neirth/openlobster/internal/application/graphql/dto"
-	"github.com/neirth/openlobster/internal/domain/services/mcp"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/dto"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/services/mcp"
 )
 
 // SkillsAdapter reads Anthropic-format skills from the workspace/skills directory.

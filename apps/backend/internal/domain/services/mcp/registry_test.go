@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/neirth/openlobster/internal/domain/services/permissions"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/services/permissions"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )

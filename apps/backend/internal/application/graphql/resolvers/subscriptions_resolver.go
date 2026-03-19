@@ -8,8 +8,8 @@ package resolvers
 import (
 	"context"
 
-	"github.com/neirth/openlobster/internal/application/graphql/generated"
-	"github.com/neirth/openlobster/internal/domain/events"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/generated"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/events"
 )
 
 // Events is the resolver for the events field.

@@ -16,8 +16,8 @@ import (
 	"github.com/wapikit/wapi.go/pkg/components"
 	"github.com/wapikit/wapi.go/pkg/messaging"
 
-	"github.com/neirth/openlobster/internal/domain/models"
-	"github.com/neirth/openlobster/internal/domain/ports"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/models"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
 )
 
 // Adapter implements ports.MessagingPort for the WhatsApp Cloud API.

@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/neirth/openlobster/internal/infrastructure/persistence"
+	"github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/persistence"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

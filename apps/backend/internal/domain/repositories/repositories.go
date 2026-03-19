@@ -5,17 +5,17 @@
 package repositories
 
 import (
-	channelPkg "github.com/neirth/openlobster/internal/domain/repositories/channel"
-	conversationPkg "github.com/neirth/openlobster/internal/domain/repositories/conversation"
-	groupPkg "github.com/neirth/openlobster/internal/domain/repositories/group"
-	mcpServerPkg "github.com/neirth/openlobster/internal/domain/repositories/mcp_server"
-	messagePkg "github.com/neirth/openlobster/internal/domain/repositories/message"
-	pairingPkg "github.com/neirth/openlobster/internal/domain/repositories/pairing"
-	sessionPkg "github.com/neirth/openlobster/internal/domain/repositories/session"
-	taskPkg "github.com/neirth/openlobster/internal/domain/repositories/task"
-	toolPermissionPkg "github.com/neirth/openlobster/internal/domain/repositories/tool_permission"
-	userPkg "github.com/neirth/openlobster/internal/domain/repositories/user"
-	userChannelPkg "github.com/neirth/openlobster/internal/domain/repositories/user_channel"
+	channelPkg "github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories/channel"
+	conversationPkg "github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories/conversation"
+	groupPkg "github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories/group"
+	mcpServerPkg "github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories/mcp_server"
+	messagePkg "github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories/message"
+	pairingPkg "github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories/pairing"
+	sessionPkg "github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories/session"
+	taskPkg "github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories/task"
+	toolPermissionPkg "github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories/tool_permission"
+	userPkg "github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories/user"
+	userChannelPkg "github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories/user_channel"
 )
 
 // Re-exports for backward compatibility.

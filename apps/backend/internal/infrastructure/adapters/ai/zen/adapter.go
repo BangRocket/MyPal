@@ -19,9 +19,9 @@ import (
 	"context"
 	"strings"
 
-	"github.com/neirth/openlobster/internal/domain/ports"
-	aianthropicadapter "github.com/neirth/openlobster/internal/infrastructure/adapters/ai/anthropic"
-	aiopenai "github.com/neirth/openlobster/internal/infrastructure/adapters/ai/openai"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
+	aianthropicadapter "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/ai/anthropic"
+	aiopenai "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/ai/openai"
 )
 
 const (

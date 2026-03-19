@@ -7,7 +7,7 @@ import (
 	"net/url"
 	"testing"
 
-	"github.com/neirth/openlobster/internal/infrastructure/secrets"
+	"github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/secrets"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

@@ -6,11 +6,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/neirth/openlobster/internal/domain/events"
-	"github.com/neirth/openlobster/internal/domain/ports"
-	domainServices "github.com/neirth/openlobster/internal/domain/services"
-	"github.com/neirth/openlobster/internal/domain/services/mcp"
-	"github.com/neirth/openlobster/internal/domain/services/permissions"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/events"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
+	domainServices "github.com/BangRocket/MyPal/apps/backend/internal/domain/services"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/services/mcp"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/services/permissions"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )

@@ -9,12 +9,12 @@ import (
 	"syscall"
 	"time"
 
-	domainhandlers "github.com/neirth/openlobster/internal/domain/handlers"
-	domainservices "github.com/neirth/openlobster/internal/domain/services"
-	"github.com/neirth/openlobster/internal/infrastructure/adapters/messaging/discord"
-	slackadapter "github.com/neirth/openlobster/internal/infrastructure/adapters/messaging/slack"
-	"github.com/neirth/openlobster/internal/infrastructure/adapters/messaging/telegram"
-	"github.com/neirth/openlobster/internal/infrastructure/logging"
+	domainhandlers "github.com/BangRocket/MyPal/apps/backend/internal/domain/handlers"
+	domainservices "github.com/BangRocket/MyPal/apps/backend/internal/domain/services"
+	"github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/messaging/discord"
+	slackadapter "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/messaging/slack"
+	"github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/messaging/telegram"
+	"github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/logging"
 )
 
 // startAndWait starts all background goroutines (scheduler, channel listeners,

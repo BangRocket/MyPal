@@ -15,8 +15,8 @@ import (
 	"github.com/diamondburned/arikawa/v3/state"
 	"github.com/google/uuid"
 
-	"github.com/neirth/openlobster/internal/domain/models"
-	"github.com/neirth/openlobster/internal/domain/ports"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/models"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
 )
 
 // Adapter implements ports.MessagingPort for Discord via the arikawa/v3 SDK.

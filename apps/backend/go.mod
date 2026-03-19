@@ -1,4 +1,4 @@
-module github.com/neirth/openlobster
+module github.com/BangRocket/MyPal/apps/backend
 
 go 1.25.0
 

@@ -6,7 +6,7 @@ import (
 	"sync"
 
 	"github.com/chromedp/chromedp"
-	"github.com/neirth/openlobster/internal/domain/ports"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
 )
 
 type ChromeDPAdapter struct {

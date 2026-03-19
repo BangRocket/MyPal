@@ -3,7 +3,7 @@ package ports
 import (
 	"context"
 
-	"github.com/neirth/openlobster/internal/domain/models"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/models"
 )
 
 type contextKey string

@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"testing"
 
-	ctxutil "github.com/neirth/openlobster/internal/domain/context"
-	"github.com/neirth/openlobster/internal/domain/events"
-	"github.com/neirth/openlobster/internal/domain/models"
+	ctxutil "github.com/BangRocket/MyPal/apps/backend/internal/domain/context"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/events"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/models"
 	"github.com/stretchr/testify/assert"
 )
 

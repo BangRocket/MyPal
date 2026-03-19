@@ -6,8 +6,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/neirth/openlobster/internal/application/graphql/generated"
-	"github.com/neirth/openlobster/internal/domain/events"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/generated"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/events"
 )
 
 // allEventTypes lists every event type for subscribeAll.

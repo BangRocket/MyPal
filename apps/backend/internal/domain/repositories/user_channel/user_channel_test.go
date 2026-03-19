@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/neirth/openlobster/internal/domain/repositories/channel"
-	"github.com/neirth/openlobster/internal/infrastructure/persistence"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories/channel"
+	"github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/persistence"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

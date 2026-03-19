@@ -21,11 +21,11 @@ import (
 
 	"github.com/spf13/cobra"
 
-	cmdconfig "github.com/neirth/openlobster/cmd/openlobster/config"
-	cmddaemon "github.com/neirth/openlobster/cmd/openlobster/daemon"
-	cmdmigrate "github.com/neirth/openlobster/cmd/openlobster/migrate"
-	cmdserve "github.com/neirth/openlobster/cmd/openlobster/serve"
-	cmdversion "github.com/neirth/openlobster/cmd/openlobster/version"
+	cmdconfig "github.com/BangRocket/MyPal/apps/backend/cmd/openlobster/config"
+	cmddaemon "github.com/BangRocket/MyPal/apps/backend/cmd/openlobster/daemon"
+	cmdmigrate "github.com/BangRocket/MyPal/apps/backend/cmd/openlobster/migrate"
+	cmdserve "github.com/BangRocket/MyPal/apps/backend/cmd/openlobster/serve"
+	cmdversion "github.com/BangRocket/MyPal/apps/backend/cmd/openlobster/version"
 )
 
 // version is set at build time via -ldflags "-X main.version=x.y.z"

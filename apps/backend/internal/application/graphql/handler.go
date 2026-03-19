@@ -4,9 +4,9 @@ import (
 	"net/http"
 
 	gqlhandler "github.com/99designs/gqlgen/graphql/handler"
-	"github.com/neirth/openlobster/internal/application/graphql/dto"
-	"github.com/neirth/openlobster/internal/application/graphql/generated"
-	"github.com/neirth/openlobster/internal/application/graphql/resolvers"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/dto"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/generated"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/resolvers"
 )
 
 // Handler provides utilities for GraphQL (e.g. updating channels).

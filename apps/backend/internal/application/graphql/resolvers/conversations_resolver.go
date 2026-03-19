@@ -11,10 +11,10 @@ import (
 	"fmt"
 
 	"github.com/99designs/gqlgen/graphql"
-	"github.com/neirth/openlobster/internal/application/graphql/generated"
-	"github.com/neirth/openlobster/internal/application/graphql/resolvers/mappers"
-	"github.com/neirth/openlobster/internal/domain/handlers"
-	"github.com/neirth/openlobster/internal/domain/models"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/generated"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/resolvers/mappers"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/handlers"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/models"
 )
 
 // DeleteUser is the resolver for the deleteUser field.

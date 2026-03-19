@@ -6,7 +6,7 @@ import (
 	"context"
 	"time"
 
-	domainmodels "github.com/neirth/openlobster/internal/domain/models"
+	domainmodels "github.com/BangRocket/MyPal/apps/backend/internal/domain/models"
 	"gorm.io/gorm"
 )
 

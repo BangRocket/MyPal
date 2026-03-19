@@ -4,7 +4,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/neirth/openlobster/internal/application/graphql/dto"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/dto"
 )
 
 // AgentRegistry keeps the agent runtime state (hot-reloaded from main).

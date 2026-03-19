@@ -13,9 +13,9 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/neirth/openlobster/internal/domain/ports"
-	"github.com/neirth/openlobster/internal/domain/services/mcp"
-	"github.com/neirth/openlobster/internal/domain/services/permissions"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/services/mcp"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/services/permissions"
 )
 
 // CapabilitiesChecker decides whether a given capability is enabled.

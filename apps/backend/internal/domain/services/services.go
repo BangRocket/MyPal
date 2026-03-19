@@ -3,14 +3,14 @@
 package services
 
 import (
-	svccompaction "github.com/neirth/openlobster/internal/domain/services/compaction"
-	svccontext "github.com/neirth/openlobster/internal/domain/services/context_builder"
-	svcdashboard "github.com/neirth/openlobster/internal/domain/services/dashboard"
-	svcmsgcompaction "github.com/neirth/openlobster/internal/domain/services/message_compaction"
-	svcmsgprocessor "github.com/neirth/openlobster/internal/domain/services/message_processor"
-	svcpairing "github.com/neirth/openlobster/internal/domain/services/pairing"
-	svcscheduler "github.com/neirth/openlobster/internal/domain/services/scheduler"
-	svcsubagent "github.com/neirth/openlobster/internal/domain/services/subagent"
+	svccompaction "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/compaction"
+	svccontext "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/context_builder"
+	svcdashboard "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/dashboard"
+	svcmsgcompaction "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/message_compaction"
+	svcmsgprocessor "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/message_processor"
+	svcpairing "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/pairing"
+	svcscheduler "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/scheduler"
+	svcsubagent "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/subagent"
 )
 
 // Compaction (legacy API)

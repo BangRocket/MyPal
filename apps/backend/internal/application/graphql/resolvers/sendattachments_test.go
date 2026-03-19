@@ -6,9 +6,9 @@ import (
 	"testing"
 
 	"github.com/99designs/gqlgen/graphql"
-	"github.com/neirth/openlobster/internal/application/registry"
-	"github.com/neirth/openlobster/internal/domain/handlers"
-	"github.com/neirth/openlobster/internal/domain/models"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/registry"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/handlers"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/models"
 	"github.com/stretchr/testify/require"
 )
 

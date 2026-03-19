@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/neirth/openlobster/internal/domain/models"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/models"
 )
 
 // ErrNotFound is returned when a requested resource does not exist.

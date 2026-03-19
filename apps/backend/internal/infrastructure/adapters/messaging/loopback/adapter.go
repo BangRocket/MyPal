@@ -12,8 +12,8 @@ package loopback
 import (
 	"context"
 
-	"github.com/neirth/openlobster/internal/domain/models"
-	"github.com/neirth/openlobster/internal/domain/ports"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/models"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
 )
 
 // Adapter is a no-op implementation of ports.MessagingPort for the loopback

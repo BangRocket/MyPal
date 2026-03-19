@@ -27,7 +27,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/neirth/openlobster/internal/infrastructure/secrets"
+	"github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/secrets"
 )
 
 // Timeouts for OAuth flow so failures surface quickly (no long freezes).

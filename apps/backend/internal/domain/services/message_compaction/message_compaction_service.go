@@ -10,8 +10,8 @@ import (
 	"unicode/utf8"
 
 	"github.com/google/uuid"
-	"github.com/neirth/openlobster/internal/domain/models"
-	"github.com/neirth/openlobster/internal/domain/ports"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/models"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
 )
 
 // Service summarizes conversation history when it approaches the model's token limit.

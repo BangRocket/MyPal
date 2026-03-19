@@ -3,7 +3,7 @@ package dto
 import (
 	"context"
 
-	"github.com/neirth/openlobster/internal/domain/models"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/models"
 )
 
 // MessageRepo exposes operations over messages.

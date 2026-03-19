@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/neirth/openlobster/internal/domain/ports"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
 )
 
 type BackgroundProcessInfo struct {

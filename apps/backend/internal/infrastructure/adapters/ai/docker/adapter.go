@@ -13,8 +13,8 @@
 package dockermodelrunner
 
 import (
-	"github.com/neirth/openlobster/internal/domain/ports"
-	aiopenai "github.com/neirth/openlobster/internal/infrastructure/adapters/ai/openai"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
+	aiopenai "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/ai/openai"
 )
 
 // DefaultEndpoint is the Docker Desktop Model Runner inference endpoint.

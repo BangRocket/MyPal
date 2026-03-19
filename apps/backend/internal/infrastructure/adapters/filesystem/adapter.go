@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/neirth/openlobster/internal/domain/services/mcp"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/services/mcp"
 )
 
 // Adapter provides filesystem operations for the agent's internal tools.

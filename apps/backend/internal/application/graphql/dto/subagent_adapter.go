@@ -3,8 +3,8 @@ package dto
 import (
 	"context"
 
-	"github.com/neirth/openlobster/internal/domain/services"
-	"github.com/neirth/openlobster/internal/domain/services/mcp"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/services"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/services/mcp"
 )
 
 // SubAgentAdapter bridges domain SubAgentService to dto.SubAgentPort.

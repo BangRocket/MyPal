@@ -6,13 +6,13 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/neirth/openlobster/internal/application/graphql/dto"
-	"github.com/neirth/openlobster/internal/application/registry"
-	"github.com/neirth/openlobster/internal/domain/handlers"
-	"github.com/neirth/openlobster/internal/domain/models"
-	"github.com/neirth/openlobster/internal/domain/ports"
-	domainservices "github.com/neirth/openlobster/internal/domain/services"
-	"github.com/neirth/openlobster/internal/domain/services/mcp"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/dto"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/registry"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/handlers"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/models"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
+	domainservices "github.com/BangRocket/MyPal/apps/backend/internal/domain/services"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/services/mcp"
 )
 
 // MessageDispatcherPort processes messages through the unified handler.

@@ -7,8 +7,8 @@ import (
 
 	"github.com/spf13/viper"
 
-	"github.com/neirth/openlobster/internal/infrastructure/config"
-	"github.com/neirth/openlobster/internal/infrastructure/logging"
+	"github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/config"
+	"github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/logging"
 )
 
 // initConfig loads openlobster.yaml, validates it, creates required

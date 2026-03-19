@@ -3,7 +3,7 @@ package registry
 import (
 	"testing"
 
-	"github.com/neirth/openlobster/internal/application/graphql/dto"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/dto"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

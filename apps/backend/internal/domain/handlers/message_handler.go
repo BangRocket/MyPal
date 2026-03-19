@@ -14,13 +14,13 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	appcontext "github.com/neirth/openlobster/internal/domain/context"
-	"github.com/neirth/openlobster/internal/domain/events"
-	"github.com/neirth/openlobster/internal/domain/models"
-	"github.com/neirth/openlobster/internal/domain/ports"
-	"github.com/neirth/openlobster/internal/domain/services"
-	"github.com/neirth/openlobster/internal/domain/services/mcp"
-	"github.com/neirth/openlobster/internal/domain/services/permissions"
+	appcontext "github.com/BangRocket/MyPal/apps/backend/internal/domain/context"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/events"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/models"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/services"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/services/mcp"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/services/permissions"
 )
 
 // CapabilitiesChecker returns whether a capability is enabled. If nil, all capabilities

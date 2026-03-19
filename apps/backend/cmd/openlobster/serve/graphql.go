@@ -3,16 +3,16 @@ package serve
 import (
 	"log"
 
-	appmcp "github.com/neirth/openlobster/internal/application/mcp"
-	"github.com/neirth/openlobster/internal/application/graphql"
-	"github.com/neirth/openlobster/internal/application/graphql/dto"
-	"github.com/neirth/openlobster/internal/application/graphql/resolvers"
-	"github.com/neirth/openlobster/internal/application/registry"
-	domainservices "github.com/neirth/openlobster/internal/domain/services"
-	"github.com/neirth/openlobster/internal/domain/repositories"
-	aifactory "github.com/neirth/openlobster/internal/infrastructure/adapters/ai/factory"
-	"github.com/neirth/openlobster/internal/infrastructure/adapters/filesystem"
-	"github.com/neirth/openlobster/internal/infrastructure/config"
+	appmcp "github.com/BangRocket/MyPal/apps/backend/internal/application/mcp"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/dto"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/resolvers"
+	"github.com/BangRocket/MyPal/apps/backend/internal/application/registry"
+	domainservices "github.com/BangRocket/MyPal/apps/backend/internal/domain/services"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories"
+	aifactory "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/ai/factory"
+	"github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/filesystem"
+	"github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/config"
 )
 
 // initGraphQL wires the agent registry, GraphQL deps struct, config writer
