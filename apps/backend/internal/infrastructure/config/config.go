@@ -142,10 +142,88 @@ func (c *Config) Validate() error {
 		errs = append(errs, "scheduler.interval must be a positive duration when scheduler.enabled is true")
 	}
 
+	// Model tiers: validate when enabled.
+	if c.ModelTiers.Enabled {
+		if len(c.ModelTiers.Tiers) == 0 {
+			errs = append(errs, "model_tiers: at least one tier must be configured when enabled")
+		}
+		defaultCount := 0
+		seenPrefixes := make(map[string]bool)
+		for i, t := range c.ModelTiers.Tiers {
+			label := fmt.Sprintf("model_tiers.tiers[%d]", i)
+			if t.Name == "" {
+				errs = append(errs, fmt.Sprintf("%s.name is required", label))
+			}
+			if t.Provider == "" {
+				errs = append(errs, fmt.Sprintf("%s.provider is required", label))
+			}
+			if t.Model == "" {
+				errs = append(errs, fmt.Sprintf("%s.model is required", label))
+			}
+			if t.Prefix == "" {
+				errs = append(errs, fmt.Sprintf("%s.prefix is required", label))
+			} else if seenPrefixes[t.Prefix] {
+				errs = append(errs, fmt.Sprintf("%s.prefix %q is not unique", label, t.Prefix))
+			} else {
+				seenPrefixes[t.Prefix] = true
+			}
+			if t.Default {
+				defaultCount++
+			}
+			// Validate that the tier's provider has valid credentials configured.
+			if t.Provider != "" {
+				providerOK := false
+				switch t.Provider {
+				case "openai":
+					providerOK = !isPlaceholder(c.Providers.OpenAI.APIKey)
+				case "openrouter":
+					providerOK = !isPlaceholder(c.Providers.OpenRouter.APIKey)
+				case "ollama":
+					providerOK = c.Providers.Ollama.Endpoint != ""
+				case "openaicompat":
+					providerOK = !isPlaceholder(c.Providers.OpenAICompat.APIKey) && c.Providers.OpenAICompat.BaseURL != ""
+				case "anthropic":
+					providerOK = !isPlaceholder(c.Providers.Anthropic.APIKey)
+				case "docker_model_runner":
+					providerOK = c.Providers.DockerModelRunner.Endpoint != ""
+				case "opencode":
+					providerOK = !isPlaceholder(c.Providers.OpenCode.APIKey)
+				default:
+					errs = append(errs, fmt.Sprintf("%s.provider %q is not a recognized provider", label, t.Provider))
+					providerOK = true // skip credential check for unknown provider
+				}
+				if !providerOK {
+					errs = append(errs, fmt.Sprintf("%s: provider %q is not configured with valid credentials", label, t.Provider))
+				}
+			}
+		}
+		if defaultCount == 0 {
+			errs = append(errs, "model_tiers: exactly one tier must be marked as default; none found")
+		} else if defaultCount > 1 {
+			errs = append(errs, fmt.Sprintf("model_tiers: exactly one tier must be marked as default; found %d", defaultCount))
+		}
+	}
+
 	if len(errs) > 0 {
 		return &ValidationError{Errors: errs}
 	}
 	return nil
+}
+
+// ModelTierConfig describes a single model tier used for tier-based routing.
+type ModelTierConfig struct {
+	Name     string  `mapstructure:"name"`     // "high", "mid", "low"
+	Provider string  `mapstructure:"provider"` // "anthropic", "openai", "ollama", etc.
+	Model    string  `mapstructure:"model"`    // "claude-opus-4", "claude-sonnet-4", etc.
+	Prefix   string  `mapstructure:"prefix"`   // "!high", "!mid", "!low"
+	CostCap  float64 `mapstructure:"cost_cap"` // optional daily cost limit (0 = unlimited)
+	Default  bool    `mapstructure:"default"`  // which tier is default
+}
+
+// ModelTiersConfig holds the multi-tier model routing configuration.
+type ModelTiersConfig struct {
+	Enabled bool              `mapstructure:"enabled"`
+	Tiers   []ModelTierConfig `mapstructure:"tiers"`
 }
 
 type Config struct {
@@ -167,6 +245,7 @@ type Config struct {
 	Secrets     SecretsConfig     `mapstructure:"secrets"`
 	Workspace   WorkspaceConfig   `mapstructure:"workspace"`
 	Wizard      WizardConfig      `mapstructure:"wizard"`
+	ModelTiers  ModelTiersConfig  `mapstructure:"model_tiers"`
 }
 
 
@@ -468,6 +547,7 @@ func setDefaults() {
 	viper.SetDefault("agent.capabilities.filesystem", true)
 	viper.SetDefault("agent.capabilities.sessions", true)
 	viper.SetDefault("wizard.completed", false)
+	viper.SetDefault("model_tiers.enabled", false)
 }
 
 // bootstrapEncryptedConfig creates a default config at path if the file does not exist.
