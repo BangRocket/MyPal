@@ -13,6 +13,7 @@ import (
 	svcpairing "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/pairing"
 	svcscheduler "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/scheduler"
 	svcheartbeat "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/heartbeat"
+	svcsandbox "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/sandbox"
 	svcsubagent "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/subagent"
 )
 
@@ -96,3 +97,8 @@ var NewHeartbeatService = svcheartbeat.NewService
 type PersonalityService = svcpersonality.Service
 
 var NewPersonalityService = svcpersonality.NewService
+
+// Sandbox
+type SandboxManager = svcsandbox.Manager
+
+var NewSandboxManager = svcsandbox.NewManager
