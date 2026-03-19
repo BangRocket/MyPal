@@ -349,6 +349,26 @@ export const MODEL_TIERS_QUERY = /* GraphQL */ `
   }
 `;
 
+// ─── Email Config ────────────────────────────────────────────────────────────
+
+export const EMAIL_CONFIG_QUERY = /* GraphQL */ `
+  query EmailConfig {
+    emailConfig {
+      enabled
+      imapHost
+      imapPort
+      imapUser
+      imapTls
+      smtpHost
+      smtpPort
+      smtpFrom
+      smtpTls
+      pollInterval
+      processedLabel
+    }
+  }
+`;
+
 // ─── System Files ─────────────────────────────────────────────────────────────
 
 export const SYSTEM_FILES_QUERY = /* GraphQL */ `
@@ -356,6 +376,42 @@ export const SYSTEM_FILES_QUERY = /* GraphQL */ `
     systemFiles {
       name
       content
+    }
+  }
+`;
+
+// ─── Heartbeat ───────────────────────────────────────────────────────────────
+
+export const HEARTBEAT_ITEMS_QUERY = /* GraphQL */ `
+  query HeartbeatItems {
+    heartbeatItems {
+      id
+      title
+      description
+      schedule
+      priority
+      status
+      createdBy
+      targetUser
+      targetChannel
+      context
+      lastRun
+      nextRun
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const HEARTBEAT_LOGS_QUERY = /* GraphQL */ `
+  query HeartbeatLogs($itemId: String!, $limit: Int) {
+    heartbeatLogs(itemId: $itemId, limit: $limit) {
+      id
+      heartbeatItemId
+      action
+      reason
+      result
+      timestamp
     }
   }
 `;
