@@ -609,7 +609,7 @@ const SettingsView: Component = () => {
         </div>
       </section>
       </Show>
-      <footer class="app-shell__footer">Made with &lt;3 by <a href="https://linkedin.com/in/neirth" target="_blank" rel="noopener noreferrer">@Neirth</a></footer>
+      <footer class="app-shell__footer">MyPal</footer>
     </AppShell>
   );
 };

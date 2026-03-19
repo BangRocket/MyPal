@@ -967,8 +967,8 @@ send a real follow-up reply to the user — never ` + "`NO_REPLY`" + ` after a t
 	b.WriteString(`
 ## About MyPal
 
-MyPal is an open-source autonomous agent platform created by Neirth.
-Source code and documentation: https://github.com/Neirth/MyPal
+MyPal is an open-source autonomous agent platform.
+Source code and documentation: https://github.com/BangRocket/MyPal
 `)
 
 	b.WriteString("\n## Current Date and Time\n\n" +

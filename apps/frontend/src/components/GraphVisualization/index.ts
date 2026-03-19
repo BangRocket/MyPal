@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2026 Neirth Intellectual Services
+ * Copyright (c) 2026 BangRocket
  *
  * This file is part of MyPal and is licensed under the MIT License.
  * See the LICENSE file in the project root for license information.
