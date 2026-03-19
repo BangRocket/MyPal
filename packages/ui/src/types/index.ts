@@ -341,3 +341,47 @@ export interface UserRelationship {
   interactionCount: number;
   lastInteraction: string | null;
 }
+
+// ─── Heartbeat ──────────────────────────────────────────────────────────────
+
+/** Lifecycle state of a heartbeat item. */
+export type HeartbeatStatus = "active" | "snoozed" | "completed" | "cancelled";
+
+/** A proactive heartbeat item that the agent evaluates on a schedule. */
+export interface HeartbeatItem {
+  id: string;
+  title: string;
+  description: string;
+  schedule: string;
+  priority: number;
+  status: HeartbeatStatus;
+  createdBy: string;
+  targetUser: string;
+  targetChannel: string;
+  context: string;
+  lastRun: string | null;
+  nextRun: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/** Input for creating or updating a heartbeat item. */
+export interface HeartbeatItemInput {
+  title: string;
+  description: string;
+  schedule: string;
+  priority: number;
+  targetUser: string;
+  targetChannel: string;
+  context: string;
+}
+
+/** An execution log entry for a heartbeat item. */
+export interface HeartbeatLog {
+  id: string;
+  heartbeatItemId: string;
+  action: string;
+  reason: string;
+  result: string;
+  timestamp: string;
+}

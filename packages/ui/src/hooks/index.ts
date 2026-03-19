@@ -22,3 +22,4 @@ export { useConfig } from "./useConfig";
 export { useSystemFiles } from "./useSystemFiles";
 export { useMcpUsers, useToolPermissions } from "./usePermissions";
 export { usePersonalities } from "./usePersonalities";
+export { useHeartbeatItems, useHeartbeatLogs } from "./useHeartbeat";

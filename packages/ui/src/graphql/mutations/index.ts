@@ -272,3 +272,47 @@ export const WRITE_SYSTEM_FILE_MUTATION = /* GraphQL */ `
     }
   }
 `;
+
+// ─── Heartbeat ───────────────────────────────────────────────────────────────
+
+export const CREATE_HEARTBEAT_ITEM_MUTATION = /* GraphQL */ `
+  mutation CreateHeartbeatItem($input: HeartbeatItemInput!) {
+    createHeartbeatItem(input: $input) {
+      id
+      title
+      status
+    }
+  }
+`;
+
+export const UPDATE_HEARTBEAT_ITEM_MUTATION = /* GraphQL */ `
+  mutation UpdateHeartbeatItem($id: String!, $input: HeartbeatItemInput!) {
+    updateHeartbeatItem(id: $id, input: $input) {
+      id
+      title
+      status
+    }
+  }
+`;
+
+export const DELETE_HEARTBEAT_ITEM_MUTATION = /* GraphQL */ `
+  mutation DeleteHeartbeatItem($id: String!) {
+    deleteHeartbeatItem(id: $id)
+  }
+`;
+
+export const SNOOZE_HEARTBEAT_ITEM_MUTATION = /* GraphQL */ `
+  mutation SnoozeHeartbeatItem($id: String!, $until: String!) {
+    snoozeHeartbeatItem(id: $id, until: $until) {
+      id
+      status
+      nextRun
+    }
+  }
+`;
+
+export const COMPLETE_HEARTBEAT_ITEM_MUTATION = /* GraphQL */ `
+  mutation CompleteHeartbeatItem($id: String!) {
+    completeHeartbeatItem(id: $id)
+  }
+`;
