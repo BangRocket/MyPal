@@ -6,14 +6,15 @@ import (
 	svccompaction "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/compaction"
 	svccontext "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/context_builder"
 	svcdashboard "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/dashboard"
-	svcorganic "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/organic"
-	svcpersonality "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/personality"
+	svcheartbeat "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/heartbeat"
+	svcmemory "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/memory"
 	svcmsgcompaction "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/message_compaction"
 	svcmsgprocessor "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/message_processor"
+	svcorganic "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/organic"
 	svcpairing "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/pairing"
-	svcscheduler "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/scheduler"
-	svcheartbeat "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/heartbeat"
+	svcpersonality "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/personality"
 	svcsandbox "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/sandbox"
+	svcscheduler "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/scheduler"
 	svcsubagent "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/subagent"
 )
 
@@ -102,3 +103,8 @@ var NewPersonalityService = svcpersonality.NewService
 type SandboxManager = svcsandbox.Manager
 
 var NewSandboxManager = svcsandbox.NewManager
+
+// Vector Memory
+type VectorMemory = svcmemory.VectorMemory
+
+var NewVectorMemory = svcmemory.NewVectorMemory
