@@ -17,6 +17,7 @@ import (
 	domainservices "github.com/BangRocket/MyPal/apps/backend/internal/domain/services"
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/services/mcp"
 	heartbeatsvc "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/heartbeat"
+	sandboxsvc "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/sandbox"
 	personalitysvc "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/personality"
 )
 
@@ -58,6 +59,7 @@ type Deps struct {
 	EmailConfig       config.EmailConfig
 	OrganicConfigRepo ports.OrganicResponseConfigRepositoryPort
 	HeartbeatSvc      *heartbeatsvc.Service
+	SandboxMgr        *sandboxsvc.Manager
 }
 
 // Agent implements agent.Provider.

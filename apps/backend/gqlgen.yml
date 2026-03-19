@@ -22,6 +22,7 @@ schema:
   - ../../schema/email.graphql
   - ../../schema/organic.graphql
   - ../../schema/heartbeat.graphql
+  - ../../schema/sandbox.graphql
   - ../../schema/subscriptions.graphql
 
 exec:

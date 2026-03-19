@@ -474,6 +474,25 @@ type PersonalityInput struct {
 type Query struct {
 }
 
+type SandboxInstance struct {
+	ID         string  `json:"id"`
+	Image      string  `json:"image"`
+	Status     string  `json:"status"`
+	UserID     string  `json:"userId"`
+	MemLimit   int     `json:"memLimit"`
+	CPULimit   float64 `json:"cpuLimit"`
+	NetPolicy  string  `json:"netPolicy"`
+	Persistent bool    `json:"persistent"`
+	CreatedAt  string  `json:"createdAt"`
+}
+
+type SandboxResult struct {
+	ExitCode   int    `json:"exitCode"`
+	Stdout     string `json:"stdout"`
+	Stderr     string `json:"stderr"`
+	DurationMs int    `json:"durationMs"`
+}
+
 type SchedulerConfig struct {
 	Enabled        *bool   `json:"enabled,omitempty"`
 	MemoryEnabled  *bool   `json:"memoryEnabled,omitempty"`

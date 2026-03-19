@@ -97,6 +97,7 @@ func (a *App) initGraphQL() {
 		EmailConfig:       cfg.Channels.Email,
 		OrganicConfigRepo: a.OrganicConfigRepo,
 		HeartbeatSvc:      hbSvc,
+		SandboxMgr:        a.SandboxMgr,
 	}
 
 	a.MsgHandler.SetCapabilitiesChecker(func(cap string) bool {

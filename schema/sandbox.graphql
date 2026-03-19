@@ -1,0 +1,31 @@
+# ─── Sandbox / Code Execution ─────────────────────────────────────────────────
+
+type SandboxInstance {
+  id: String!
+  image: String!
+  status: String!
+  userId: String!
+  memLimit: Int!
+  cpuLimit: Float!
+  netPolicy: String!
+  persistent: Boolean!
+  createdAt: String!
+}
+
+type SandboxResult {
+  exitCode: Int!
+  stdout: String!
+  stderr: String!
+  durationMs: Int!
+}
+
+extend type Query {
+  sandboxInstances: [SandboxInstance!]!
+  sandboxInstance(id: String!): SandboxInstance
+}
+
+extend type Mutation {
+  createSandbox(image: String!, persistent: Boolean): SandboxInstance!
+  executeSandbox(id: String!, command: String!): SandboxResult!
+  destroySandbox(id: String!): Boolean!
+}

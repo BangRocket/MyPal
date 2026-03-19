@@ -407,6 +407,7 @@ type ComplexityRoot struct {
 		ConnectMcp            func(childComplexity int, name string, transport string, url string, clientID *string) int
 		CreateHeartbeatItem   func(childComplexity int, input HeartbeatItemInput) int
 		CreatePersonality     func(childComplexity int, input PersonalityInput) int
+		CreateSandbox         func(childComplexity int, image string, persistent *bool) int
 		DeleteHeartbeatItem   func(childComplexity int, id string) int
 		DeleteMemoryNode      func(childComplexity int, id string) int
 		DeletePersonality     func(childComplexity int, id string) int
@@ -414,10 +415,12 @@ type ComplexityRoot struct {
 		DeleteToolPermission  func(childComplexity int, userID string, toolName string) int
 		DeleteUser            func(childComplexity int, conversationID string) int
 		DenyPairing           func(childComplexity int, code string, reason *string) int
+		DestroySandbox        func(childComplexity int, id string) int
 		DisableSkill          func(childComplexity int, name string) int
 		DisconnectMcp         func(childComplexity int, name string) int
 		EnableSkill           func(childComplexity int, name string) int
 		ExecuteCypher         func(childComplexity int, cypher string) int
+		ExecuteSandbox        func(childComplexity int, id string, command string) int
 		ImportSkill           func(childComplexity int, data string) int
 		InitiateOAuth         func(childComplexity int, name string, url string) int
 		KillSubAgent          func(childComplexity int, id string) int
@@ -524,6 +527,8 @@ type ComplexityRoot struct {
 		PendingPairings   func(childComplexity int) int
 		Personalities     func(childComplexity int) int
 		Personality       func(childComplexity int, id string) int
+		SandboxInstance   func(childComplexity int, id string) int
+		SandboxInstances  func(childComplexity int) int
 		SearchMemory      func(childComplexity int, query string) int
 		Skills            func(childComplexity int) int
 		Status            func(childComplexity int) int
@@ -535,6 +540,25 @@ type ComplexityRoot struct {
 		UserGraph         func(childComplexity int, userID *string) int
 		UserRelationships func(childComplexity int, userID string) int
 		Users             func(childComplexity int) int
+	}
+
+	SandboxInstance struct {
+		CPULimit   func(childComplexity int) int
+		CreatedAt  func(childComplexity int) int
+		ID         func(childComplexity int) int
+		Image      func(childComplexity int) int
+		MemLimit   func(childComplexity int) int
+		NetPolicy  func(childComplexity int) int
+		Persistent func(childComplexity int) int
+		Status     func(childComplexity int) int
+		UserID     func(childComplexity int) int
+	}
+
+	SandboxResult struct {
+		DurationMs func(childComplexity int) int
+		ExitCode   func(childComplexity int) int
+		Stderr     func(childComplexity int) int
+		Stdout     func(childComplexity int) int
 	}
 
 	SchedulerConfig struct {
@@ -720,6 +744,9 @@ type MutationResolver interface {
 	DeleteHeartbeatItem(ctx context.Context, id string) (bool, error)
 	SnoozeHeartbeatItem(ctx context.Context, id string, until string) (*HeartbeatItem, error)
 	CompleteHeartbeatItem(ctx context.Context, id string) (bool, error)
+	CreateSandbox(ctx context.Context, image string, persistent *bool) (*SandboxInstance, error)
+	ExecuteSandbox(ctx context.Context, id string, command string) (*SandboxResult, error)
+	DestroySandbox(ctx context.Context, id string) (bool, error)
 }
 type QueryResolver interface {
 	Agent(ctx context.Context) (*Agent, error)
@@ -755,6 +782,8 @@ type QueryResolver interface {
 	HeartbeatItems(ctx context.Context) ([]*HeartbeatItem, error)
 	HeartbeatItem(ctx context.Context, id string) (*HeartbeatItem, error)
 	HeartbeatLogs(ctx context.Context, itemID string, limit *int) ([]*HeartbeatLog, error)
+	SandboxInstances(ctx context.Context) ([]*SandboxInstance, error)
+	SandboxInstance(ctx context.Context, id string) (*SandboxInstance, error)
 }
 type SubscriptionResolver interface {
 	Events(ctx context.Context, eventType *string) (<-chan *EventPayload, error)
@@ -2337,6 +2366,17 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.ComplexityRoot.Mutation.CreatePersonality(childComplexity, args["input"].(PersonalityInput)), true
+	case "Mutation.createSandbox":
+		if e.ComplexityRoot.Mutation.CreateSandbox == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createSandbox_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.ComplexityRoot.Mutation.CreateSandbox(childComplexity, args["image"].(string), args["persistent"].(*bool)), true
 	case "Mutation.deleteHeartbeatItem":
 		if e.ComplexityRoot.Mutation.DeleteHeartbeatItem == nil {
 			break
@@ -2414,6 +2454,17 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.ComplexityRoot.Mutation.DenyPairing(childComplexity, args["code"].(string), args["reason"].(*string)), true
+	case "Mutation.destroySandbox":
+		if e.ComplexityRoot.Mutation.DestroySandbox == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_destroySandbox_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.ComplexityRoot.Mutation.DestroySandbox(childComplexity, args["id"].(string)), true
 	case "Mutation.disableSkill":
 		if e.ComplexityRoot.Mutation.DisableSkill == nil {
 			break
@@ -2458,6 +2509,17 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.ComplexityRoot.Mutation.ExecuteCypher(childComplexity, args["cypher"].(string)), true
+	case "Mutation.executeSandbox":
+		if e.ComplexityRoot.Mutation.ExecuteSandbox == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_executeSandbox_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.ComplexityRoot.Mutation.ExecuteSandbox(childComplexity, args["id"].(string), args["command"].(string)), true
 	case "Mutation.importSkill":
 		if e.ComplexityRoot.Mutation.ImportSkill == nil {
 			break
@@ -3062,6 +3124,23 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.ComplexityRoot.Query.Personality(childComplexity, args["id"].(string)), true
+	case "Query.sandboxInstance":
+		if e.ComplexityRoot.Query.SandboxInstance == nil {
+			break
+		}
+
+		args, err := ec.field_Query_sandboxInstance_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.ComplexityRoot.Query.SandboxInstance(childComplexity, args["id"].(string)), true
+	case "Query.sandboxInstances":
+		if e.ComplexityRoot.Query.SandboxInstances == nil {
+			break
+		}
+
+		return e.ComplexityRoot.Query.SandboxInstances(childComplexity), true
 	case "Query.searchMemory":
 		if e.ComplexityRoot.Query.SearchMemory == nil {
 			break
@@ -3148,6 +3227,86 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.ComplexityRoot.Query.Users(childComplexity), true
+
+	case "SandboxInstance.cpuLimit":
+		if e.ComplexityRoot.SandboxInstance.CPULimit == nil {
+			break
+		}
+
+		return e.ComplexityRoot.SandboxInstance.CPULimit(childComplexity), true
+	case "SandboxInstance.createdAt":
+		if e.ComplexityRoot.SandboxInstance.CreatedAt == nil {
+			break
+		}
+
+		return e.ComplexityRoot.SandboxInstance.CreatedAt(childComplexity), true
+	case "SandboxInstance.id":
+		if e.ComplexityRoot.SandboxInstance.ID == nil {
+			break
+		}
+
+		return e.ComplexityRoot.SandboxInstance.ID(childComplexity), true
+	case "SandboxInstance.image":
+		if e.ComplexityRoot.SandboxInstance.Image == nil {
+			break
+		}
+
+		return e.ComplexityRoot.SandboxInstance.Image(childComplexity), true
+	case "SandboxInstance.memLimit":
+		if e.ComplexityRoot.SandboxInstance.MemLimit == nil {
+			break
+		}
+
+		return e.ComplexityRoot.SandboxInstance.MemLimit(childComplexity), true
+	case "SandboxInstance.netPolicy":
+		if e.ComplexityRoot.SandboxInstance.NetPolicy == nil {
+			break
+		}
+
+		return e.ComplexityRoot.SandboxInstance.NetPolicy(childComplexity), true
+	case "SandboxInstance.persistent":
+		if e.ComplexityRoot.SandboxInstance.Persistent == nil {
+			break
+		}
+
+		return e.ComplexityRoot.SandboxInstance.Persistent(childComplexity), true
+	case "SandboxInstance.status":
+		if e.ComplexityRoot.SandboxInstance.Status == nil {
+			break
+		}
+
+		return e.ComplexityRoot.SandboxInstance.Status(childComplexity), true
+	case "SandboxInstance.userId":
+		if e.ComplexityRoot.SandboxInstance.UserID == nil {
+			break
+		}
+
+		return e.ComplexityRoot.SandboxInstance.UserID(childComplexity), true
+
+	case "SandboxResult.durationMs":
+		if e.ComplexityRoot.SandboxResult.DurationMs == nil {
+			break
+		}
+
+		return e.ComplexityRoot.SandboxResult.DurationMs(childComplexity), true
+	case "SandboxResult.exitCode":
+		if e.ComplexityRoot.SandboxResult.ExitCode == nil {
+			break
+		}
+
+		return e.ComplexityRoot.SandboxResult.ExitCode(childComplexity), true
+	case "SandboxResult.stderr":
+		if e.ComplexityRoot.SandboxResult.Stderr == nil {
+			break
+		}
+
+		return e.ComplexityRoot.SandboxResult.Stderr(childComplexity), true
+	case "SandboxResult.stdout":
+		if e.ComplexityRoot.SandboxResult.Stdout == nil {
+			break
+		}
+
+		return e.ComplexityRoot.SandboxResult.Stdout(childComplexity), true
 
 	case "SchedulerConfig.enabled":
 		if e.ComplexityRoot.SchedulerConfig.Enabled == nil {
@@ -4667,6 +4826,38 @@ extend type Mutation {
   completeHeartbeatItem(id: String!): Boolean!
 }
 `, BuiltIn: false},
+	{Name: "../../../../../../schema/sandbox.graphql", Input: `# ─── Sandbox / Code Execution ─────────────────────────────────────────────────
+
+type SandboxInstance {
+  id: String!
+  image: String!
+  status: String!
+  userId: String!
+  memLimit: Int!
+  cpuLimit: Float!
+  netPolicy: String!
+  persistent: Boolean!
+  createdAt: String!
+}
+
+type SandboxResult {
+  exitCode: Int!
+  stdout: String!
+  stderr: String!
+  durationMs: Int!
+}
+
+extend type Query {
+  sandboxInstances: [SandboxInstance!]!
+  sandboxInstance(id: String!): SandboxInstance
+}
+
+extend type Mutation {
+  createSandbox(image: String!, persistent: Boolean): SandboxInstance!
+  executeSandbox(id: String!, command: String!): SandboxResult!
+  destroySandbox(id: String!): Boolean!
+}
+`, BuiltIn: false},
 	{Name: "../../../../../../schema/subscriptions.graphql", Input: `# ─── Subscription ─────────────────────────────────────────────────────────────
 
 type EventPayload {
@@ -4865,6 +5056,22 @@ func (ec *executionContext) field_Mutation_createPersonality_args(ctx context.Co
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_createSandbox_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "image", ec.unmarshalNString2string)
+	if err != nil {
+		return nil, err
+	}
+	args["image"] = arg0
+	arg1, err := graphql.ProcessArgField(ctx, rawArgs, "persistent", ec.unmarshalOBoolean2ᚖbool)
+	if err != nil {
+		return nil, err
+	}
+	args["persistent"] = arg1
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_deleteHeartbeatItem_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
@@ -4952,6 +5159,17 @@ func (ec *executionContext) field_Mutation_denyPairing_args(ctx context.Context,
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_destroySandbox_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNString2string)
+	if err != nil {
+		return nil, err
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_disableSkill_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
@@ -4993,6 +5211,22 @@ func (ec *executionContext) field_Mutation_executeCypher_args(ctx context.Contex
 		return nil, err
 	}
 	args["cypher"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_executeSandbox_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNString2string)
+	if err != nil {
+		return nil, err
+	}
+	args["id"] = arg0
+	arg1, err := graphql.ProcessArgField(ctx, rawArgs, "command", ec.unmarshalNString2string)
+	if err != nil {
+		return nil, err
+	}
+	args["command"] = arg1
 	return args, nil
 }
 
@@ -5376,6 +5610,17 @@ func (ec *executionContext) field_Query_organicConfig_args(ctx context.Context, 
 }
 
 func (ec *executionContext) field_Query_personality_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNString2string)
+	if err != nil {
+		return nil, err
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_sandboxInstance_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
 	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNString2string)
@@ -14444,6 +14689,159 @@ func (ec *executionContext) fieldContext_Mutation_completeHeartbeatItem(ctx cont
 	return fc, nil
 }
 
+func (ec *executionContext) _Mutation_createSandbox(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Mutation_createSandbox,
+		func(ctx context.Context) (any, error) {
+			fc := graphql.GetFieldContext(ctx)
+			return ec.Resolvers.Mutation().CreateSandbox(ctx, fc.Args["image"].(string), fc.Args["persistent"].(*bool))
+		},
+		nil,
+		ec.marshalNSandboxInstance2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSandboxInstance,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Mutation_createSandbox(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_SandboxInstance_id(ctx, field)
+			case "image":
+				return ec.fieldContext_SandboxInstance_image(ctx, field)
+			case "status":
+				return ec.fieldContext_SandboxInstance_status(ctx, field)
+			case "userId":
+				return ec.fieldContext_SandboxInstance_userId(ctx, field)
+			case "memLimit":
+				return ec.fieldContext_SandboxInstance_memLimit(ctx, field)
+			case "cpuLimit":
+				return ec.fieldContext_SandboxInstance_cpuLimit(ctx, field)
+			case "netPolicy":
+				return ec.fieldContext_SandboxInstance_netPolicy(ctx, field)
+			case "persistent":
+				return ec.fieldContext_SandboxInstance_persistent(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_SandboxInstance_createdAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SandboxInstance", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_createSandbox_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_executeSandbox(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Mutation_executeSandbox,
+		func(ctx context.Context) (any, error) {
+			fc := graphql.GetFieldContext(ctx)
+			return ec.Resolvers.Mutation().ExecuteSandbox(ctx, fc.Args["id"].(string), fc.Args["command"].(string))
+		},
+		nil,
+		ec.marshalNSandboxResult2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSandboxResult,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Mutation_executeSandbox(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "exitCode":
+				return ec.fieldContext_SandboxResult_exitCode(ctx, field)
+			case "stdout":
+				return ec.fieldContext_SandboxResult_stdout(ctx, field)
+			case "stderr":
+				return ec.fieldContext_SandboxResult_stderr(ctx, field)
+			case "durationMs":
+				return ec.fieldContext_SandboxResult_durationMs(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SandboxResult", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_executeSandbox_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_destroySandbox(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Mutation_destroySandbox,
+		func(ctx context.Context) (any, error) {
+			fc := graphql.GetFieldContext(ctx)
+			return ec.Resolvers.Mutation().DestroySandbox(ctx, fc.Args["id"].(string))
+		},
+		nil,
+		ec.marshalNBoolean2bool,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Mutation_destroySandbox(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_destroySandbox_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _MutationResult_success(ctx context.Context, field graphql.CollectedField, obj *MutationResult) (ret graphql.Marshaler) {
 	return graphql.ResolveField(
 		ctx,
@@ -17146,6 +17544,116 @@ func (ec *executionContext) fieldContext_Query_heartbeatLogs(ctx context.Context
 	return fc, nil
 }
 
+func (ec *executionContext) _Query_sandboxInstances(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Query_sandboxInstances,
+		func(ctx context.Context) (any, error) {
+			return ec.Resolvers.Query().SandboxInstances(ctx)
+		},
+		nil,
+		ec.marshalNSandboxInstance2ᚕᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSandboxInstanceᚄ,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Query_sandboxInstances(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_SandboxInstance_id(ctx, field)
+			case "image":
+				return ec.fieldContext_SandboxInstance_image(ctx, field)
+			case "status":
+				return ec.fieldContext_SandboxInstance_status(ctx, field)
+			case "userId":
+				return ec.fieldContext_SandboxInstance_userId(ctx, field)
+			case "memLimit":
+				return ec.fieldContext_SandboxInstance_memLimit(ctx, field)
+			case "cpuLimit":
+				return ec.fieldContext_SandboxInstance_cpuLimit(ctx, field)
+			case "netPolicy":
+				return ec.fieldContext_SandboxInstance_netPolicy(ctx, field)
+			case "persistent":
+				return ec.fieldContext_SandboxInstance_persistent(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_SandboxInstance_createdAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SandboxInstance", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_sandboxInstance(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Query_sandboxInstance,
+		func(ctx context.Context) (any, error) {
+			fc := graphql.GetFieldContext(ctx)
+			return ec.Resolvers.Query().SandboxInstance(ctx, fc.Args["id"].(string))
+		},
+		nil,
+		ec.marshalOSandboxInstance2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSandboxInstance,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_Query_sandboxInstance(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_SandboxInstance_id(ctx, field)
+			case "image":
+				return ec.fieldContext_SandboxInstance_image(ctx, field)
+			case "status":
+				return ec.fieldContext_SandboxInstance_status(ctx, field)
+			case "userId":
+				return ec.fieldContext_SandboxInstance_userId(ctx, field)
+			case "memLimit":
+				return ec.fieldContext_SandboxInstance_memLimit(ctx, field)
+			case "cpuLimit":
+				return ec.fieldContext_SandboxInstance_cpuLimit(ctx, field)
+			case "netPolicy":
+				return ec.fieldContext_SandboxInstance_netPolicy(ctx, field)
+			case "persistent":
+				return ec.fieldContext_SandboxInstance_persistent(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_SandboxInstance_createdAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SandboxInstance", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_sandboxInstance_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	return graphql.ResolveField(
 		ctx,
@@ -17249,6 +17757,383 @@ func (ec *executionContext) fieldContext_Query___schema(_ context.Context, field
 				return ec.fieldContext___Schema_directives(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type __Schema", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SandboxInstance_id(ctx context.Context, field graphql.CollectedField, obj *SandboxInstance) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SandboxInstance_id,
+		func(ctx context.Context) (any, error) {
+			return obj.ID, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_SandboxInstance_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SandboxInstance",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SandboxInstance_image(ctx context.Context, field graphql.CollectedField, obj *SandboxInstance) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SandboxInstance_image,
+		func(ctx context.Context) (any, error) {
+			return obj.Image, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_SandboxInstance_image(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SandboxInstance",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SandboxInstance_status(ctx context.Context, field graphql.CollectedField, obj *SandboxInstance) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SandboxInstance_status,
+		func(ctx context.Context) (any, error) {
+			return obj.Status, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_SandboxInstance_status(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SandboxInstance",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SandboxInstance_userId(ctx context.Context, field graphql.CollectedField, obj *SandboxInstance) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SandboxInstance_userId,
+		func(ctx context.Context) (any, error) {
+			return obj.UserID, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_SandboxInstance_userId(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SandboxInstance",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SandboxInstance_memLimit(ctx context.Context, field graphql.CollectedField, obj *SandboxInstance) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SandboxInstance_memLimit,
+		func(ctx context.Context) (any, error) {
+			return obj.MemLimit, nil
+		},
+		nil,
+		ec.marshalNInt2int,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_SandboxInstance_memLimit(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SandboxInstance",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SandboxInstance_cpuLimit(ctx context.Context, field graphql.CollectedField, obj *SandboxInstance) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SandboxInstance_cpuLimit,
+		func(ctx context.Context) (any, error) {
+			return obj.CPULimit, nil
+		},
+		nil,
+		ec.marshalNFloat2float64,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_SandboxInstance_cpuLimit(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SandboxInstance",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Float does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SandboxInstance_netPolicy(ctx context.Context, field graphql.CollectedField, obj *SandboxInstance) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SandboxInstance_netPolicy,
+		func(ctx context.Context) (any, error) {
+			return obj.NetPolicy, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_SandboxInstance_netPolicy(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SandboxInstance",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SandboxInstance_persistent(ctx context.Context, field graphql.CollectedField, obj *SandboxInstance) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SandboxInstance_persistent,
+		func(ctx context.Context) (any, error) {
+			return obj.Persistent, nil
+		},
+		nil,
+		ec.marshalNBoolean2bool,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_SandboxInstance_persistent(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SandboxInstance",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SandboxInstance_createdAt(ctx context.Context, field graphql.CollectedField, obj *SandboxInstance) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SandboxInstance_createdAt,
+		func(ctx context.Context) (any, error) {
+			return obj.CreatedAt, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_SandboxInstance_createdAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SandboxInstance",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SandboxResult_exitCode(ctx context.Context, field graphql.CollectedField, obj *SandboxResult) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SandboxResult_exitCode,
+		func(ctx context.Context) (any, error) {
+			return obj.ExitCode, nil
+		},
+		nil,
+		ec.marshalNInt2int,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_SandboxResult_exitCode(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SandboxResult",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SandboxResult_stdout(ctx context.Context, field graphql.CollectedField, obj *SandboxResult) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SandboxResult_stdout,
+		func(ctx context.Context) (any, error) {
+			return obj.Stdout, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_SandboxResult_stdout(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SandboxResult",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SandboxResult_stderr(ctx context.Context, field graphql.CollectedField, obj *SandboxResult) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SandboxResult_stderr,
+		func(ctx context.Context) (any, error) {
+			return obj.Stderr, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_SandboxResult_stderr(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SandboxResult",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SandboxResult_durationMs(ctx context.Context, field graphql.CollectedField, obj *SandboxResult) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_SandboxResult_durationMs,
+		func(ctx context.Context) (any, error) {
+			return obj.DurationMs, nil
+		},
+		nil,
+		ec.marshalNInt2int,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_SandboxResult_durationMs(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SandboxResult",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
 		},
 	}
 	return fc, nil
@@ -24746,6 +25631,27 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
+		case "createSandbox":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createSandbox(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "executeSandbox":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_executeSandbox(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "destroySandbox":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_destroySandbox(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -25897,6 +26803,47 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "sandboxInstances":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_sandboxInstances(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "sandboxInstance":
+			field := field
+
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_sandboxInstance(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
 		case "__type":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Query___type(ctx, field)
@@ -25905,6 +26852,139 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Query___schema(ctx, field)
 			})
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.Deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.ProcessDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var sandboxInstanceImplementors = []string{"SandboxInstance"}
+
+func (ec *executionContext) _SandboxInstance(ctx context.Context, sel ast.SelectionSet, obj *SandboxInstance) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, sandboxInstanceImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SandboxInstance")
+		case "id":
+			out.Values[i] = ec._SandboxInstance_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "image":
+			out.Values[i] = ec._SandboxInstance_image(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "status":
+			out.Values[i] = ec._SandboxInstance_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "userId":
+			out.Values[i] = ec._SandboxInstance_userId(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "memLimit":
+			out.Values[i] = ec._SandboxInstance_memLimit(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "cpuLimit":
+			out.Values[i] = ec._SandboxInstance_cpuLimit(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "netPolicy":
+			out.Values[i] = ec._SandboxInstance_netPolicy(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "persistent":
+			out.Values[i] = ec._SandboxInstance_persistent(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "createdAt":
+			out.Values[i] = ec._SandboxInstance_createdAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.Deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.ProcessDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var sandboxResultImplementors = []string{"SandboxResult"}
+
+func (ec *executionContext) _SandboxResult(ctx context.Context, sel ast.SelectionSet, obj *SandboxResult) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, sandboxResultImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SandboxResult")
+		case "exitCode":
+			out.Values[i] = ec._SandboxResult_exitCode(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "stdout":
+			out.Values[i] = ec._SandboxResult_stdout(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "stderr":
+			out.Values[i] = ec._SandboxResult_stderr(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "durationMs":
+			out.Values[i] = ec._SandboxResult_durationMs(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -27822,6 +28902,50 @@ func (ec *executionContext) unmarshalNPersonalityInput2githubᚗcomᚋBangRocket
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) marshalNSandboxInstance2githubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSandboxInstance(ctx context.Context, sel ast.SelectionSet, v SandboxInstance) graphql.Marshaler {
+	return ec._SandboxInstance(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNSandboxInstance2ᚕᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSandboxInstanceᚄ(ctx context.Context, sel ast.SelectionSet, v []*SandboxInstance) graphql.Marshaler {
+	ret := graphql.MarshalSliceConcurrently(ctx, len(v), 0, false, func(ctx context.Context, i int) graphql.Marshaler {
+		fc := graphql.GetFieldContext(ctx)
+		fc.Result = &v[i]
+		return ec.marshalNSandboxInstance2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSandboxInstance(ctx, sel, v[i])
+	})
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNSandboxInstance2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSandboxInstance(ctx context.Context, sel ast.SelectionSet, v *SandboxInstance) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._SandboxInstance(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNSandboxResult2githubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSandboxResult(ctx context.Context, sel ast.SelectionSet, v SandboxResult) graphql.Marshaler {
+	return ec._SandboxResult(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNSandboxResult2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSandboxResult(ctx context.Context, sel ast.SelectionSet, v *SandboxResult) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._SandboxResult(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNSkill2ᚕᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSkillᚄ(ctx context.Context, sel ast.SelectionSet, v []*Skill) graphql.Marshaler {
 	ret := graphql.MarshalSliceConcurrently(ctx, len(v), 0, false, func(ctx context.Context, i int) graphql.Marshaler {
 		fc := graphql.GetFieldContext(ctx)
@@ -28587,6 +29711,13 @@ func (ec *executionContext) marshalOPersonality2ᚖgithubᚗcomᚋBangRocketᚋM
 		return graphql.Null
 	}
 	return ec._Personality(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOSandboxInstance2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSandboxInstance(ctx context.Context, sel ast.SelectionSet, v *SandboxInstance) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._SandboxInstance(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOSchedulerConfig2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐSchedulerConfig(ctx context.Context, sel ast.SelectionSet, v *SchedulerConfig) graphql.Marshaler {
