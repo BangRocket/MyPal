@@ -204,6 +204,31 @@ func (c *Config) Validate() error {
 		}
 	}
 
+	// Email channel: when enabled, require IMAP and SMTP credentials.
+	if c.Channels.Email.Enabled {
+		if isPlaceholder(c.Channels.Email.IMAPHost) {
+			errs = append(errs, "channels.email.imap_host is required when email is enabled")
+		}
+		if isPlaceholder(c.Channels.Email.IMAPUser) {
+			errs = append(errs, "channels.email.imap_user is required when email is enabled")
+		}
+		if isPlaceholder(c.Channels.Email.IMAPPass) {
+			errs = append(errs, "channels.email.imap_pass is required when email is enabled")
+		}
+		if isPlaceholder(c.Channels.Email.SMTPHost) {
+			errs = append(errs, "channels.email.smtp_host is required when email is enabled")
+		}
+		if isPlaceholder(c.Channels.Email.SMTPUser) {
+			errs = append(errs, "channels.email.smtp_user is required when email is enabled")
+		}
+		if isPlaceholder(c.Channels.Email.SMTPPass) {
+			errs = append(errs, "channels.email.smtp_pass is required when email is enabled")
+		}
+		if isPlaceholder(c.Channels.Email.SMTPFrom) {
+			errs = append(errs, "channels.email.smtp_from is required when email is enabled")
+		}
+	}
+
 	if len(errs) > 0 {
 		return &ValidationError{Errors: errs}
 	}
@@ -366,6 +391,7 @@ type ChannelsConfig struct {
 	WhatsApp WhatsAppConfig `mapstructure:"whatsapp"`
 	Twilio   TwilioConfig   `mapstructure:"twilio"`
 	Slack    SlackConfig    `mapstructure:"slack"`
+	Email    EmailConfig    `mapstructure:"email"`
 }
 
 type TelegramConfig struct {
@@ -399,6 +425,24 @@ type SlackConfig struct {
 	Enabled  bool   `mapstructure:"enabled"`
 	BotToken string `mapstructure:"bot_token"`
 	AppToken string `mapstructure:"app_token"`
+}
+
+// EmailConfig holds IMAP (inbound) and SMTP (outbound) email settings.
+type EmailConfig struct {
+	Enabled        bool   `mapstructure:"enabled"`
+	IMAPHost       string `mapstructure:"imap_host"`
+	IMAPPort       int    `mapstructure:"imap_port"`
+	IMAPUser       string `mapstructure:"imap_user"`
+	IMAPPass       string `mapstructure:"imap_pass"`
+	IMAPTLS        bool   `mapstructure:"imap_tls"`
+	SMTPHost       string `mapstructure:"smtp_host"`
+	SMTPPort       int    `mapstructure:"smtp_port"`
+	SMTPUser       string `mapstructure:"smtp_user"`
+	SMTPPass       string `mapstructure:"smtp_pass"`
+	SMTPFrom       string `mapstructure:"smtp_from"`
+	SMTPTLS        bool   `mapstructure:"smtp_tls"`
+	PollInterval   int    `mapstructure:"poll_interval"`
+	ProcessedLabel string `mapstructure:"processed_label"`
 }
 
 type MCPConfig struct {
@@ -538,6 +582,13 @@ func setDefaults() {
 	viper.SetDefault("channels.slack.enabled", false)
 	viper.SetDefault("channels.slack.bot_token", "")
 	viper.SetDefault("channels.slack.app_token", "")
+	viper.SetDefault("channels.email.enabled", false)
+	viper.SetDefault("channels.email.imap_port", 993)
+	viper.SetDefault("channels.email.imap_tls", true)
+	viper.SetDefault("channels.email.smtp_port", 587)
+	viper.SetDefault("channels.email.smtp_tls", true)
+	viper.SetDefault("channels.email.poll_interval", 60)
+	viper.SetDefault("channels.email.processed_label", "MyPal/Processed")
 	// Default agent name (shown in navbar)
 	viper.SetDefault("agent.name", "MyPal")
 	// Default capabilities: subagents, memory, mcp, filesystem, sessions enabled
