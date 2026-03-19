@@ -173,7 +173,7 @@ func (a *Adapter) poll(ctx context.Context) {
 			Flags:  []imap.Flag{imap.FlagSeen},
 			Silent: true,
 		}
-		if err := c.UIDStore(*markSet, storeFlags, nil).Close(); err != nil {
+		if err := c.Store(*markSet, storeFlags, nil).Close(); err != nil {
 			log.Printf("email: IMAP store flags error: %v", err)
 		}
 	}
@@ -266,8 +266,8 @@ func extractPlainText(rawBody []byte) string {
 			break
 		}
 		// Prefer text/plain inline parts.
-		if _, ok := p.Header.(*gomessagemail.InlineHeader); ok {
-			ct, _, _ := p.Header.ContentType()
+		if h, ok := p.Header.(*gomessagemail.InlineHeader); ok {
+			ct, _, _ := h.ContentType()
 			if ct == "text/plain" || ct == "" {
 				b, readErr := io.ReadAll(p.Body)
 				if readErr == nil {

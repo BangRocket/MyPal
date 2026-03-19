@@ -12,6 +12,7 @@ import (
 	domainhandlers "github.com/BangRocket/MyPal/apps/backend/internal/domain/handlers"
 	domainservices "github.com/BangRocket/MyPal/apps/backend/internal/domain/services"
 	"github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/messaging/discord"
+	emailadapter "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/messaging/email"
 	slackadapter "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/messaging/slack"
 	"github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/messaging/telegram"
 	"github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/logging"
@@ -50,6 +51,8 @@ func (a *App) startAndWait() {
 			channelType = "discord"
 		case *slackadapter.Adapter:
 			channelType = "slack"
+		case *emailadapter.Adapter:
+			channelType = "email"
 		}
 		if channelType == "" {
 			continue

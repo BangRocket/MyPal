@@ -10,6 +10,7 @@ import (
 	domainhandlers "github.com/BangRocket/MyPal/apps/backend/internal/domain/handlers"
 	msgrouter "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/messaging/router"
 	"github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/messaging/discord"
+	emailadapter "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/messaging/email"
 	slackadapter "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/messaging/slack"
 	"github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/messaging/telegram"
 	"github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/messaging/twilio"
@@ -25,6 +26,7 @@ var channelCaps = map[string]dto.ChannelCapabilities{
 	"slack":    {HasVoiceMessage: true, HasCallStream: false, HasTextStream: true, HasMediaSupport: true},
 	"whatsapp": {HasVoiceMessage: true, HasCallStream: true, HasTextStream: true, HasMediaSupport: true},
 	"twilio":   {HasVoiceMessage: true, HasCallStream: true, HasTextStream: true, HasMediaSupport: true},
+	"email":    {HasVoiceMessage: false, HasCallStream: false, HasTextStream: true, HasMediaSupport: false},
 }
 
 // initChannels builds the messaging adapter list from config, populates
@@ -88,6 +90,17 @@ func (a *App) initChannels() {
 		log.Println("channel: twilio — registered OK")
 	}
 
+	if !cfg.Channels.Email.Enabled {
+		log.Println("channel: email — disabled (skipping)")
+	} else if u := cfg.Channels.Email.IMAPUser; u == "" || u == "YOUR_IMAP_USER_HERE" {
+		log.Println("channel: email — no credentials configured (skipping)")
+	} else if a2, err := emailadapter.NewAdapter(cfg.Channels.Email); err != nil {
+		log.Printf("channel: email — failed to initialize: %v", err)
+	} else {
+		a.MessagingAdapters = append(a.MessagingAdapters, a2)
+		log.Println("channel: email — registered OK")
+	}
+
 	log.Printf("channels: %d adapter(s) active", len(a.MessagingAdapters))
 
 	a.ChanReg = msgrouter.New()
@@ -103,6 +116,8 @@ func (a *App) initChannels() {
 			a.ChanReg.Set("whatsapp", adapter)
 		case *twilio.Adapter:
 			a.ChanReg.Set("twilio", adapter)
+		case *emailadapter.Adapter:
+			a.ChanReg.Set("email", adapter)
 		}
 	}
 
@@ -137,7 +152,7 @@ func (a *App) makeChannelMsgHandler(ct string) func(context.Context, *models.Mes
 // inspecting which adapters are registered in chanReg.
 func (a *App) rebuildActiveChannels() []dto.ChannelStatus {
 	var list []dto.ChannelStatus
-	for _, t := range []string{"telegram", "discord", "slack", "whatsapp", "twilio"} {
+	for _, t := range []string{"telegram", "discord", "slack", "whatsapp", "twilio", "email"} {
 		if a.ChanReg.Get(t) != nil {
 			list = append(list, dto.ChannelStatus{
 				ID: t, Name: t, Type: t, Status: "online",
@@ -201,6 +216,23 @@ func (a *App) reloadChannel(channelType string) {
 			if sid != "" && tok != "" && from != "" {
 				newAdapter = twilio.NewAdapter(sid, tok, from)
 			}
+		case "email":
+			emailCfg := a.Cfg.Channels.Email
+			// Re-read key fields from viper for hot-reload.
+			emailCfg.IMAPUser = viper.GetString("channels.email.imap_user")
+			emailCfg.IMAPPass = viper.GetString("channels.email.imap_pass")
+			emailCfg.IMAPHost = viper.GetString("channels.email.imap_host")
+			emailCfg.SMTPHost = viper.GetString("channels.email.smtp_host")
+			emailCfg.SMTPUser = viper.GetString("channels.email.smtp_user")
+			emailCfg.SMTPPass = viper.GetString("channels.email.smtp_pass")
+			emailCfg.SMTPFrom = viper.GetString("channels.email.smtp_from")
+			if emailCfg.IMAPUser != "" && emailCfg.IMAPUser != "YOUR_IMAP_USER_HERE" {
+				if ad, err := emailadapter.NewAdapter(emailCfg); err == nil {
+					newAdapter = ad
+				} else {
+					log.Printf("channel: email — reload failed: %v", err)
+				}
+			}
 		}
 	}
 
@@ -224,6 +256,12 @@ func (a *App) reloadChannel(channelType string) {
 				go func() {
 					if err := ad.Start(a.ChannelStartCtx, a.makeChannelMsgHandler("slack")); err != nil {
 						log.Printf("channel: slack — listener failed (hot): %v", err)
+					}
+				}()
+			case *emailadapter.Adapter:
+				go func() {
+					if err := ad.Start(a.ChannelStartCtx, a.makeChannelMsgHandler("email")); err != nil {
+						log.Printf("channel: email — listener failed (hot): %v", err)
 					}
 				}()
 			}
