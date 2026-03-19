@@ -8,6 +8,7 @@ const (
 	ChannelTelegram ChannelType = "telegram"
 	ChannelTwilio   ChannelType = "twilio"
 	ChannelSlack    ChannelType = "slack"
+	ChannelEmail    ChannelType = "email"
 	// ChannelLoopback is the virtual channel used by the Scheduler for
 	// system-initiated agentic executions. It has no external messaging
 	// adapter; execution is ephemeral and no conversation history is

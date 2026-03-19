@@ -68,6 +68,13 @@ func GetCapabilitiesForType(channelType string) ChannelCapabilities {
 			HasTextStream:   true,
 			HasMediaSupport: true,
 		}
+	case "email":
+		return ChannelCapabilities{
+			HasVoiceMessage: false,
+			HasCallStream:   false,
+			HasTextStream:   true,
+			HasMediaSupport: false,
+		}
 	default:
 		return ChannelCapabilities{
 			HasTextStream:   true,
