@@ -282,6 +282,7 @@ type Config struct {
 	Wizard      WizardConfig      `mapstructure:"wizard"`
 	ModelTiers  ModelTiersConfig  `mapstructure:"model_tiers"`
 	Sandbox     SandboxConfig     `mapstructure:"sandbox"`
+	Embedding   EmbeddingConfig   `mapstructure:"embedding"`
 }
 
 
@@ -523,6 +524,20 @@ type WorkspaceConfig struct {
 	Path string `mapstructure:"path"`
 }
 
+// EmbeddingConfig holds settings for the embedding provider used by semantic
+// search and memory features.
+type EmbeddingConfig struct {
+	Provider string `mapstructure:"provider"` // "openai" or "ollama"
+	OpenAI   struct {
+		APIKey string `mapstructure:"api_key"`
+		Model  string `mapstructure:"model"`
+	} `mapstructure:"openai"`
+	Ollama struct {
+		Endpoint string `mapstructure:"endpoint"`
+		Model    string `mapstructure:"model"`
+	} `mapstructure:"ollama"`
+}
+
 // SandboxConfig holds code-execution sandbox settings.
 type SandboxConfig struct {
 	Enabled     bool    `mapstructure:"enabled"`
@@ -623,6 +638,10 @@ func setDefaults() {
 	viper.SetDefault("agent.capabilities.sessions", true)
 	viper.SetDefault("wizard.completed", false)
 	viper.SetDefault("model_tiers.enabled", false)
+	viper.SetDefault("embedding.provider", "openai")
+	viper.SetDefault("embedding.openai.model", "text-embedding-3-small")
+	viper.SetDefault("embedding.ollama.endpoint", "http://localhost:11434")
+	viper.SetDefault("embedding.ollama.model", "nomic-embed-text")
 	viper.SetDefault("sandbox.enabled", false)
 	viper.SetDefault("sandbox.backend", "docker")
 	viper.SetDefault("sandbox.pool_size", 2)
