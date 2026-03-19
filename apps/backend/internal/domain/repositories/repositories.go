@@ -8,6 +8,7 @@ import (
 	channelPkg "github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories/channel"
 	conversationPkg "github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories/conversation"
 	groupPkg "github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories/group"
+	heartbeatPkg "github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories/heartbeat"
 	mcpServerPkg "github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories/mcp_server"
 	organicPkg "github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories/organic"
 	messagePkg "github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories/message"
@@ -35,6 +36,7 @@ var (
 	NewDashboardMessageRepository      = messagePkg.NewDashboardMessageRepository
 	NewOrganicResponseConfigRepository = organicPkg.NewOrganicResponseConfigRepository
 	NewDashboardTaskRepository    = taskPkg.NewDashboardTaskRepository
+	NewHeartbeatRepository        = heartbeatPkg.NewHeartbeatRepository
 )
 
 // Type aliases for types defined in subpackages.

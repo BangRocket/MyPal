@@ -3,6 +3,7 @@ package ports
 import (
 	"context"
 	"errors"
+	"time"
 
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/models"
 )
@@ -228,6 +229,18 @@ type PersonalityRepositoryPort interface {
 type OrganicResponseConfigRepositoryPort interface {
 	GetByChannel(ctx context.Context, channelID string) (*models.OrganicResponseConfigModel, error)
 	Upsert(ctx context.Context, cfg *models.OrganicResponseConfigModel) error
+}
+
+// HeartbeatRepositoryPort manages heartbeat items and their execution logs.
+type HeartbeatRepositoryPort interface {
+	Create(ctx context.Context, item *models.HeartbeatItemModel) error
+	GetByID(ctx context.Context, id string) (*models.HeartbeatItemModel, error)
+	ListActive(ctx context.Context) ([]models.HeartbeatItemModel, error)
+	ListDue(ctx context.Context, now time.Time) ([]models.HeartbeatItemModel, error)
+	Update(ctx context.Context, item *models.HeartbeatItemModel) error
+	Delete(ctx context.Context, id string) error
+	AddLog(ctx context.Context, log *models.HeartbeatLogModel) error
+	GetLogs(ctx context.Context, itemID string, limit int) ([]models.HeartbeatLogModel, error)
 }
 
 // UserPersonaRelationshipRepositoryPort manages per-user familiarity with personalities.
