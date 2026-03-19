@@ -12,6 +12,7 @@ import (
 	svcmsgprocessor "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/message_processor"
 	svcpairing "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/pairing"
 	svcscheduler "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/scheduler"
+	svcheartbeat "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/heartbeat"
 	svcsubagent "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/subagent"
 )
 
@@ -85,6 +86,11 @@ var NewMemoryDigestService = svccontext.NewMemoryDigestService
 type OrganicResponseService = svcorganic.Service
 
 var NewOrganicResponseService = svcorganic.NewService
+
+// Heartbeat
+type HeartbeatService = svcheartbeat.Service
+
+var NewHeartbeatService = svcheartbeat.NewService
 
 // Personality
 type PersonalityService = svcpersonality.Service
