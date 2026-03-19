@@ -41,6 +41,13 @@ func (a *App) startAndWait() {
 		go sched.Run(ctx)
 	}
 
+	// Heartbeat evaluation loop
+	if a.HeartbeatSvc != nil {
+		dispatcher := domainhandlers.NewLoopbackDispatcher(a.MsgHandler)
+		a.HeartbeatSvc.SetDispatcher(dispatcher)
+		go a.HeartbeatSvc.Run(ctx)
+	}
+
 	// Channel listeners (only poll-based adapters — WhatsApp/Twilio are webhook-driven)
 	for _, adapter := range a.MessagingAdapters {
 		var channelType string

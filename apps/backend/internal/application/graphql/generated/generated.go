@@ -179,6 +179,20 @@ type ComplexityRoot struct {
 		Success func(childComplexity int) int
 	}
 
+	EmailChannelConfig struct {
+		Enabled        func(childComplexity int) int
+		ImapHost       func(childComplexity int) int
+		ImapPort       func(childComplexity int) int
+		ImapTLS        func(childComplexity int) int
+		ImapUser       func(childComplexity int) int
+		PollInterval   func(childComplexity int) int
+		ProcessedLabel func(childComplexity int) int
+		SMTPFrom       func(childComplexity int) int
+		SMTPHost       func(childComplexity int) int
+		SMTPPort       func(childComplexity int) int
+		SMTPTLS        func(childComplexity int) int
+	}
+
 	EventPayload struct {
 		Data      func(childComplexity int) int
 		Timestamp func(childComplexity int) int
@@ -213,6 +227,32 @@ type ComplexityRoot struct {
 	Heartbeat struct {
 		LastCheck func(childComplexity int) int
 		Status    func(childComplexity int) int
+	}
+
+	HeartbeatItem struct {
+		Context       func(childComplexity int) int
+		CreatedAt     func(childComplexity int) int
+		CreatedBy     func(childComplexity int) int
+		Description   func(childComplexity int) int
+		ID            func(childComplexity int) int
+		LastRun       func(childComplexity int) int
+		NextRun       func(childComplexity int) int
+		Priority      func(childComplexity int) int
+		Schedule      func(childComplexity int) int
+		Status        func(childComplexity int) int
+		TargetChannel func(childComplexity int) int
+		TargetUser    func(childComplexity int) int
+		Title         func(childComplexity int) int
+		UpdatedAt     func(childComplexity int) int
+	}
+
+	HeartbeatLog struct {
+		Action          func(childComplexity int) int
+		HeartbeatItemID func(childComplexity int) int
+		ID              func(childComplexity int) int
+		Reason          func(childComplexity int) int
+		Result          func(childComplexity int) int
+		Timestamp       func(childComplexity int) int
 	}
 
 	ImportSkillResult struct {
@@ -362,9 +402,12 @@ type ComplexityRoot struct {
 		AddRelation           func(childComplexity int, from string, to string, relationType string) int
 		AddTask               func(childComplexity int, prompt string, schedule *string) int
 		ApprovePairing        func(childComplexity int, code string, userID *string, displayName *string) int
+		CompleteHeartbeatItem func(childComplexity int, id string) int
 		CompleteTask          func(childComplexity int, taskID string) int
 		ConnectMcp            func(childComplexity int, name string, transport string, url string, clientID *string) int
+		CreateHeartbeatItem   func(childComplexity int, input HeartbeatItemInput) int
 		CreatePersonality     func(childComplexity int, input PersonalityInput) int
+		DeleteHeartbeatItem   func(childComplexity int, id string) int
 		DeleteMemoryNode      func(childComplexity int, id string) int
 		DeletePersonality     func(childComplexity int, id string) int
 		DeleteSkill           func(childComplexity int, name string) int
@@ -383,9 +426,11 @@ type ComplexityRoot struct {
 		SetAllToolPermissions func(childComplexity int, userID string, mode string) int
 		SetDefaultPersonality func(childComplexity int, id string) int
 		SetToolPermission     func(childComplexity int, userID string, toolName string, mode string) int
+		SnoozeHeartbeatItem   func(childComplexity int, id string, until string) int
 		SpawnSubAgent         func(childComplexity int, name string, model string, task *string) int
 		ToggleTask            func(childComplexity int, id string, enabled bool) int
 		UpdateConfig          func(childComplexity int, input UpdateConfigInput) int
+		UpdateHeartbeatItem   func(childComplexity int, id string, input HeartbeatItemInput) int
 		UpdateMemoryNode      func(childComplexity int, id string, label *string, typeArg *string, value *string, properties *string) int
 		UpdateOrganicConfig   func(childComplexity int, channelID string, input OrganicResponseConfigInput) int
 		UpdatePersonality     func(childComplexity int, id string, input PersonalityInput) int
@@ -461,7 +506,11 @@ type ComplexityRoot struct {
 		Channels          func(childComplexity int) int
 		Config            func(childComplexity int) int
 		Conversations     func(childComplexity int) int
+		EmailConfig       func(childComplexity int) int
 		Heartbeat         func(childComplexity int) int
+		HeartbeatItem     func(childComplexity int, id string) int
+		HeartbeatItems    func(childComplexity int) int
+		HeartbeatLogs     func(childComplexity int, itemID string, limit *int) int
 		McpOAuthStatus    func(childComplexity int, name string) int
 		McpServers        func(childComplexity int) int
 		McpTools          func(childComplexity int) int
@@ -666,6 +715,11 @@ type MutationResolver interface {
 	DeletePersonality(ctx context.Context, id string) (bool, error)
 	SetDefaultPersonality(ctx context.Context, id string) (bool, error)
 	UpdateOrganicConfig(ctx context.Context, channelID string, input OrganicResponseConfigInput) (*OrganicResponseConfig, error)
+	CreateHeartbeatItem(ctx context.Context, input HeartbeatItemInput) (*HeartbeatItem, error)
+	UpdateHeartbeatItem(ctx context.Context, id string, input HeartbeatItemInput) (*HeartbeatItem, error)
+	DeleteHeartbeatItem(ctx context.Context, id string) (bool, error)
+	SnoozeHeartbeatItem(ctx context.Context, id string, until string) (*HeartbeatItem, error)
+	CompleteHeartbeatItem(ctx context.Context, id string) (bool, error)
 }
 type QueryResolver interface {
 	Agent(ctx context.Context) (*Agent, error)
@@ -696,7 +750,11 @@ type QueryResolver interface {
 	Personality(ctx context.Context, id string) (*Personality, error)
 	UserRelationships(ctx context.Context, userID string) ([]*UserRelationship, error)
 	ModelTiers(ctx context.Context) (*ModelTiersConfig, error)
+	EmailConfig(ctx context.Context) (*EmailChannelConfig, error)
 	OrganicConfig(ctx context.Context, channelID string) (*OrganicResponseConfig, error)
+	HeartbeatItems(ctx context.Context) ([]*HeartbeatItem, error)
+	HeartbeatItem(ctx context.Context, id string) (*HeartbeatItem, error)
+	HeartbeatLogs(ctx context.Context, itemID string, limit *int) ([]*HeartbeatLog, error)
 }
 type SubscriptionResolver interface {
 	Events(ctx context.Context, eventType *string) (<-chan *EventPayload, error)
@@ -1343,6 +1401,73 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.ComplexityRoot.DenyPairingResult.Success(childComplexity), true
 
+	case "EmailChannelConfig.enabled":
+		if e.ComplexityRoot.EmailChannelConfig.Enabled == nil {
+			break
+		}
+
+		return e.ComplexityRoot.EmailChannelConfig.Enabled(childComplexity), true
+	case "EmailChannelConfig.imapHost":
+		if e.ComplexityRoot.EmailChannelConfig.ImapHost == nil {
+			break
+		}
+
+		return e.ComplexityRoot.EmailChannelConfig.ImapHost(childComplexity), true
+	case "EmailChannelConfig.imapPort":
+		if e.ComplexityRoot.EmailChannelConfig.ImapPort == nil {
+			break
+		}
+
+		return e.ComplexityRoot.EmailChannelConfig.ImapPort(childComplexity), true
+	case "EmailChannelConfig.imapTls":
+		if e.ComplexityRoot.EmailChannelConfig.ImapTLS == nil {
+			break
+		}
+
+		return e.ComplexityRoot.EmailChannelConfig.ImapTLS(childComplexity), true
+	case "EmailChannelConfig.imapUser":
+		if e.ComplexityRoot.EmailChannelConfig.ImapUser == nil {
+			break
+		}
+
+		return e.ComplexityRoot.EmailChannelConfig.ImapUser(childComplexity), true
+	case "EmailChannelConfig.pollInterval":
+		if e.ComplexityRoot.EmailChannelConfig.PollInterval == nil {
+			break
+		}
+
+		return e.ComplexityRoot.EmailChannelConfig.PollInterval(childComplexity), true
+	case "EmailChannelConfig.processedLabel":
+		if e.ComplexityRoot.EmailChannelConfig.ProcessedLabel == nil {
+			break
+		}
+
+		return e.ComplexityRoot.EmailChannelConfig.ProcessedLabel(childComplexity), true
+	case "EmailChannelConfig.smtpFrom":
+		if e.ComplexityRoot.EmailChannelConfig.SMTPFrom == nil {
+			break
+		}
+
+		return e.ComplexityRoot.EmailChannelConfig.SMTPFrom(childComplexity), true
+	case "EmailChannelConfig.smtpHost":
+		if e.ComplexityRoot.EmailChannelConfig.SMTPHost == nil {
+			break
+		}
+
+		return e.ComplexityRoot.EmailChannelConfig.SMTPHost(childComplexity), true
+	case "EmailChannelConfig.smtpPort":
+		if e.ComplexityRoot.EmailChannelConfig.SMTPPort == nil {
+			break
+		}
+
+		return e.ComplexityRoot.EmailChannelConfig.SMTPPort(childComplexity), true
+	case "EmailChannelConfig.smtpTls":
+		if e.ComplexityRoot.EmailChannelConfig.SMTPTLS == nil {
+			break
+		}
+
+		return e.ComplexityRoot.EmailChannelConfig.SMTPTLS(childComplexity), true
+
 	case "EventPayload.data":
 		if e.ComplexityRoot.EventPayload.Data == nil {
 			break
@@ -1456,6 +1581,128 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.ComplexityRoot.Heartbeat.Status(childComplexity), true
+
+	case "HeartbeatItem.context":
+		if e.ComplexityRoot.HeartbeatItem.Context == nil {
+			break
+		}
+
+		return e.ComplexityRoot.HeartbeatItem.Context(childComplexity), true
+	case "HeartbeatItem.createdAt":
+		if e.ComplexityRoot.HeartbeatItem.CreatedAt == nil {
+			break
+		}
+
+		return e.ComplexityRoot.HeartbeatItem.CreatedAt(childComplexity), true
+	case "HeartbeatItem.createdBy":
+		if e.ComplexityRoot.HeartbeatItem.CreatedBy == nil {
+			break
+		}
+
+		return e.ComplexityRoot.HeartbeatItem.CreatedBy(childComplexity), true
+	case "HeartbeatItem.description":
+		if e.ComplexityRoot.HeartbeatItem.Description == nil {
+			break
+		}
+
+		return e.ComplexityRoot.HeartbeatItem.Description(childComplexity), true
+	case "HeartbeatItem.id":
+		if e.ComplexityRoot.HeartbeatItem.ID == nil {
+			break
+		}
+
+		return e.ComplexityRoot.HeartbeatItem.ID(childComplexity), true
+	case "HeartbeatItem.lastRun":
+		if e.ComplexityRoot.HeartbeatItem.LastRun == nil {
+			break
+		}
+
+		return e.ComplexityRoot.HeartbeatItem.LastRun(childComplexity), true
+	case "HeartbeatItem.nextRun":
+		if e.ComplexityRoot.HeartbeatItem.NextRun == nil {
+			break
+		}
+
+		return e.ComplexityRoot.HeartbeatItem.NextRun(childComplexity), true
+	case "HeartbeatItem.priority":
+		if e.ComplexityRoot.HeartbeatItem.Priority == nil {
+			break
+		}
+
+		return e.ComplexityRoot.HeartbeatItem.Priority(childComplexity), true
+	case "HeartbeatItem.schedule":
+		if e.ComplexityRoot.HeartbeatItem.Schedule == nil {
+			break
+		}
+
+		return e.ComplexityRoot.HeartbeatItem.Schedule(childComplexity), true
+	case "HeartbeatItem.status":
+		if e.ComplexityRoot.HeartbeatItem.Status == nil {
+			break
+		}
+
+		return e.ComplexityRoot.HeartbeatItem.Status(childComplexity), true
+	case "HeartbeatItem.targetChannel":
+		if e.ComplexityRoot.HeartbeatItem.TargetChannel == nil {
+			break
+		}
+
+		return e.ComplexityRoot.HeartbeatItem.TargetChannel(childComplexity), true
+	case "HeartbeatItem.targetUser":
+		if e.ComplexityRoot.HeartbeatItem.TargetUser == nil {
+			break
+		}
+
+		return e.ComplexityRoot.HeartbeatItem.TargetUser(childComplexity), true
+	case "HeartbeatItem.title":
+		if e.ComplexityRoot.HeartbeatItem.Title == nil {
+			break
+		}
+
+		return e.ComplexityRoot.HeartbeatItem.Title(childComplexity), true
+	case "HeartbeatItem.updatedAt":
+		if e.ComplexityRoot.HeartbeatItem.UpdatedAt == nil {
+			break
+		}
+
+		return e.ComplexityRoot.HeartbeatItem.UpdatedAt(childComplexity), true
+
+	case "HeartbeatLog.action":
+		if e.ComplexityRoot.HeartbeatLog.Action == nil {
+			break
+		}
+
+		return e.ComplexityRoot.HeartbeatLog.Action(childComplexity), true
+	case "HeartbeatLog.heartbeatItemId":
+		if e.ComplexityRoot.HeartbeatLog.HeartbeatItemID == nil {
+			break
+		}
+
+		return e.ComplexityRoot.HeartbeatLog.HeartbeatItemID(childComplexity), true
+	case "HeartbeatLog.id":
+		if e.ComplexityRoot.HeartbeatLog.ID == nil {
+			break
+		}
+
+		return e.ComplexityRoot.HeartbeatLog.ID(childComplexity), true
+	case "HeartbeatLog.reason":
+		if e.ComplexityRoot.HeartbeatLog.Reason == nil {
+			break
+		}
+
+		return e.ComplexityRoot.HeartbeatLog.Reason(childComplexity), true
+	case "HeartbeatLog.result":
+		if e.ComplexityRoot.HeartbeatLog.Result == nil {
+			break
+		}
+
+		return e.ComplexityRoot.HeartbeatLog.Result(childComplexity), true
+	case "HeartbeatLog.timestamp":
+		if e.ComplexityRoot.HeartbeatLog.Timestamp == nil {
+			break
+		}
+
+		return e.ComplexityRoot.HeartbeatLog.Timestamp(childComplexity), true
 
 	case "ImportSkillResult.error":
 		if e.ComplexityRoot.ImportSkillResult.Error == nil {
@@ -2035,6 +2282,17 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.ComplexityRoot.Mutation.ApprovePairing(childComplexity, args["code"].(string), args["userID"].(*string), args["displayName"].(*string)), true
+	case "Mutation.completeHeartbeatItem":
+		if e.ComplexityRoot.Mutation.CompleteHeartbeatItem == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_completeHeartbeatItem_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.ComplexityRoot.Mutation.CompleteHeartbeatItem(childComplexity, args["id"].(string)), true
 	case "Mutation.completeTask":
 		if e.ComplexityRoot.Mutation.CompleteTask == nil {
 			break
@@ -2057,6 +2315,17 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.ComplexityRoot.Mutation.ConnectMcp(childComplexity, args["name"].(string), args["transport"].(string), args["url"].(string), args["clientId"].(*string)), true
+	case "Mutation.createHeartbeatItem":
+		if e.ComplexityRoot.Mutation.CreateHeartbeatItem == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createHeartbeatItem_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.ComplexityRoot.Mutation.CreateHeartbeatItem(childComplexity, args["input"].(HeartbeatItemInput)), true
 	case "Mutation.createPersonality":
 		if e.ComplexityRoot.Mutation.CreatePersonality == nil {
 			break
@@ -2068,6 +2337,17 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.ComplexityRoot.Mutation.CreatePersonality(childComplexity, args["input"].(PersonalityInput)), true
+	case "Mutation.deleteHeartbeatItem":
+		if e.ComplexityRoot.Mutation.DeleteHeartbeatItem == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_deleteHeartbeatItem_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.ComplexityRoot.Mutation.DeleteHeartbeatItem(childComplexity, args["id"].(string)), true
 	case "Mutation.deleteMemoryNode":
 		if e.ComplexityRoot.Mutation.DeleteMemoryNode == nil {
 			break
@@ -2266,6 +2546,17 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.ComplexityRoot.Mutation.SetToolPermission(childComplexity, args["userId"].(string), args["toolName"].(string), args["mode"].(string)), true
+	case "Mutation.snoozeHeartbeatItem":
+		if e.ComplexityRoot.Mutation.SnoozeHeartbeatItem == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_snoozeHeartbeatItem_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.ComplexityRoot.Mutation.SnoozeHeartbeatItem(childComplexity, args["id"].(string), args["until"].(string)), true
 	case "Mutation.spawnSubAgent":
 		if e.ComplexityRoot.Mutation.SpawnSubAgent == nil {
 			break
@@ -2299,6 +2590,17 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.ComplexityRoot.Mutation.UpdateConfig(childComplexity, args["input"].(UpdateConfigInput)), true
+	case "Mutation.updateHeartbeatItem":
+		if e.ComplexityRoot.Mutation.UpdateHeartbeatItem == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateHeartbeatItem_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.ComplexityRoot.Mutation.UpdateHeartbeatItem(childComplexity, args["id"].(string), args["input"].(HeartbeatItemInput)), true
 	case "Mutation.updateMemoryNode":
 		if e.ComplexityRoot.Mutation.UpdateMemoryNode == nil {
 			break
@@ -2621,12 +2923,46 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.ComplexityRoot.Query.Conversations(childComplexity), true
+	case "Query.emailConfig":
+		if e.ComplexityRoot.Query.EmailConfig == nil {
+			break
+		}
+
+		return e.ComplexityRoot.Query.EmailConfig(childComplexity), true
 	case "Query.heartbeat":
 		if e.ComplexityRoot.Query.Heartbeat == nil {
 			break
 		}
 
 		return e.ComplexityRoot.Query.Heartbeat(childComplexity), true
+	case "Query.heartbeatItem":
+		if e.ComplexityRoot.Query.HeartbeatItem == nil {
+			break
+		}
+
+		args, err := ec.field_Query_heartbeatItem_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.ComplexityRoot.Query.HeartbeatItem(childComplexity, args["id"].(string)), true
+	case "Query.heartbeatItems":
+		if e.ComplexityRoot.Query.HeartbeatItems == nil {
+			break
+		}
+
+		return e.ComplexityRoot.Query.HeartbeatItems(childComplexity), true
+	case "Query.heartbeatLogs":
+		if e.ComplexityRoot.Query.HeartbeatLogs == nil {
+			break
+		}
+
+		args, err := ec.field_Query_heartbeatLogs_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.ComplexityRoot.Query.HeartbeatLogs(childComplexity, args["itemId"].(string), args["limit"].(*int)), true
 
 	case "Query.mcpOAuthStatus":
 		if e.ComplexityRoot.Query.McpOAuthStatus == nil {
@@ -3373,6 +3709,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	ec := newExecutionContext(opCtx, e, make(chan graphql.DeferredResult))
 	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
 		ec.unmarshalInputCapabilitiesInput,
+		ec.unmarshalInputHeartbeatItemInput,
 		ec.unmarshalInputOrganicResponseConfigInput,
 		ec.unmarshalInputPersonalityInput,
 		ec.unmarshalInputUpdateConfigInput,
@@ -4229,6 +4566,26 @@ extend type Query {
   modelTiers: ModelTiersConfig!
 }
 `, BuiltIn: false},
+	{Name: "../../../../../../schema/email.graphql", Input: `# ─── Email Channel Config ────────────────────────────────────────────────────
+
+type EmailChannelConfig {
+  enabled: Boolean!
+  imapHost: String!
+  imapPort: Int!
+  imapUser: String!
+  imapTls: Boolean!
+  smtpHost: String!
+  smtpPort: Int!
+  smtpFrom: String!
+  smtpTls: Boolean!
+  pollInterval: Int!
+  processedLabel: String!
+}
+
+extend type Query {
+  emailConfig: EmailChannelConfig!
+}
+`, BuiltIn: false},
 	{Name: "../../../../../../schema/organic.graphql", Input: `type OrganicResponseConfig {
   channelId: String!
   enabled: Boolean!
@@ -4258,6 +4615,56 @@ extend type Query {
 
 extend type Mutation {
   updateOrganicConfig(channelId: String!, input: OrganicResponseConfigInput!): OrganicResponseConfig!
+}
+`, BuiltIn: false},
+	{Name: "../../../../../../schema/heartbeat.graphql", Input: `type HeartbeatItem {
+  id: String!
+  title: String!
+  description: String
+  schedule: String
+  priority: Int!
+  status: String!
+  createdBy: String!
+  targetUser: String
+  targetChannel: String
+  context: String
+  lastRun: String
+  nextRun: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+type HeartbeatLog {
+  id: String!
+  heartbeatItemId: String!
+  action: String!
+  reason: String
+  result: String
+  timestamp: String!
+}
+
+input HeartbeatItemInput {
+  title: String!
+  description: String
+  schedule: String
+  priority: Int
+  targetUser: String
+  targetChannel: String
+  context: String
+}
+
+extend type Query {
+  heartbeatItems: [HeartbeatItem!]!
+  heartbeatItem(id: String!): HeartbeatItem
+  heartbeatLogs(itemId: String!, limit: Int): [HeartbeatLog!]!
+}
+
+extend type Mutation {
+  createHeartbeatItem(input: HeartbeatItemInput!): HeartbeatItem!
+  updateHeartbeatItem(id: String!, input: HeartbeatItemInput!): HeartbeatItem!
+  deleteHeartbeatItem(id: String!): Boolean!
+  snoozeHeartbeatItem(id: String!, until: String!): HeartbeatItem!
+  completeHeartbeatItem(id: String!): Boolean!
 }
 `, BuiltIn: false},
 	{Name: "../../../../../../schema/subscriptions.graphql", Input: `# ─── Subscription ─────────────────────────────────────────────────────────────
@@ -4388,6 +4795,17 @@ func (ec *executionContext) field_Mutation_approvePairing_args(ctx context.Conte
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_completeHeartbeatItem_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNString2string)
+	if err != nil {
+		return nil, err
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_completeTask_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
@@ -4425,6 +4843,17 @@ func (ec *executionContext) field_Mutation_connectMcp_args(ctx context.Context, 
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_createHeartbeatItem_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "input", ec.unmarshalNHeartbeatItemInput2githubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐHeartbeatItemInput)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_createPersonality_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
@@ -4433,6 +4862,17 @@ func (ec *executionContext) field_Mutation_createPersonality_args(ctx context.Co
 		return nil, err
 	}
 	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_deleteHeartbeatItem_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNString2string)
+	if err != nil {
+		return nil, err
+	}
+	args["id"] = arg0
 	return args, nil
 }
 
@@ -4674,6 +5114,22 @@ func (ec *executionContext) field_Mutation_setToolPermission_args(ctx context.Co
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_snoozeHeartbeatItem_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNString2string)
+	if err != nil {
+		return nil, err
+	}
+	args["id"] = arg0
+	arg1, err := graphql.ProcessArgField(ctx, rawArgs, "until", ec.unmarshalNString2string)
+	if err != nil {
+		return nil, err
+	}
+	args["until"] = arg1
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_spawnSubAgent_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
@@ -4719,6 +5175,22 @@ func (ec *executionContext) field_Mutation_updateConfig_args(ctx context.Context
 		return nil, err
 	}
 	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateHeartbeatItem_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNString2string)
+	if err != nil {
+		return nil, err
+	}
+	args["id"] = arg0
+	arg1, err := graphql.ProcessArgField(ctx, rawArgs, "input", ec.unmarshalNHeartbeatItemInput2githubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐHeartbeatItemInput)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg1
 	return args, nil
 }
 
@@ -4830,6 +5302,33 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 		return nil, err
 	}
 	args["name"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_heartbeatItem_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNString2string)
+	if err != nil {
+		return nil, err
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_heartbeatLogs_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "itemId", ec.unmarshalNString2string)
+	if err != nil {
+		return nil, err
+	}
+	args["itemId"] = arg0
+	arg1, err := graphql.ProcessArgField(ctx, rawArgs, "limit", ec.unmarshalOInt2ᚖint)
+	if err != nil {
+		return nil, err
+	}
+	args["limit"] = arg1
 	return args, nil
 }
 
@@ -8045,6 +8544,325 @@ func (ec *executionContext) fieldContext_DenyPairingResult_error(_ context.Conte
 	return fc, nil
 }
 
+func (ec *executionContext) _EmailChannelConfig_enabled(ctx context.Context, field graphql.CollectedField, obj *EmailChannelConfig) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_EmailChannelConfig_enabled,
+		func(ctx context.Context) (any, error) {
+			return obj.Enabled, nil
+		},
+		nil,
+		ec.marshalNBoolean2bool,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_EmailChannelConfig_enabled(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "EmailChannelConfig",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _EmailChannelConfig_imapHost(ctx context.Context, field graphql.CollectedField, obj *EmailChannelConfig) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_EmailChannelConfig_imapHost,
+		func(ctx context.Context) (any, error) {
+			return obj.ImapHost, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_EmailChannelConfig_imapHost(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "EmailChannelConfig",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _EmailChannelConfig_imapPort(ctx context.Context, field graphql.CollectedField, obj *EmailChannelConfig) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_EmailChannelConfig_imapPort,
+		func(ctx context.Context) (any, error) {
+			return obj.ImapPort, nil
+		},
+		nil,
+		ec.marshalNInt2int,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_EmailChannelConfig_imapPort(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "EmailChannelConfig",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _EmailChannelConfig_imapUser(ctx context.Context, field graphql.CollectedField, obj *EmailChannelConfig) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_EmailChannelConfig_imapUser,
+		func(ctx context.Context) (any, error) {
+			return obj.ImapUser, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_EmailChannelConfig_imapUser(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "EmailChannelConfig",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _EmailChannelConfig_imapTls(ctx context.Context, field graphql.CollectedField, obj *EmailChannelConfig) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_EmailChannelConfig_imapTls,
+		func(ctx context.Context) (any, error) {
+			return obj.ImapTLS, nil
+		},
+		nil,
+		ec.marshalNBoolean2bool,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_EmailChannelConfig_imapTls(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "EmailChannelConfig",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _EmailChannelConfig_smtpHost(ctx context.Context, field graphql.CollectedField, obj *EmailChannelConfig) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_EmailChannelConfig_smtpHost,
+		func(ctx context.Context) (any, error) {
+			return obj.SMTPHost, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_EmailChannelConfig_smtpHost(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "EmailChannelConfig",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _EmailChannelConfig_smtpPort(ctx context.Context, field graphql.CollectedField, obj *EmailChannelConfig) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_EmailChannelConfig_smtpPort,
+		func(ctx context.Context) (any, error) {
+			return obj.SMTPPort, nil
+		},
+		nil,
+		ec.marshalNInt2int,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_EmailChannelConfig_smtpPort(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "EmailChannelConfig",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _EmailChannelConfig_smtpFrom(ctx context.Context, field graphql.CollectedField, obj *EmailChannelConfig) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_EmailChannelConfig_smtpFrom,
+		func(ctx context.Context) (any, error) {
+			return obj.SMTPFrom, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_EmailChannelConfig_smtpFrom(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "EmailChannelConfig",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _EmailChannelConfig_smtpTls(ctx context.Context, field graphql.CollectedField, obj *EmailChannelConfig) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_EmailChannelConfig_smtpTls,
+		func(ctx context.Context) (any, error) {
+			return obj.SMTPTLS, nil
+		},
+		nil,
+		ec.marshalNBoolean2bool,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_EmailChannelConfig_smtpTls(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "EmailChannelConfig",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _EmailChannelConfig_pollInterval(ctx context.Context, field graphql.CollectedField, obj *EmailChannelConfig) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_EmailChannelConfig_pollInterval,
+		func(ctx context.Context) (any, error) {
+			return obj.PollInterval, nil
+		},
+		nil,
+		ec.marshalNInt2int,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_EmailChannelConfig_pollInterval(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "EmailChannelConfig",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _EmailChannelConfig_processedLabel(ctx context.Context, field graphql.CollectedField, obj *EmailChannelConfig) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_EmailChannelConfig_processedLabel,
+		func(ctx context.Context) (any, error) {
+			return obj.ProcessedLabel, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_EmailChannelConfig_processedLabel(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "EmailChannelConfig",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _EventPayload_type(ctx context.Context, field graphql.CollectedField, obj *EventPayload) (ret graphql.Marshaler) {
 	return graphql.ResolveField(
 		ctx,
@@ -8562,6 +9380,586 @@ func (ec *executionContext) fieldContext_Heartbeat_lastCheck(_ context.Context, 
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _HeartbeatItem_id(ctx context.Context, field graphql.CollectedField, obj *HeartbeatItem) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_HeartbeatItem_id,
+		func(ctx context.Context) (any, error) {
+			return obj.ID, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_HeartbeatItem_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "HeartbeatItem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _HeartbeatItem_title(ctx context.Context, field graphql.CollectedField, obj *HeartbeatItem) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_HeartbeatItem_title,
+		func(ctx context.Context) (any, error) {
+			return obj.Title, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_HeartbeatItem_title(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "HeartbeatItem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _HeartbeatItem_description(ctx context.Context, field graphql.CollectedField, obj *HeartbeatItem) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_HeartbeatItem_description,
+		func(ctx context.Context) (any, error) {
+			return obj.Description, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_HeartbeatItem_description(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "HeartbeatItem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _HeartbeatItem_schedule(ctx context.Context, field graphql.CollectedField, obj *HeartbeatItem) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_HeartbeatItem_schedule,
+		func(ctx context.Context) (any, error) {
+			return obj.Schedule, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_HeartbeatItem_schedule(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "HeartbeatItem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _HeartbeatItem_priority(ctx context.Context, field graphql.CollectedField, obj *HeartbeatItem) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_HeartbeatItem_priority,
+		func(ctx context.Context) (any, error) {
+			return obj.Priority, nil
+		},
+		nil,
+		ec.marshalNInt2int,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_HeartbeatItem_priority(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "HeartbeatItem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _HeartbeatItem_status(ctx context.Context, field graphql.CollectedField, obj *HeartbeatItem) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_HeartbeatItem_status,
+		func(ctx context.Context) (any, error) {
+			return obj.Status, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_HeartbeatItem_status(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "HeartbeatItem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _HeartbeatItem_createdBy(ctx context.Context, field graphql.CollectedField, obj *HeartbeatItem) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_HeartbeatItem_createdBy,
+		func(ctx context.Context) (any, error) {
+			return obj.CreatedBy, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_HeartbeatItem_createdBy(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "HeartbeatItem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _HeartbeatItem_targetUser(ctx context.Context, field graphql.CollectedField, obj *HeartbeatItem) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_HeartbeatItem_targetUser,
+		func(ctx context.Context) (any, error) {
+			return obj.TargetUser, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_HeartbeatItem_targetUser(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "HeartbeatItem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _HeartbeatItem_targetChannel(ctx context.Context, field graphql.CollectedField, obj *HeartbeatItem) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_HeartbeatItem_targetChannel,
+		func(ctx context.Context) (any, error) {
+			return obj.TargetChannel, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_HeartbeatItem_targetChannel(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "HeartbeatItem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _HeartbeatItem_context(ctx context.Context, field graphql.CollectedField, obj *HeartbeatItem) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_HeartbeatItem_context,
+		func(ctx context.Context) (any, error) {
+			return obj.Context, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_HeartbeatItem_context(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "HeartbeatItem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _HeartbeatItem_lastRun(ctx context.Context, field graphql.CollectedField, obj *HeartbeatItem) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_HeartbeatItem_lastRun,
+		func(ctx context.Context) (any, error) {
+			return obj.LastRun, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_HeartbeatItem_lastRun(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "HeartbeatItem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _HeartbeatItem_nextRun(ctx context.Context, field graphql.CollectedField, obj *HeartbeatItem) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_HeartbeatItem_nextRun,
+		func(ctx context.Context) (any, error) {
+			return obj.NextRun, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_HeartbeatItem_nextRun(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "HeartbeatItem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _HeartbeatItem_createdAt(ctx context.Context, field graphql.CollectedField, obj *HeartbeatItem) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_HeartbeatItem_createdAt,
+		func(ctx context.Context) (any, error) {
+			return obj.CreatedAt, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_HeartbeatItem_createdAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "HeartbeatItem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _HeartbeatItem_updatedAt(ctx context.Context, field graphql.CollectedField, obj *HeartbeatItem) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_HeartbeatItem_updatedAt,
+		func(ctx context.Context) (any, error) {
+			return obj.UpdatedAt, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_HeartbeatItem_updatedAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "HeartbeatItem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _HeartbeatLog_id(ctx context.Context, field graphql.CollectedField, obj *HeartbeatLog) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_HeartbeatLog_id,
+		func(ctx context.Context) (any, error) {
+			return obj.ID, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_HeartbeatLog_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "HeartbeatLog",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _HeartbeatLog_heartbeatItemId(ctx context.Context, field graphql.CollectedField, obj *HeartbeatLog) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_HeartbeatLog_heartbeatItemId,
+		func(ctx context.Context) (any, error) {
+			return obj.HeartbeatItemID, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_HeartbeatLog_heartbeatItemId(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "HeartbeatLog",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _HeartbeatLog_action(ctx context.Context, field graphql.CollectedField, obj *HeartbeatLog) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_HeartbeatLog_action,
+		func(ctx context.Context) (any, error) {
+			return obj.Action, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_HeartbeatLog_action(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "HeartbeatLog",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _HeartbeatLog_reason(ctx context.Context, field graphql.CollectedField, obj *HeartbeatLog) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_HeartbeatLog_reason,
+		func(ctx context.Context) (any, error) {
+			return obj.Reason, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_HeartbeatLog_reason(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "HeartbeatLog",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _HeartbeatLog_result(ctx context.Context, field graphql.CollectedField, obj *HeartbeatLog) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_HeartbeatLog_result,
+		func(ctx context.Context) (any, error) {
+			return obj.Result, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_HeartbeatLog_result(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "HeartbeatLog",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _HeartbeatLog_timestamp(ctx context.Context, field graphql.CollectedField, obj *HeartbeatLog) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_HeartbeatLog_timestamp,
+		func(ctx context.Context) (any, error) {
+			return obj.Timestamp, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_HeartbeatLog_timestamp(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "HeartbeatLog",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -12751,6 +14149,301 @@ func (ec *executionContext) fieldContext_Mutation_updateOrganicConfig(ctx contex
 	return fc, nil
 }
 
+func (ec *executionContext) _Mutation_createHeartbeatItem(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Mutation_createHeartbeatItem,
+		func(ctx context.Context) (any, error) {
+			fc := graphql.GetFieldContext(ctx)
+			return ec.Resolvers.Mutation().CreateHeartbeatItem(ctx, fc.Args["input"].(HeartbeatItemInput))
+		},
+		nil,
+		ec.marshalNHeartbeatItem2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐHeartbeatItem,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Mutation_createHeartbeatItem(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_HeartbeatItem_id(ctx, field)
+			case "title":
+				return ec.fieldContext_HeartbeatItem_title(ctx, field)
+			case "description":
+				return ec.fieldContext_HeartbeatItem_description(ctx, field)
+			case "schedule":
+				return ec.fieldContext_HeartbeatItem_schedule(ctx, field)
+			case "priority":
+				return ec.fieldContext_HeartbeatItem_priority(ctx, field)
+			case "status":
+				return ec.fieldContext_HeartbeatItem_status(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_HeartbeatItem_createdBy(ctx, field)
+			case "targetUser":
+				return ec.fieldContext_HeartbeatItem_targetUser(ctx, field)
+			case "targetChannel":
+				return ec.fieldContext_HeartbeatItem_targetChannel(ctx, field)
+			case "context":
+				return ec.fieldContext_HeartbeatItem_context(ctx, field)
+			case "lastRun":
+				return ec.fieldContext_HeartbeatItem_lastRun(ctx, field)
+			case "nextRun":
+				return ec.fieldContext_HeartbeatItem_nextRun(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_HeartbeatItem_createdAt(ctx, field)
+			case "updatedAt":
+				return ec.fieldContext_HeartbeatItem_updatedAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type HeartbeatItem", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_createHeartbeatItem_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_updateHeartbeatItem(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Mutation_updateHeartbeatItem,
+		func(ctx context.Context) (any, error) {
+			fc := graphql.GetFieldContext(ctx)
+			return ec.Resolvers.Mutation().UpdateHeartbeatItem(ctx, fc.Args["id"].(string), fc.Args["input"].(HeartbeatItemInput))
+		},
+		nil,
+		ec.marshalNHeartbeatItem2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐHeartbeatItem,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Mutation_updateHeartbeatItem(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_HeartbeatItem_id(ctx, field)
+			case "title":
+				return ec.fieldContext_HeartbeatItem_title(ctx, field)
+			case "description":
+				return ec.fieldContext_HeartbeatItem_description(ctx, field)
+			case "schedule":
+				return ec.fieldContext_HeartbeatItem_schedule(ctx, field)
+			case "priority":
+				return ec.fieldContext_HeartbeatItem_priority(ctx, field)
+			case "status":
+				return ec.fieldContext_HeartbeatItem_status(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_HeartbeatItem_createdBy(ctx, field)
+			case "targetUser":
+				return ec.fieldContext_HeartbeatItem_targetUser(ctx, field)
+			case "targetChannel":
+				return ec.fieldContext_HeartbeatItem_targetChannel(ctx, field)
+			case "context":
+				return ec.fieldContext_HeartbeatItem_context(ctx, field)
+			case "lastRun":
+				return ec.fieldContext_HeartbeatItem_lastRun(ctx, field)
+			case "nextRun":
+				return ec.fieldContext_HeartbeatItem_nextRun(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_HeartbeatItem_createdAt(ctx, field)
+			case "updatedAt":
+				return ec.fieldContext_HeartbeatItem_updatedAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type HeartbeatItem", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_updateHeartbeatItem_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_deleteHeartbeatItem(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Mutation_deleteHeartbeatItem,
+		func(ctx context.Context) (any, error) {
+			fc := graphql.GetFieldContext(ctx)
+			return ec.Resolvers.Mutation().DeleteHeartbeatItem(ctx, fc.Args["id"].(string))
+		},
+		nil,
+		ec.marshalNBoolean2bool,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Mutation_deleteHeartbeatItem(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_deleteHeartbeatItem_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_snoozeHeartbeatItem(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Mutation_snoozeHeartbeatItem,
+		func(ctx context.Context) (any, error) {
+			fc := graphql.GetFieldContext(ctx)
+			return ec.Resolvers.Mutation().SnoozeHeartbeatItem(ctx, fc.Args["id"].(string), fc.Args["until"].(string))
+		},
+		nil,
+		ec.marshalNHeartbeatItem2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐHeartbeatItem,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Mutation_snoozeHeartbeatItem(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_HeartbeatItem_id(ctx, field)
+			case "title":
+				return ec.fieldContext_HeartbeatItem_title(ctx, field)
+			case "description":
+				return ec.fieldContext_HeartbeatItem_description(ctx, field)
+			case "schedule":
+				return ec.fieldContext_HeartbeatItem_schedule(ctx, field)
+			case "priority":
+				return ec.fieldContext_HeartbeatItem_priority(ctx, field)
+			case "status":
+				return ec.fieldContext_HeartbeatItem_status(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_HeartbeatItem_createdBy(ctx, field)
+			case "targetUser":
+				return ec.fieldContext_HeartbeatItem_targetUser(ctx, field)
+			case "targetChannel":
+				return ec.fieldContext_HeartbeatItem_targetChannel(ctx, field)
+			case "context":
+				return ec.fieldContext_HeartbeatItem_context(ctx, field)
+			case "lastRun":
+				return ec.fieldContext_HeartbeatItem_lastRun(ctx, field)
+			case "nextRun":
+				return ec.fieldContext_HeartbeatItem_nextRun(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_HeartbeatItem_createdAt(ctx, field)
+			case "updatedAt":
+				return ec.fieldContext_HeartbeatItem_updatedAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type HeartbeatItem", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_snoozeHeartbeatItem_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_completeHeartbeatItem(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Mutation_completeHeartbeatItem,
+		func(ctx context.Context) (any, error) {
+			fc := graphql.GetFieldContext(ctx)
+			return ec.Resolvers.Mutation().CompleteHeartbeatItem(ctx, fc.Args["id"].(string))
+		},
+		nil,
+		ec.marshalNBoolean2bool,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Mutation_completeHeartbeatItem(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_completeHeartbeatItem_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _MutationResult_success(ctx context.Context, field graphql.CollectedField, obj *MutationResult) (ret graphql.Marshaler) {
 	return graphql.ResolveField(
 		ctx,
@@ -15154,6 +16847,59 @@ func (ec *executionContext) fieldContext_Query_modelTiers(_ context.Context, fie
 	return fc, nil
 }
 
+func (ec *executionContext) _Query_emailConfig(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Query_emailConfig,
+		func(ctx context.Context) (any, error) {
+			return ec.Resolvers.Query().EmailConfig(ctx)
+		},
+		nil,
+		ec.marshalNEmailChannelConfig2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEmailChannelConfig,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Query_emailConfig(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "enabled":
+				return ec.fieldContext_EmailChannelConfig_enabled(ctx, field)
+			case "imapHost":
+				return ec.fieldContext_EmailChannelConfig_imapHost(ctx, field)
+			case "imapPort":
+				return ec.fieldContext_EmailChannelConfig_imapPort(ctx, field)
+			case "imapUser":
+				return ec.fieldContext_EmailChannelConfig_imapUser(ctx, field)
+			case "imapTls":
+				return ec.fieldContext_EmailChannelConfig_imapTls(ctx, field)
+			case "smtpHost":
+				return ec.fieldContext_EmailChannelConfig_smtpHost(ctx, field)
+			case "smtpPort":
+				return ec.fieldContext_EmailChannelConfig_smtpPort(ctx, field)
+			case "smtpFrom":
+				return ec.fieldContext_EmailChannelConfig_smtpFrom(ctx, field)
+			case "smtpTls":
+				return ec.fieldContext_EmailChannelConfig_smtpTls(ctx, field)
+			case "pollInterval":
+				return ec.fieldContext_EmailChannelConfig_pollInterval(ctx, field)
+			case "processedLabel":
+				return ec.fieldContext_EmailChannelConfig_processedLabel(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type EmailChannelConfig", field.Name)
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Query_organicConfig(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	return graphql.ResolveField(
 		ctx,
@@ -15209,6 +16955,191 @@ func (ec *executionContext) fieldContext_Query_organicConfig(ctx context.Context
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Query_organicConfig_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_heartbeatItems(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Query_heartbeatItems,
+		func(ctx context.Context) (any, error) {
+			return ec.Resolvers.Query().HeartbeatItems(ctx)
+		},
+		nil,
+		ec.marshalNHeartbeatItem2ᚕᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐHeartbeatItemᚄ,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Query_heartbeatItems(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_HeartbeatItem_id(ctx, field)
+			case "title":
+				return ec.fieldContext_HeartbeatItem_title(ctx, field)
+			case "description":
+				return ec.fieldContext_HeartbeatItem_description(ctx, field)
+			case "schedule":
+				return ec.fieldContext_HeartbeatItem_schedule(ctx, field)
+			case "priority":
+				return ec.fieldContext_HeartbeatItem_priority(ctx, field)
+			case "status":
+				return ec.fieldContext_HeartbeatItem_status(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_HeartbeatItem_createdBy(ctx, field)
+			case "targetUser":
+				return ec.fieldContext_HeartbeatItem_targetUser(ctx, field)
+			case "targetChannel":
+				return ec.fieldContext_HeartbeatItem_targetChannel(ctx, field)
+			case "context":
+				return ec.fieldContext_HeartbeatItem_context(ctx, field)
+			case "lastRun":
+				return ec.fieldContext_HeartbeatItem_lastRun(ctx, field)
+			case "nextRun":
+				return ec.fieldContext_HeartbeatItem_nextRun(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_HeartbeatItem_createdAt(ctx, field)
+			case "updatedAt":
+				return ec.fieldContext_HeartbeatItem_updatedAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type HeartbeatItem", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_heartbeatItem(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Query_heartbeatItem,
+		func(ctx context.Context) (any, error) {
+			fc := graphql.GetFieldContext(ctx)
+			return ec.Resolvers.Query().HeartbeatItem(ctx, fc.Args["id"].(string))
+		},
+		nil,
+		ec.marshalOHeartbeatItem2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐHeartbeatItem,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_Query_heartbeatItem(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_HeartbeatItem_id(ctx, field)
+			case "title":
+				return ec.fieldContext_HeartbeatItem_title(ctx, field)
+			case "description":
+				return ec.fieldContext_HeartbeatItem_description(ctx, field)
+			case "schedule":
+				return ec.fieldContext_HeartbeatItem_schedule(ctx, field)
+			case "priority":
+				return ec.fieldContext_HeartbeatItem_priority(ctx, field)
+			case "status":
+				return ec.fieldContext_HeartbeatItem_status(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_HeartbeatItem_createdBy(ctx, field)
+			case "targetUser":
+				return ec.fieldContext_HeartbeatItem_targetUser(ctx, field)
+			case "targetChannel":
+				return ec.fieldContext_HeartbeatItem_targetChannel(ctx, field)
+			case "context":
+				return ec.fieldContext_HeartbeatItem_context(ctx, field)
+			case "lastRun":
+				return ec.fieldContext_HeartbeatItem_lastRun(ctx, field)
+			case "nextRun":
+				return ec.fieldContext_HeartbeatItem_nextRun(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_HeartbeatItem_createdAt(ctx, field)
+			case "updatedAt":
+				return ec.fieldContext_HeartbeatItem_updatedAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type HeartbeatItem", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_heartbeatItem_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_heartbeatLogs(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Query_heartbeatLogs,
+		func(ctx context.Context) (any, error) {
+			fc := graphql.GetFieldContext(ctx)
+			return ec.Resolvers.Query().HeartbeatLogs(ctx, fc.Args["itemId"].(string), fc.Args["limit"].(*int))
+		},
+		nil,
+		ec.marshalNHeartbeatLog2ᚕᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐHeartbeatLogᚄ,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Query_heartbeatLogs(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_HeartbeatLog_id(ctx, field)
+			case "heartbeatItemId":
+				return ec.fieldContext_HeartbeatLog_heartbeatItemId(ctx, field)
+			case "action":
+				return ec.fieldContext_HeartbeatLog_action(ctx, field)
+			case "reason":
+				return ec.fieldContext_HeartbeatLog_reason(ctx, field)
+			case "result":
+				return ec.fieldContext_HeartbeatLog_result(ctx, field)
+			case "timestamp":
+				return ec.fieldContext_HeartbeatLog_timestamp(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type HeartbeatLog", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_heartbeatLogs_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -19691,6 +21622,78 @@ func (ec *executionContext) unmarshalInputCapabilitiesInput(ctx context.Context,
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputHeartbeatItemInput(ctx context.Context, obj any) (HeartbeatItemInput, error) {
+	var it HeartbeatItemInput
+	if obj == nil {
+		return it, nil
+	}
+
+	asMap := map[string]any{}
+	for k, v := range obj.(map[string]any) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"title", "description", "schedule", "priority", "targetUser", "targetChannel", "context"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "title":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Title = data
+		case "description":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("description"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Description = data
+		case "schedule":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("schedule"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Schedule = data
+		case "priority":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("priority"))
+			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Priority = data
+		case "targetUser":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("targetUser"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.TargetUser = data
+		case "targetChannel":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("targetChannel"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.TargetChannel = data
+		case "context":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("context"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Context = data
+		}
+	}
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputOrganicResponseConfigInput(ctx context.Context, obj any) (OrganicResponseConfigInput, error) {
 	var it OrganicResponseConfigInput
 	if obj == nil {
@@ -21026,6 +23029,95 @@ func (ec *executionContext) _DenyPairingResult(ctx context.Context, sel ast.Sele
 	return out
 }
 
+var emailChannelConfigImplementors = []string{"EmailChannelConfig"}
+
+func (ec *executionContext) _EmailChannelConfig(ctx context.Context, sel ast.SelectionSet, obj *EmailChannelConfig) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, emailChannelConfigImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("EmailChannelConfig")
+		case "enabled":
+			out.Values[i] = ec._EmailChannelConfig_enabled(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "imapHost":
+			out.Values[i] = ec._EmailChannelConfig_imapHost(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "imapPort":
+			out.Values[i] = ec._EmailChannelConfig_imapPort(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "imapUser":
+			out.Values[i] = ec._EmailChannelConfig_imapUser(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "imapTls":
+			out.Values[i] = ec._EmailChannelConfig_imapTls(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "smtpHost":
+			out.Values[i] = ec._EmailChannelConfig_smtpHost(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "smtpPort":
+			out.Values[i] = ec._EmailChannelConfig_smtpPort(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "smtpFrom":
+			out.Values[i] = ec._EmailChannelConfig_smtpFrom(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "smtpTls":
+			out.Values[i] = ec._EmailChannelConfig_smtpTls(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "pollInterval":
+			out.Values[i] = ec._EmailChannelConfig_pollInterval(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "processedLabel":
+			out.Values[i] = ec._EmailChannelConfig_processedLabel(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.Deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.ProcessDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
 var eventPayloadImplementors = []string{"EventPayload"}
 
 func (ec *executionContext) _EventPayload(ctx context.Context, sel ast.SelectionSet, obj *EventPayload) graphql.Marshaler {
@@ -21261,6 +23353,147 @@ func (ec *executionContext) _Heartbeat(ctx context.Context, sel ast.SelectionSet
 			}
 		case "lastCheck":
 			out.Values[i] = ec._Heartbeat_lastCheck(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.Deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.ProcessDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var heartbeatItemImplementors = []string{"HeartbeatItem"}
+
+func (ec *executionContext) _HeartbeatItem(ctx context.Context, sel ast.SelectionSet, obj *HeartbeatItem) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, heartbeatItemImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("HeartbeatItem")
+		case "id":
+			out.Values[i] = ec._HeartbeatItem_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "title":
+			out.Values[i] = ec._HeartbeatItem_title(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "description":
+			out.Values[i] = ec._HeartbeatItem_description(ctx, field, obj)
+		case "schedule":
+			out.Values[i] = ec._HeartbeatItem_schedule(ctx, field, obj)
+		case "priority":
+			out.Values[i] = ec._HeartbeatItem_priority(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "status":
+			out.Values[i] = ec._HeartbeatItem_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "createdBy":
+			out.Values[i] = ec._HeartbeatItem_createdBy(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "targetUser":
+			out.Values[i] = ec._HeartbeatItem_targetUser(ctx, field, obj)
+		case "targetChannel":
+			out.Values[i] = ec._HeartbeatItem_targetChannel(ctx, field, obj)
+		case "context":
+			out.Values[i] = ec._HeartbeatItem_context(ctx, field, obj)
+		case "lastRun":
+			out.Values[i] = ec._HeartbeatItem_lastRun(ctx, field, obj)
+		case "nextRun":
+			out.Values[i] = ec._HeartbeatItem_nextRun(ctx, field, obj)
+		case "createdAt":
+			out.Values[i] = ec._HeartbeatItem_createdAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "updatedAt":
+			out.Values[i] = ec._HeartbeatItem_updatedAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.Deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.ProcessDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var heartbeatLogImplementors = []string{"HeartbeatLog"}
+
+func (ec *executionContext) _HeartbeatLog(ctx context.Context, sel ast.SelectionSet, obj *HeartbeatLog) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, heartbeatLogImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("HeartbeatLog")
+		case "id":
+			out.Values[i] = ec._HeartbeatLog_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "heartbeatItemId":
+			out.Values[i] = ec._HeartbeatLog_heartbeatItemId(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "action":
+			out.Values[i] = ec._HeartbeatLog_action(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "reason":
+			out.Values[i] = ec._HeartbeatLog_reason(ctx, field, obj)
+		case "result":
+			out.Values[i] = ec._HeartbeatLog_result(ctx, field, obj)
+		case "timestamp":
+			out.Values[i] = ec._HeartbeatLog_timestamp(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
@@ -22478,6 +24711,41 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
+		case "createHeartbeatItem":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createHeartbeatItem(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "updateHeartbeatItem":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateHeartbeatItem(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "deleteHeartbeatItem":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_deleteHeartbeatItem(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "snoozeHeartbeatItem":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_snoozeHeartbeatItem(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "completeHeartbeatItem":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_completeHeartbeatItem(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -23525,6 +25793,28 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "emailConfig":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_emailConfig(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
 		case "organicConfig":
 			field := field
 
@@ -23535,6 +25825,69 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_organicConfig(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "heartbeatItems":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_heartbeatItems(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "heartbeatItem":
+			field := field
+
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_heartbeatItem(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "heartbeatLogs":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_heartbeatLogs(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
 				return res
 			}
 
@@ -24942,6 +27295,20 @@ func (ec *executionContext) marshalNDenyPairingResult2ᚖgithubᚗcomᚋBangRock
 	return ec._DenyPairingResult(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNEmailChannelConfig2githubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEmailChannelConfig(ctx context.Context, sel ast.SelectionSet, v EmailChannelConfig) graphql.Marshaler {
+	return ec._EmailChannelConfig(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNEmailChannelConfig2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEmailChannelConfig(ctx context.Context, sel ast.SelectionSet, v *EmailChannelConfig) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._EmailChannelConfig(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNFloat2float64(ctx context.Context, v any) (float64, error) {
 	res, err := graphql.UnmarshalFloatContext(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -24976,6 +27343,67 @@ func (ec *executionContext) marshalNGraphNode2ᚖgithubᚗcomᚋBangRocketᚋMyP
 		return graphql.Null
 	}
 	return ec._GraphNode(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNHeartbeatItem2githubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐHeartbeatItem(ctx context.Context, sel ast.SelectionSet, v HeartbeatItem) graphql.Marshaler {
+	return ec._HeartbeatItem(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNHeartbeatItem2ᚕᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐHeartbeatItemᚄ(ctx context.Context, sel ast.SelectionSet, v []*HeartbeatItem) graphql.Marshaler {
+	ret := graphql.MarshalSliceConcurrently(ctx, len(v), 0, false, func(ctx context.Context, i int) graphql.Marshaler {
+		fc := graphql.GetFieldContext(ctx)
+		fc.Result = &v[i]
+		return ec.marshalNHeartbeatItem2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐHeartbeatItem(ctx, sel, v[i])
+	})
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNHeartbeatItem2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐHeartbeatItem(ctx context.Context, sel ast.SelectionSet, v *HeartbeatItem) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._HeartbeatItem(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNHeartbeatItemInput2githubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐHeartbeatItemInput(ctx context.Context, v any) (HeartbeatItemInput, error) {
+	res, err := ec.unmarshalInputHeartbeatItemInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNHeartbeatLog2ᚕᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐHeartbeatLogᚄ(ctx context.Context, sel ast.SelectionSet, v []*HeartbeatLog) graphql.Marshaler {
+	ret := graphql.MarshalSliceConcurrently(ctx, len(v), 0, false, func(ctx context.Context, i int) graphql.Marshaler {
+		fc := graphql.GetFieldContext(ctx)
+		fc.Result = &v[i]
+		return ec.marshalNHeartbeatLog2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐHeartbeatLog(ctx, sel, v[i])
+	})
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNHeartbeatLog2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐHeartbeatLog(ctx context.Context, sel ast.SelectionSet, v *HeartbeatLog) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._HeartbeatLog(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNImportSkillResult2githubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐImportSkillResult(ctx context.Context, sel ast.SelectionSet, v ImportSkillResult) graphql.Marshaler {
@@ -26027,6 +28455,13 @@ func (ec *executionContext) marshalOHeartbeat2ᚖgithubᚗcomᚋBangRocketᚋMyP
 		return graphql.Null
 	}
 	return ec._Heartbeat(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOHeartbeatItem2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐHeartbeatItem(ctx context.Context, sel ast.SelectionSet, v *HeartbeatItem) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._HeartbeatItem(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOInt2ᚖint(ctx context.Context, v any) (*int, error) {

@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories"
+	heartbeatrepo "github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories/heartbeat"
 	personalityrepo "github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories/personality"
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/services/permissions"
 	"github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/persistence"
@@ -39,6 +40,7 @@ func (a *App) initDatabase() {
 	a.UserChannelRepo = repositories.NewUserChannelRepository(gormDB)
 	a.PersonalityRepo = personalityrepo.NewPersonalityRepository(gormDB)
 	a.RelationshipRepo = personalityrepo.NewRelationshipRepository(gormDB)
+	a.HeartbeatRepo = heartbeatrepo.NewHeartbeatRepository(gormDB)
 }
 
 // loadPermissions loads tool-permission overrides from config and DB into permManager.

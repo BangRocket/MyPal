@@ -46,6 +46,13 @@ func NewService(
 	}
 }
 
+// SetDispatcher allows setting or replacing the task dispatcher after
+// construction. This is useful when the dispatcher depends on components
+// that are initialised after the heartbeat service.
+func (s *Service) SetDispatcher(d ports.TaskDispatcherPort) {
+	s.dispatcher = d
+}
+
 // ---------------------------------------------------------------------------
 // CRUD Methods
 // ---------------------------------------------------------------------------
@@ -81,6 +88,14 @@ func (s *Service) List(ctx context.Context) ([]models.HeartbeatItemModel, error)
 // Delete removes a heartbeat item by ID.
 func (s *Service) Delete(ctx context.Context, id string) error {
 	return s.repo.Delete(ctx, id)
+}
+
+// Logs returns execution logs for a heartbeat item.
+func (s *Service) Logs(ctx context.Context, itemID string, limit int) ([]models.HeartbeatLogModel, error) {
+	if limit <= 0 {
+		limit = 50
+	}
+	return s.repo.GetLogs(ctx, itemID, limit)
 }
 
 // Update modifies fields on an existing heartbeat item, recomputes NextRun,

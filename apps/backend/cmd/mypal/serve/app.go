@@ -18,6 +18,7 @@ import (
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories"
 	domainservices "github.com/BangRocket/MyPal/apps/backend/internal/domain/services"
+	heartbeatsvc "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/heartbeat"
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/services/mcp"
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/services/permissions"
 	msgrouter "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/messaging/router"
@@ -79,6 +80,8 @@ type App struct {
 	PersonalityRepo     ports.PersonalityRepositoryPort
 	RelationshipRepo    ports.UserPersonaRelationshipRepositoryPort
 	OrganicConfigRepo   ports.OrganicResponseConfigRepositoryPort
+	HeartbeatRepo       ports.HeartbeatRepositoryPort
+	HeartbeatSvc        *heartbeatsvc.Service
 	CtxInjector   appcontext.ContextInjector
 	MsgHandler    *domainhandlers.MessageHandler
 	SkillsAdapter *filesystem.SkillsAdapter

@@ -9,6 +9,7 @@ import (
 	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/resolvers"
 	"github.com/BangRocket/MyPal/apps/backend/internal/application/registry"
 	domainservices "github.com/BangRocket/MyPal/apps/backend/internal/domain/services"
+	heartbeatsvc "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/heartbeat"
 	personalitysvc "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/personality"
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories"
 	aifactory "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/ai/factory"
@@ -55,6 +56,12 @@ func (a *App) initGraphQL() {
 	subAgentAdapter := dto.NewSubAgentAdapter(a.SubAgentSvc)
 	pSvc := personalitysvc.NewService(a.PersonalityRepo, a.RelationshipRepo)
 
+	// Heartbeat service — the eval loop is started in lifecycle.go after the
+	// dispatcher is available, so we pass nil for the dispatcher here and set
+	// it later.
+	hbSvc := heartbeatsvc.NewService(a.HeartbeatRepo, nil, 0)
+	a.HeartbeatSvc = hbSvc
+
 	a.Deps = &resolvers.Deps{
 		AgentRegistry:   a.AgentRegistry,
 		QuerySvc:        queryService,
@@ -87,7 +94,9 @@ func (a *App) initGraphQL() {
 		ConfigPath:        a.CfgPath,
 		PersonalitySvc:    pSvc,
 		ModelTiers:        cfg.ModelTiers,
+		EmailConfig:       cfg.Channels.Email,
 		OrganicConfigRepo: a.OrganicConfigRepo,
+		HeartbeatSvc:      hbSvc,
 	}
 
 	a.MsgHandler.SetCapabilitiesChecker(func(cap string) bool {
@@ -151,6 +160,7 @@ func (a *App) initGraphQL() {
 			}
 			a.Deps.ConfigSnapshot = dto.BuildConfigSnapshot(reloaded, aifactory.ProviderName)
 			a.Deps.ModelTiers = reloaded.ModelTiers
+			a.Deps.EmailConfig = reloaded.Channels.Email
 			if cur := a.AgentRegistry.GetAgent(); cur != nil {
 				name := reloaded.Agent.Name
 				if name == "" {

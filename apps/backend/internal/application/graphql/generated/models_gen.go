@@ -156,6 +156,20 @@ type DenyPairingResult struct {
 	Error   *string `json:"error,omitempty"`
 }
 
+type EmailChannelConfig struct {
+	Enabled        bool   `json:"enabled"`
+	ImapHost       string `json:"imapHost"`
+	ImapPort       int    `json:"imapPort"`
+	ImapUser       string `json:"imapUser"`
+	ImapTLS        bool   `json:"imapTls"`
+	SMTPHost       string `json:"smtpHost"`
+	SMTPPort       int    `json:"smtpPort"`
+	SMTPFrom       string `json:"smtpFrom"`
+	SMTPTLS        bool   `json:"smtpTls"`
+	PollInterval   int    `json:"pollInterval"`
+	ProcessedLabel string `json:"processedLabel"`
+}
+
 type EventPayload struct {
 	Type      string         `json:"type"`
 	Timestamp string         `json:"timestamp"`
@@ -190,6 +204,42 @@ type GraphQLConfig struct {
 type Heartbeat struct {
 	Status    string `json:"status"`
 	LastCheck int    `json:"lastCheck"`
+}
+
+type HeartbeatItem struct {
+	ID            string  `json:"id"`
+	Title         string  `json:"title"`
+	Description   *string `json:"description,omitempty"`
+	Schedule      *string `json:"schedule,omitempty"`
+	Priority      int     `json:"priority"`
+	Status        string  `json:"status"`
+	CreatedBy     string  `json:"createdBy"`
+	TargetUser    *string `json:"targetUser,omitempty"`
+	TargetChannel *string `json:"targetChannel,omitempty"`
+	Context       *string `json:"context,omitempty"`
+	LastRun       *string `json:"lastRun,omitempty"`
+	NextRun       *string `json:"nextRun,omitempty"`
+	CreatedAt     string  `json:"createdAt"`
+	UpdatedAt     string  `json:"updatedAt"`
+}
+
+type HeartbeatItemInput struct {
+	Title         string  `json:"title"`
+	Description   *string `json:"description,omitempty"`
+	Schedule      *string `json:"schedule,omitempty"`
+	Priority      *int    `json:"priority,omitempty"`
+	TargetUser    *string `json:"targetUser,omitempty"`
+	TargetChannel *string `json:"targetChannel,omitempty"`
+	Context       *string `json:"context,omitempty"`
+}
+
+type HeartbeatLog struct {
+	ID              string  `json:"id"`
+	HeartbeatItemID string  `json:"heartbeatItemId"`
+	Action          string  `json:"action"`
+	Reason          *string `json:"reason,omitempty"`
+	Result          *string `json:"result,omitempty"`
+	Timestamp       string  `json:"timestamp"`
 }
 
 type ImportSkillResult struct {

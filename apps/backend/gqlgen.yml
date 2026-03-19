@@ -19,7 +19,9 @@ schema:
   - ../../schema/tools.graphql
   - ../../schema/personality.graphql
   - ../../schema/modeltiers.graphql
+  - ../../schema/email.graphql
   - ../../schema/organic.graphql
+  - ../../schema/heartbeat.graphql
   - ../../schema/subscriptions.graphql
 
 exec:

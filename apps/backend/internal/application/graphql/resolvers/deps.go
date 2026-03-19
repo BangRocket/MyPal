@@ -16,6 +16,7 @@ import (
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
 	domainservices "github.com/BangRocket/MyPal/apps/backend/internal/domain/services"
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/services/mcp"
+	heartbeatsvc "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/heartbeat"
 	personalitysvc "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/personality"
 )
 
@@ -54,7 +55,9 @@ type Deps struct {
 	ConfigWriter      dto.ConfigUpdatePort
 	PersonalitySvc    *personalitysvc.Service
 	ModelTiers        config.ModelTiersConfig
+	EmailConfig       config.EmailConfig
 	OrganicConfigRepo ports.OrganicResponseConfigRepositoryPort
+	HeartbeatSvc      *heartbeatsvc.Service
 }
 
 // Agent implements agent.Provider.
@@ -1213,4 +1216,198 @@ func organicConfigModelToGenerated(m *models.OrganicResponseConfigModel) *genera
 		QuietHoursStart:    strPtrIfNotEmpty(m.QuietHoursStart),
 		QuietHoursEnd:      strPtrIfNotEmpty(m.QuietHoursEnd),
 	}
+}
+
+// ─── Heartbeat provider ──────────────────────────────────────────────────────
+
+// HeartbeatItems returns all active heartbeat items.
+func (d *Deps) HeartbeatItems(ctx context.Context) ([]*generated.HeartbeatItem, error) {
+	if d.HeartbeatSvc == nil {
+		return nil, nil
+	}
+	items, err := d.HeartbeatSvc.List(ctx)
+	if err != nil {
+		return nil, err
+	}
+	out := make([]*generated.HeartbeatItem, len(items))
+	for i, m := range items {
+		out[i] = heartbeatItemModelToGenerated(&m)
+	}
+	return out, nil
+}
+
+// HeartbeatItemByID returns a single heartbeat item by ID.
+func (d *Deps) HeartbeatItemByID(ctx context.Context, id string) (*generated.HeartbeatItem, error) {
+	if d.HeartbeatSvc == nil {
+		return nil, nil
+	}
+	m, err := d.HeartbeatSvc.Get(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	return heartbeatItemModelToGenerated(m), nil
+}
+
+// HeartbeatLogs returns execution logs for a heartbeat item.
+func (d *Deps) HeartbeatLogs(ctx context.Context, itemID string, limit *int) ([]*generated.HeartbeatLog, error) {
+	if d.HeartbeatSvc == nil {
+		return nil, nil
+	}
+	n := 50
+	if limit != nil && *limit > 0 {
+		n = *limit
+	}
+	logs, err := d.HeartbeatSvc.Logs(ctx, itemID, n)
+	if err != nil {
+		return nil, err
+	}
+	out := make([]*generated.HeartbeatLog, len(logs))
+	for i, l := range logs {
+		out[i] = heartbeatLogModelToGenerated(&l)
+	}
+	return out, nil
+}
+
+// CreateHeartbeatItem creates a new heartbeat item from GraphQL input.
+func (d *Deps) CreateHeartbeatItem(ctx context.Context, input generated.HeartbeatItemInput) (*generated.HeartbeatItem, error) {
+	if d.HeartbeatSvc == nil {
+		return nil, nil
+	}
+	m := &models.HeartbeatItemModel{
+		Title:         input.Title,
+		Description:   ptrStrVal(input.Description),
+		Schedule:      ptrStrVal(input.Schedule),
+		Priority:      ptrIntVal(input.Priority, 3),
+		CreatedBy:     "dashboard",
+		TargetUser:    ptrStrVal(input.TargetUser),
+		TargetChannel: ptrStrVal(input.TargetChannel),
+		Context:       ptrStrVal(input.Context),
+	}
+	if err := d.HeartbeatSvc.Create(ctx, m); err != nil {
+		return nil, err
+	}
+	return heartbeatItemModelToGenerated(m), nil
+}
+
+// UpdateHeartbeatItem updates an existing heartbeat item.
+func (d *Deps) UpdateHeartbeatItem(ctx context.Context, id string, input generated.HeartbeatItemInput) (*generated.HeartbeatItem, error) {
+	if d.HeartbeatSvc == nil {
+		return nil, nil
+	}
+	m := &models.HeartbeatItemModel{
+		Title:         input.Title,
+		Description:   ptrStrVal(input.Description),
+		Schedule:      ptrStrVal(input.Schedule),
+		Priority:      ptrIntVal(input.Priority, 3),
+		TargetUser:    ptrStrVal(input.TargetUser),
+		TargetChannel: ptrStrVal(input.TargetChannel),
+		Context:       ptrStrVal(input.Context),
+	}
+	if err := d.HeartbeatSvc.Update(ctx, id, m); err != nil {
+		return nil, err
+	}
+	// Re-fetch the updated item to return current state.
+	updated, err := d.HeartbeatSvc.Get(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	return heartbeatItemModelToGenerated(updated), nil
+}
+
+// DeleteHeartbeatItem deletes a heartbeat item by ID.
+func (d *Deps) DeleteHeartbeatItem(ctx context.Context, id string) (bool, error) {
+	if d.HeartbeatSvc == nil {
+		return false, nil
+	}
+	err := d.HeartbeatSvc.Delete(ctx, id)
+	return err == nil, err
+}
+
+// SnoozeHeartbeatItem snoozes a heartbeat item until the given time.
+func (d *Deps) SnoozeHeartbeatItem(ctx context.Context, id string, until string) (*generated.HeartbeatItem, error) {
+	if d.HeartbeatSvc == nil {
+		return nil, nil
+	}
+	t, err := time.Parse(time.RFC3339, until)
+	if err != nil {
+		return nil, fmt.Errorf("invalid until time: %w", err)
+	}
+	if err := d.HeartbeatSvc.Snooze(ctx, id, t); err != nil {
+		return nil, err
+	}
+	updated, err := d.HeartbeatSvc.Get(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	return heartbeatItemModelToGenerated(updated), nil
+}
+
+// CompleteHeartbeatItem marks a heartbeat item as completed.
+func (d *Deps) CompleteHeartbeatItem(ctx context.Context, id string) (bool, error) {
+	if d.HeartbeatSvc == nil {
+		return false, nil
+	}
+	err := d.HeartbeatSvc.Complete(ctx, id)
+	return err == nil, err
+}
+
+// ─── Heartbeat mapping helpers ───────────────────────────────────────────────
+
+func heartbeatItemModelToGenerated(m *models.HeartbeatItemModel) *generated.HeartbeatItem {
+	item := &generated.HeartbeatItem{
+		ID:        m.ID,
+		Title:     m.Title,
+		Priority:  m.Priority,
+		Status:    m.Status,
+		CreatedBy: m.CreatedBy,
+		CreatedAt: m.CreatedAt.Format(time.RFC3339),
+		UpdatedAt: m.UpdatedAt.Format(time.RFC3339),
+	}
+	if m.Description != "" {
+		item.Description = &m.Description
+	}
+	if m.Schedule != "" {
+		item.Schedule = &m.Schedule
+	}
+	if m.TargetUser != "" {
+		item.TargetUser = &m.TargetUser
+	}
+	if m.TargetChannel != "" {
+		item.TargetChannel = &m.TargetChannel
+	}
+	if m.Context != "" {
+		item.Context = &m.Context
+	}
+	if !m.LastRun.IsZero() {
+		s := m.LastRun.Format(time.RFC3339)
+		item.LastRun = &s
+	}
+	if !m.NextRun.IsZero() {
+		s := m.NextRun.Format(time.RFC3339)
+		item.NextRun = &s
+	}
+	return item
+}
+
+func heartbeatLogModelToGenerated(m *models.HeartbeatLogModel) *generated.HeartbeatLog {
+	log := &generated.HeartbeatLog{
+		ID:              m.ID,
+		HeartbeatItemID: m.HeartbeatItemID,
+		Action:          m.Action,
+		Timestamp:       m.Timestamp.Format(time.RFC3339),
+	}
+	if m.Reason != "" {
+		log.Reason = &m.Reason
+	}
+	if m.Result != "" {
+		log.Result = &m.Result
+	}
+	return log
+}
+
+func ptrIntVal(p *int, defaultVal int) int {
+	if p == nil {
+		return defaultVal
+	}
+	return *p
 }

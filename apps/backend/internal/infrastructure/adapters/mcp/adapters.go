@@ -360,6 +360,91 @@ func (a *CronAdapter) Delete(ctx context.Context, jobID string) error {
 }
 
 // ---------------------------------------------------------------------------
+// HeartbeatAdapter — bridges heartbeat.Service to mcp.HeartbeatService
+// ---------------------------------------------------------------------------
+
+// HeartbeatAdapter wraps a heartbeat.Service and exposes the mcp.HeartbeatService
+// interface expected by internal tools.
+type HeartbeatAdapter struct {
+	Svc HeartbeatServicePort
+}
+
+// HeartbeatServicePort is the subset of heartbeat.Service methods needed by
+// the adapter. Avoids importing the concrete service type directly.
+type HeartbeatServicePort interface {
+	BotCreate(ctx context.Context, item *models.HeartbeatItemModel, reason string) error
+	List(ctx context.Context) ([]models.HeartbeatItemModel, error)
+	BotComplete(ctx context.Context, id string, reason string) error
+	BotSnooze(ctx context.Context, id string, until time.Time, reason string) error
+	Cancel(ctx context.Context, id string) error
+}
+
+func (a *HeartbeatAdapter) BotCreate(ctx context.Context, params *svmcp.HeartbeatCreateParams, reason string) (string, error) {
+	if a.Svc == nil {
+		return "", fmt.Errorf("heartbeat: service unavailable")
+	}
+	item := &models.HeartbeatItemModel{
+		Title:         params.Title,
+		Description:   params.Description,
+		Schedule:      params.Schedule,
+		Priority:      params.Priority,
+		TargetUser:    params.TargetUser,
+		TargetChannel: params.TargetChannel,
+		Context:       params.Context,
+	}
+	if err := a.Svc.BotCreate(ctx, item, reason); err != nil {
+		return "", err
+	}
+	return item.ID, nil
+}
+
+func (a *HeartbeatAdapter) List(ctx context.Context) ([]svmcp.HeartbeatInfo, error) {
+	if a.Svc == nil {
+		return nil, fmt.Errorf("heartbeat: service unavailable")
+	}
+	items, err := a.Svc.List(ctx)
+	if err != nil {
+		return nil, err
+	}
+	result := make([]svmcp.HeartbeatInfo, len(items))
+	for i, item := range items {
+		result[i] = svmcp.HeartbeatInfo{
+			ID:            item.ID,
+			Title:         item.Title,
+			Description:   item.Description,
+			Schedule:      item.Schedule,
+			Priority:      item.Priority,
+			Status:        item.Status,
+			TargetUser:    item.TargetUser,
+			TargetChannel: item.TargetChannel,
+			NextRun:       item.NextRun.Format(time.RFC3339),
+		}
+	}
+	return result, nil
+}
+
+func (a *HeartbeatAdapter) BotComplete(ctx context.Context, id string, reason string) error {
+	if a.Svc == nil {
+		return fmt.Errorf("heartbeat: service unavailable")
+	}
+	return a.Svc.BotComplete(ctx, id, reason)
+}
+
+func (a *HeartbeatAdapter) BotSnooze(ctx context.Context, id string, until time.Time, reason string) error {
+	if a.Svc == nil {
+		return fmt.Errorf("heartbeat: service unavailable")
+	}
+	return a.Svc.BotSnooze(ctx, id, until, reason)
+}
+
+func (a *HeartbeatAdapter) Cancel(ctx context.Context, id string) error {
+	if a.Svc == nil {
+		return fmt.Errorf("heartbeat: service unavailable")
+	}
+	return a.Svc.Cancel(ctx, id)
+}
+
+// ---------------------------------------------------------------------------
 // BrowserAdapter — bridges browser.ChromeDPAdapter to mcp.BrowserService
 // ---------------------------------------------------------------------------
 

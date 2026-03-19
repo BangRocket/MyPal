@@ -23,6 +23,7 @@ import (
 
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/models"
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
+	heartbeatsvc "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/heartbeat"
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/services/modeltier"
 	organicsvc "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/organic"
 	personalitysvc "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/personality"
@@ -106,6 +107,10 @@ func (a *App) initServices() {
 	)
 	a.CompactionSvc = domainservices.NewMessageCompactionService(a.MessageRepo, a.AIProvider)
 
+	// Heartbeat service — note: the dispatcher is wired in startAndWait after
+	// the message handler is ready, so we pass nil here and set it later.
+	a.HeartbeatSvc = heartbeatsvc.NewService(a.HeartbeatRepo, nil, 0)
+
 	// Register all internal tools
 	mcp.RegisterAllInternalTools(a.ToolRegistry, mcp.InternalTools{
 		Messaging:           &inframc.MessagingAdapter{Port: a.MsgRouter},
@@ -130,6 +135,7 @@ func (a *App) initServices() {
 		Filesystem:    filesystem.NewAdapter(a.CfgPath),
 		Conversations: &inframc.ConversationAdapter{ConvRepo: a.ConvRepo, MsgRepo: a.MessageRepo},
 		Skills:        a.SkillsAdapter,
+		Heartbeat:     &inframc.HeartbeatAdapter{Svc: a.HeartbeatSvc},
 		ConfigPath:    a.CfgPath,
 		SchedulerNotify: func() {
 			if a.SchedulerNotify != nil {

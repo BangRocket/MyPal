@@ -56,6 +56,7 @@ type InternalTools struct {
 	Filesystem          FilesystemService
 	Conversations       ConversationService
 	Skills              SkillsService
+	Heartbeat           HeartbeatService
 	// ConfigPath is the absolute path to the application configuration file.
 	// Terminal tools use this to deny any command that references that file.
 	ConfigPath string
@@ -115,6 +116,39 @@ type ConversationMessage struct {
 	Role      string
 	Content   string
 	Timestamp string
+}
+
+// HeartbeatService provides bot-callable operations on heartbeat items.
+type HeartbeatService interface {
+	BotCreate(ctx context.Context, item *HeartbeatCreateParams, reason string) (string, error)
+	List(ctx context.Context) ([]HeartbeatInfo, error)
+	BotComplete(ctx context.Context, id string, reason string) error
+	BotSnooze(ctx context.Context, id string, until time.Time, reason string) error
+	Cancel(ctx context.Context, id string) error
+}
+
+// HeartbeatCreateParams carries the fields needed by the heartbeat_create tool.
+type HeartbeatCreateParams struct {
+	Title         string
+	Description   string
+	Schedule      string
+	Priority      int
+	TargetUser    string
+	TargetChannel string
+	Context       string
+}
+
+// HeartbeatInfo is a lightweight summary of a heartbeat item for tool output.
+type HeartbeatInfo struct {
+	ID            string
+	Title         string
+	Description   string
+	Schedule      string
+	Priority      int
+	Status        string
+	TargetUser    string
+	TargetChannel string
+	NextRun       string
 }
 
 type FilesystemService interface {
@@ -1813,5 +1847,12 @@ func RegisterAllInternalTools(reg *ToolRegistry, tools InternalTools) {
 	if tools.Skills != nil {
 		reg.RegisterInternal("load_skill", &LoadSkillTool{Tools: tools})
 		reg.RegisterInternal("read_skill_file", &ReadSkillFileTool{Tools: tools})
+	}
+	if tools.Heartbeat != nil {
+		reg.RegisterInternal("heartbeat_create", &HeartbeatCreateTool{Tools: tools})
+		reg.RegisterInternal("heartbeat_list", &HeartbeatListTool{Tools: tools})
+		reg.RegisterInternal("heartbeat_complete", &HeartbeatCompleteTool{Tools: tools})
+		reg.RegisterInternal("heartbeat_snooze", &HeartbeatSnoozeTool{Tools: tools})
+		reg.RegisterInternal("heartbeat_cancel", &HeartbeatCancelTool{Tools: tools})
 	}
 }

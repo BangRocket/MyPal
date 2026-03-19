@@ -1,0 +1,49 @@
+type HeartbeatItem {
+  id: String!
+  title: String!
+  description: String
+  schedule: String
+  priority: Int!
+  status: String!
+  createdBy: String!
+  targetUser: String
+  targetChannel: String
+  context: String
+  lastRun: String
+  nextRun: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+type HeartbeatLog {
+  id: String!
+  heartbeatItemId: String!
+  action: String!
+  reason: String
+  result: String
+  timestamp: String!
+}
+
+input HeartbeatItemInput {
+  title: String!
+  description: String
+  schedule: String
+  priority: Int
+  targetUser: String
+  targetChannel: String
+  context: String
+}
+
+extend type Query {
+  heartbeatItems: [HeartbeatItem!]!
+  heartbeatItem(id: String!): HeartbeatItem
+  heartbeatLogs(itemId: String!, limit: Int): [HeartbeatLog!]!
+}
+
+extend type Mutation {
+  createHeartbeatItem(input: HeartbeatItemInput!): HeartbeatItem!
+  updateHeartbeatItem(id: String!, input: HeartbeatItemInput!): HeartbeatItem!
+  deleteHeartbeatItem(id: String!): Boolean!
+  snoozeHeartbeatItem(id: String!, until: String!): HeartbeatItem!
+  completeHeartbeatItem(id: String!): Boolean!
+}
