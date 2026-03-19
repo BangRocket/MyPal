@@ -298,6 +298,57 @@ export const CONFIG_QUERY = /* GraphQL */ `
   }
 `;
 
+// ─── Personalities ────────────────────────────────────────────────────────────
+
+export const PERSONALITIES_QUERY = /* GraphQL */ `
+  query Personalities {
+    personalities {
+      id
+      name
+      basePrompt
+      traits
+      tone
+      boundaries
+      quirks
+      adaptations
+      isDefault
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const USER_RELATIONSHIPS_QUERY = /* GraphQL */ `
+  query UserRelationships($userId: String!) {
+    userRelationships(userId: $userId) {
+      userId
+      personalityId
+      familiarity
+      preferences
+      interactionCount
+      lastInteraction
+    }
+  }
+`;
+
+// ─── Model Tiers ──────────────────────────────────────────────────────────────
+
+export const MODEL_TIERS_QUERY = /* GraphQL */ `
+  query ModelTiers {
+    modelTiers {
+      enabled
+      tiers {
+        name
+        provider
+        model
+        prefix
+        costCap
+        isDefault
+      }
+    }
+  }
+`;
+
 // ─── System Files ─────────────────────────────────────────────────────────────
 
 export const SYSTEM_FILES_QUERY = /* GraphQL */ `
