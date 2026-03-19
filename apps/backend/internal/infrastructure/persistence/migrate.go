@@ -42,6 +42,7 @@ func Migrate(db *gorm.DB, driver string) error {
 		&domainmodels.OrganicResponseConfigModel{},
 		&domainmodels.HeartbeatItemModel{},
 		&domainmodels.HeartbeatLogModel{},
+		&domainmodels.SandboxInstanceModel{},
 	); err != nil {
 		return fmt.Errorf("AutoMigrate: %w", err)
 	}
