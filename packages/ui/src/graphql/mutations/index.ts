@@ -316,3 +316,32 @@ export const COMPLETE_HEARTBEAT_ITEM_MUTATION = /* GraphQL */ `
     completeHeartbeatItem(id: $id)
   }
 `;
+
+// ─── Sandbox ──────────────────────────────────────────────────────────────────
+
+export const CREATE_SANDBOX_MUTATION = /* GraphQL */ `
+  mutation CreateSandbox($image: String!, $persistent: Boolean) {
+    createSandbox(image: $image, persistent: $persistent) {
+      id
+      image
+      status
+    }
+  }
+`;
+
+export const EXECUTE_SANDBOX_MUTATION = /* GraphQL */ `
+  mutation ExecuteSandbox($id: String!, $command: String!) {
+    executeSandbox(id: $id, command: $command) {
+      exitCode
+      stdout
+      stderr
+      durationMs
+    }
+  }
+`;
+
+export const DESTROY_SANDBOX_MUTATION = /* GraphQL */ `
+  mutation DestroySandbox($id: String!) {
+    destroySandbox(id: $id)
+  }
+`;

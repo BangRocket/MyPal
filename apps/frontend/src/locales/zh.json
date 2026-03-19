@@ -208,6 +208,7 @@
   "mcps.oauthCallbackErrorClose": "关闭窗口",
   "personalities.title": "个性",
   "heartbeat.title": "心跳",
+  "sandbox.title": "沙盒",
   "skills.title": "技能",
   "skills.capabilities": "能力",
   "skills.enabled": "启用的能力会作为工具注入到代理的 LLM 提示上下文中。",

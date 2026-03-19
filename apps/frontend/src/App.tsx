@@ -19,6 +19,7 @@ const ModelTiersView = lazy(() => import("./views/ModelTiersView/ModelTiersView"
 const PersonalityView = lazy(() => import("./views/PersonalityView/PersonalityView"));
 const EmailSettingsView = lazy(() => import("./views/EmailSettingsView/EmailSettingsView"));
 const HeartbeatView = lazy(() => import("./views/HeartbeatView/HeartbeatView"));
+const SandboxView = lazy(() => import("./views/SandboxView/SandboxView"));
 const Error404 = lazy(() => import("./views/ErrorView/ErrorView").then((m) => ({ default: m.Error404 })));
 import AuthModals from "./components/AuthModals";
 import BrowserCheck from "./components/BrowserCheck";
@@ -158,6 +159,7 @@ const Root: Component = () => {
                   <Route path="/settings/email" component={EmailSettingsView} />
                   <Route path="/personalities" component={PersonalityView} />
                   <Route path="/heartbeat" component={HeartbeatView} />
+                  <Route path="/sandbox" component={SandboxView} />
                   <Route path="*" component={Error404} />
                 </Suspense>
               </Router>

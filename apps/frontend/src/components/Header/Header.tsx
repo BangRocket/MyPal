@@ -30,6 +30,7 @@ export type TabId =
   | "skills"
   | "personalities"
   | "heartbeat"
+  | "sandbox"
   | "settings";
 
 interface Tab {
@@ -47,6 +48,7 @@ const getTabs = (): Tab[] => [
   { id: "skills", labelKey: "skills.title", path: "/skills" },
   { id: "personalities", labelKey: "personalities.title", path: "/personalities" },
   { id: "heartbeat", labelKey: "heartbeat.title", path: "/heartbeat" },
+  { id: "sandbox", labelKey: "sandbox.title", path: "/sandbox" },
   { id: "settings", labelKey: "settings.title", path: "/settings" },
 ];
 

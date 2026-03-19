@@ -208,6 +208,7 @@
   "mcps.oauthCallbackErrorClose": "Cerrar ventana",
   "personalities.title": "Personalidades",
   "heartbeat.title": "Heartbeat",
+  "sandbox.title": "Sandbox",
   "skills.title": "Habilidades",
   "skills.capabilities": "Capacidades",
   "skills.enabled": "Las capacidades habilitadas se inyectan como herramientas en el contexto del prompt del LLM del agente.",

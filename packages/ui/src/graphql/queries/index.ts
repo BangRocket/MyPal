@@ -415,3 +415,21 @@ export const HEARTBEAT_LOGS_QUERY = /* GraphQL */ `
     }
   }
 `;
+
+// ─── Sandbox ──────────────────────────────────────────────────────────────────
+
+export const SANDBOX_INSTANCES_QUERY = /* GraphQL */ `
+  query SandboxInstances {
+    sandboxInstances {
+      id
+      image
+      status
+      userId
+      memLimit
+      cpuLimit
+      netPolicy
+      persistent
+      createdAt
+    }
+  }
+`;

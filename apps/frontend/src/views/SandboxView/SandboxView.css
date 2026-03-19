@@ -1,0 +1,413 @@
+/* Copyright (c) MyPal contributors. See LICENSE for details. */
+
+/* ── Page layout ─────────────────────────────────────────────── */
+
+.sandbox-view {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ── Header ──────────────────────────────────────────────────── */
+
+.sandbox-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 16px;
+}
+
+.sandbox-header h1 {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  margin: 0;
+}
+
+.sandbox-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ── Message bar ─────────────────────────────────────────────── */
+
+.sandbox-message {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+}
+
+.sandbox-message--success {
+  color: var(--color-success);
+}
+
+.sandbox-message--error {
+  color: var(--color-error);
+}
+
+/* ── Table ───────────────────────────────────────────────────── */
+
+.sandbox-table-wrap {
+  overflow-x: auto;
+}
+
+.sandbox-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-xs);
+}
+
+.sandbox-table th {
+  text-align: left;
+  padding: 8px 12px;
+  font-size: 11px;
+  font-weight: var(--weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-text-muted);
+  border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+
+.sandbox-table td {
+  padding: 10px 12px;
+  color: var(--color-text-primary);
+  border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+
+.sandbox-table tbody tr:hover {
+  background: var(--color-bg-secondary);
+}
+
+.sandbox-table__id {
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.sandbox-table__actions {
+  display: flex;
+  gap: 4px;
+}
+
+.sandbox-table__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: var(--color-bg-elevated);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  transition: background var(--duration-micro) var(--ease-out);
+}
+
+.sandbox-table__btn:hover {
+  background: var(--color-bg-selected);
+  color: var(--color-text-primary);
+}
+
+.sandbox-table__btn--danger:hover {
+  color: var(--color-error);
+}
+
+.sandbox-table__btn .material-symbols-outlined {
+  font-size: 16px;
+  font-variation-settings: 'FILL' 0, 'wght' 400;
+}
+
+/* ── Status badges ───────────────────────────────────────────── */
+
+.sandbox-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: var(--weight-medium);
+  border-radius: var(--radius-sm);
+}
+
+.sandbox-badge--running {
+  background: #16a34a;
+  color: #fff;
+}
+
+.sandbox-badge--stopped {
+  background: #6b7280;
+  color: #fff;
+}
+
+.sandbox-badge--creating {
+  background: #ca8a04;
+  color: #fff;
+}
+
+/* ── Empty state ─────────────────────────────────────────────── */
+
+.sandbox-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 24px;
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+.sandbox-empty__icon {
+  font-size: 48px;
+  opacity: 0.35;
+  font-variation-settings: 'FILL' 0, 'wght' 300;
+  margin-bottom: 8px;
+}
+
+.sandbox-empty__text {
+  font-size: var(--text-sm);
+  margin: 0;
+}
+
+/* ── Execute command panel ───────────────────────────────────── */
+
+.sandbox-exec {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.sandbox-exec__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sandbox-exec__header h2 {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.sandbox-exec__target {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--color-text-muted);
+}
+
+.sandbox-exec__close {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  border-radius: var(--radius-sm);
+}
+
+.sandbox-exec__close:hover {
+  background: var(--color-bg-elevated);
+  color: var(--color-text-primary);
+}
+
+.sandbox-exec__close .material-symbols-outlined {
+  font-size: 16px;
+}
+
+.sandbox-exec__input-row {
+  display: flex;
+  gap: 8px;
+}
+
+.sandbox-exec__input {
+  flex: 1;
+  height: 36px;
+  padding: 0 12px;
+  background: var(--color-bg-sunken);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-primary);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  outline: none;
+}
+
+.sandbox-exec__input:focus {
+  border-color: var(--color-accent);
+}
+
+.sandbox-exec__run {
+  height: 36px;
+  padding: 0 16px;
+  background: var(--color-accent);
+  color: var(--color-toggle-knob);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.sandbox-exec__run:hover {
+  opacity: 0.9;
+}
+
+.sandbox-exec__run:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.sandbox-exec__result {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sandbox-exec__meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sandbox-exec__duration {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+}
+
+.sandbox-exec__output {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sandbox-exec__output label {
+  font-size: 11px;
+  font-weight: var(--weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-text-muted);
+}
+
+.sandbox-exec__output pre {
+  margin: 0;
+  padding: 10px 12px;
+  background: var(--color-bg-sunken);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-text-primary);
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-height: 300px;
+  overflow-y: auto;
+  line-height: 1.5;
+}
+
+.sandbox-exec__output--stderr pre {
+  color: var(--color-error);
+}
+
+/* ── Form (inside modal) ─────────────────────────────────────── */
+
+.sandbox-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sandbox-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sandbox-form__field--row {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.sandbox-form__label {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-text-muted);
+}
+
+.sandbox-form__input {
+  height: 36px;
+  padding: 0 12px;
+  background: var(--color-bg-sunken);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  outline: none;
+}
+
+.sandbox-form__input:focus {
+  border-color: var(--color-accent);
+}
+
+.sandbox-form__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 8px;
+}
+
+.sandbox-form__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 16px;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background var(--duration-micro) var(--ease-out);
+}
+
+.sandbox-form__btn--primary {
+  background: var(--color-accent);
+  color: var(--color-toggle-knob);
+  border: none;
+}
+
+.sandbox-form__btn--primary:hover {
+  opacity: 0.9;
+}
+
+.sandbox-form__btn--primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.sandbox-form__btn--secondary {
+  background: var(--color-bg-elevated);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+}
+
+.sandbox-form__btn--secondary:hover {
+  background: var(--color-bg-selected);
+}
