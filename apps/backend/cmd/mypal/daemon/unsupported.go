@@ -6,7 +6,7 @@ package daemon
 
 import "fmt"
 
-func install(binaryPath, openlobsterHome string) error {
+func install(binaryPath, mypalHome string) error {
 	return fmt.Errorf("daemon management is not supported on this platform")
 }
 

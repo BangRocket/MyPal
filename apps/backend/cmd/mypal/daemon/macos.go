@@ -13,7 +13,7 @@ import (
 	"text/template"
 )
 
-const plistLabel = "com.openlobster"
+const plistLabel = "com.mypal"
 
 const plistTmpl = `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -48,8 +48,8 @@ func plistPath() (string, error) {
 	return filepath.Join(home, "Library", "LaunchAgents", plistLabel+".plist"), nil
 }
 
-func install(binaryPath, openlobsterHome string) error {
-	logDir := filepath.Join(openlobsterHome, "logs")
+func install(binaryPath, mypalHome string) error {
+	logDir := filepath.Join(mypalHome, "logs")
 	if err := os.MkdirAll(logDir, 0o750); err != nil {
 		return fmt.Errorf("create log directory: %w", err)
 	}
@@ -70,7 +70,7 @@ func install(binaryPath, openlobsterHome string) error {
 	if err := tmpl.Execute(&buf, map[string]string{
 		"Label":      plistLabel,
 		"BinaryPath": binaryPath,
-		"WorkingDir": openlobsterHome,
+		"WorkingDir": mypalHome,
 		"LogOut":     filepath.Join(logDir, "daemon.log"),
 		"LogErr":     filepath.Join(logDir, "daemon.err"),
 	}); err != nil {

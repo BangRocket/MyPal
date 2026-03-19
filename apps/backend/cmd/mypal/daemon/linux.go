@@ -13,10 +13,10 @@ import (
 	"text/template"
 )
 
-const unitName = "openlobster.service"
+const unitName = "mypal.service"
 
 const unitTmpl = `[Unit]
-Description=OpenLobster Autonomous Messaging Agent
+Description=MyPal Autonomous Messaging Agent
 After=network-online.target
 Wants=network-online.target
 
@@ -28,7 +28,7 @@ Restart=always
 RestartSec=5
 StandardOutput=journal
 StandardError=journal
-SyslogIdentifier=openlobster
+SyslogIdentifier=mypal
 Environment=OLLAMA_AUTH=false
 
 [Install]
@@ -43,7 +43,7 @@ func unitPath() (string, error) {
 	return filepath.Join(home, ".config", "systemd", "user", unitName), nil
 }
 
-func install(binaryPath, openlobsterHome string) error {
+func install(binaryPath, mypalHome string) error {
 	path, err := unitPath()
 	if err != nil {
 		return err
@@ -59,7 +59,7 @@ func install(binaryPath, openlobsterHome string) error {
 	var buf bytes.Buffer
 	if err := tmpl.Execute(&buf, map[string]string{
 		"BinaryPath": binaryPath,
-		"WorkingDir": openlobsterHome,
+		"WorkingDir": mypalHome,
 	}); err != nil {
 		return err
 	}

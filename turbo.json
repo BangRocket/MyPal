@@ -4,10 +4,10 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**", "cmd/openlobster/public/**"]
+      "outputs": [".next/**", "!.next/cache/**", "dist/**", "cmd/mypal/public/**"]
     },
-    "@openlobster/backend#build": {
-      "dependsOn": ["^build", "@openlobster/frontend#build"],
+    "@mypal/backend#build": {
+      "dependsOn": ["^build", "@mypal/frontend#build"],
       "outputs": ["../../dist/**"]
     },
     "lint": {
@@ -26,6 +26,6 @@
       "cache": false
     }
   },
-  "globalPassThroughEnv": ["OPENLOBSTER_GRAPHQL_AUTH_TOKEN", "OPENLOBSTER_CONFIG"],
+  "globalPassThroughEnv": ["MYPAL_GRAPHQL_AUTH_TOKEN", "MYPAL_CONFIG"],
   "ui": "tui"
 }

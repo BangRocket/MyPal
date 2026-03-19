@@ -1,8 +1,8 @@
 // Package migrate implements the "migrate" subcommand.
 //
 // It reads an OpenClaw configuration file and migrates the supported data
-// to a running OpenLobster instance via its GraphQL API, and copies the
-// OpenClaw workspace directory to the OpenLobster workspace.
+// to a running MyPal instance via its GraphQL API, and copies the
+// OpenClaw workspace directory to the MyPal workspace.
 //
 // Migrated data:
 //   - Agent and channel configuration (via updateConfig mutation)
@@ -24,7 +24,7 @@ import (
 
 const (
 	defaultEndpoint = "http://localhost:8080/graphql"
-	apiKeyEnvVar    = "OPENLOBSTER_API_KEY"
+	apiKeyEnvVar    = "MYPAL_API_KEY"
 )
 
 // Command returns the cobra command for the "migrate" subcommand.
@@ -39,9 +39,9 @@ func Command() *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:   "migrate",
-		Short: "Migrate an OpenClaw installation to OpenLobster via GraphQL",
+		Short: "Migrate an OpenClaw installation to MyPal via GraphQL",
 		Long: `Reads an OpenClaw home directory and migrates the supported data
-to a running OpenLobster instance via its GraphQL API.
+to a running MyPal instance via its GraphQL API.
 
 Migrated:
   - Agent and channel configuration (via updateConfig)
@@ -49,7 +49,7 @@ Migrated:
   - Workspace directory (filesystem copy)
 
 Note: WhatsApp credentials cannot be migrated — OpenClaw uses Baileys (QR)
-while OpenLobster requires a Meta Cloud API phone_id and api_token.`,
+while MyPal requires a Meta Cloud API phone_id and api_token.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if apiKey == "" {
 				apiKey = os.Getenv(apiKeyEnvVar)
@@ -76,9 +76,9 @@ while OpenLobster requires a Meta Cloud API phone_id and api_token.`,
 	}
 
 	cmd.Flags().StringVar(&src, "from", defaultOpenClawHome(), "path to OpenClaw home directory")
-	cmd.Flags().StringVar(&dst, "to", defaultOpenLobsterHome(), "path to OpenLobster home directory")
-	cmd.Flags().StringVar(&endpoint, "endpoint", defaultEndpoint, "OpenLobster GraphQL endpoint")
-	cmd.Flags().StringVar(&apiKey, "api-key", "", "OpenLobster API key (or set "+apiKeyEnvVar+" env var)")
+	cmd.Flags().StringVar(&dst, "to", defaultMyPalHome(), "path to MyPal home directory")
+	cmd.Flags().StringVar(&endpoint, "endpoint", defaultEndpoint, "MyPal GraphQL endpoint")
+	cmd.Flags().StringVar(&apiKey, "api-key", "", "MyPal API key (or set "+apiKeyEnvVar+" env var)")
 	cmd.Flags().BoolVar(&dryRun, "dry-run", false, "print what would be migrated without making API calls")
 
 	return cmd
@@ -111,11 +111,11 @@ func runMigration(cfg viperReader, c *gqlClient, workspaceSrc, workspaceDst stri
 func printWhatsAppWarning() {
 	fmt.Println(`
 Note: WhatsApp credentials were NOT migrated.
-  OpenClaw uses Baileys (QR-code / WhatsApp Web); OpenLobster uses the
+  OpenClaw uses Baileys (QR-code / WhatsApp Web); MyPal uses the
   Meta Cloud API and requires a phone_id and api_token from
   developers.facebook.com. Set them manually:
 
-    openlobster config set \
+    mypal config set \
       channels.whatsapp.enabled true \
       channels.whatsapp.phone_id  <YOUR_PHONE_ID> \
       channels.whatsapp.api_token <YOUR_API_TOKEN>`)

@@ -24,5 +24,5 @@ func Command(v string) *cobra.Command {
 
 // Run prints the build version to w.
 func Run(w io.Writer, v string) {
-	fmt.Fprintf(w, "openlobster %s\n", v)
+	fmt.Fprintf(w, "mypal %s\n", v)
 }

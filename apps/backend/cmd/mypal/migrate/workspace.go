@@ -9,19 +9,19 @@ import (
 	"path/filepath"
 )
 
-// defaultOpenLobsterHome returns the default OpenLobster home directory
-// (~/.openlobster), falling back to ./.openlobster if the home directory
+// defaultMyPalHome returns the default MyPal home directory
+// (~/.mypal), falling back to ./.mypal if the home directory
 // cannot be determined.
-func defaultOpenLobsterHome() string {
+func defaultMyPalHome() string {
 	home, err := os.UserHomeDir()
 	if err != nil {
-		return "./.openlobster"
+		return "./.mypal"
 	}
-	return filepath.Join(home, ".openlobster")
+	return filepath.Join(home, ".mypal")
 }
 
 // migrateWorkspace copies the OpenClaw workspace directory tree to the
-// OpenLobster workspace directory, preserving relative paths.
+// MyPal workspace directory, preserving relative paths.
 //
 // Existing files in dst are overwritten; no files are deleted from dst.
 func migrateWorkspace(src, dst string, dryRun bool) error {

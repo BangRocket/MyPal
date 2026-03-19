@@ -63,7 +63,7 @@ func (a *App) initMCP() {
 		if cfg.GraphQL.BaseURL != "" {
 			log.Printf("oauth: graphql.base_url %q is not a full URL; using %q for redirect_uri.", cfg.GraphQL.BaseURL, oauthCallbackURL)
 		} else if cfg.GraphQL.Host == "0.0.0.0" || cfg.GraphQL.Host == "" {
-			log.Printf("oauth: redirect_uri is %q. For OAuth behind a reverse proxy, set OPENLOBSTER_GRAPHQL_BASE_URL.", oauthCallbackURL)
+			log.Printf("oauth: redirect_uri is %q. For OAuth behind a reverse proxy, set MYPAL_GRAPHQL_BASE_URL.", oauthCallbackURL)
 		}
 	}
 	a.OAuthMgr = mcp.NewOAuthManager(a.SecretsProvider, oauthCallbackURL)

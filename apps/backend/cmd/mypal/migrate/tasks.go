@@ -8,7 +8,7 @@ import (
 )
 
 // migrateTasks reads cron job definitions from the OpenClaw config and creates
-// the equivalent tasks in OpenLobster via addTask mutations.
+// the equivalent tasks in MyPal via addTask mutations.
 func migrateTasks(cfg viperReader, c *gqlClient) error {
 	jobs := readCronJobs(cfg)
 	if len(jobs) == 0 {

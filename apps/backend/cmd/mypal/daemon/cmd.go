@@ -1,5 +1,5 @@
 // Package daemon implements the "daemon" subcommand, which installs, uninstalls,
-// and reports the status of the OpenLobster user-space daemon.
+// and reports the status of the MyPal user-space daemon.
 //
 // On macOS the daemon is managed via launchd (~/Library/LaunchAgents/).
 // On Linux it is managed via systemd --user (~/.config/systemd/user/).
@@ -20,13 +20,13 @@ import (
 func Command() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "daemon",
-		Short: "Manage the OpenLobster user-space background daemon",
-		Long: `Install, uninstall, or check the status of the OpenLobster daemon.
+		Short: "Manage the MyPal user-space background daemon",
+		Long: `Install, uninstall, or check the status of the MyPal daemon.
 
 The daemon runs as a user-space service — no root privileges are required.
 
-  macOS  — launchd,          ~/Library/LaunchAgents/com.openlobster.plist
-  Linux  — systemd --user,   ~/.config/systemd/user/openlobster.service`,
+  macOS  — launchd,          ~/Library/LaunchAgents/com.mypal.plist
+  Linux  — systemd --user,   ~/.config/systemd/user/mypal.service`,
 	}
 
 	cmd.AddCommand(installCmd(), uninstallCmd(), statusCmd())
@@ -46,7 +46,7 @@ func installCmd() *cobra.Command {
 			if err != nil {
 				return fmt.Errorf("cannot determine home directory: %w", err)
 			}
-			return install(bin, filepath.Join(home, ".openlobster"))
+			return install(bin, filepath.Join(home, ".mypal"))
 		},
 	}
 }

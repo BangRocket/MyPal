@@ -29,7 +29,7 @@ RUN mkdir -p /app/{bin,config,data,logs,.ollama} && \
     chown -R nonroot:nonroot /app && \
     chmod -R 755 /app
 
-RUN cp /build/dist/openlobster /app/bin/openlobster
+RUN cp /build/dist/mypal /app/bin/mypal
 
 #########################################################################
 # Final stage: Create a minimal image with the static binary and necessary assets.
@@ -49,12 +49,12 @@ WORKDIR /app
 
 EXPOSE 8080
 
-CMD ["/app/bin/openlobster", "serve", "--data-dir", "/app"]
+CMD ["/app/bin/mypal", "serve", "--data-dir", "/app"]
 
-# Persist data: docker run -v openlobster-data:/app ...
+# Persist data: docker run -v mypal-data:/app ...
 LABEL maintainer="neirth <7413024+Neirth@users.noreply.github.com>" \
-    org.opencontainers.image.title="OpenLobster" \
-    org.opencontainers.image.description="OpenLobster is a self-hosted, open-source personal ai autonomous agent platform built with Go and Solid.js, designed to run on your own hardware for maximum privacy and control." \
+    org.opencontainers.image.title="MyPal" \
+    org.opencontainers.image.description="MyPal is a self-hosted, open-source personal ai autonomous agent platform built with Go and Solid.js, designed to run on your own hardware for maximum privacy and control." \
     org.opencontainers.image.licenses="MIT" \
-    org.opencontainers.image.source="https://github.com/neirth/OpenLobster" \
+    org.opencontainers.image.source="https://github.com/BangRocket/MyPal" \
     org.opencontainers.image.created="2026-02-14"

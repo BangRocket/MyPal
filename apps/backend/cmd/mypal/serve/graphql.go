@@ -24,12 +24,12 @@ func (a *App) initGraphQL() {
 
 	agentName := cfg.Agent.Name
 	if agentName == "" {
-		agentName = "OpenLobster"
+		agentName = "MyPal"
 	}
 	provider := aifactory.ProviderName(cfg)
 	channels := buildInitialChannels(cfg)
 	a.AgentRegistry.UpdateAgent(&dto.AgentSnapshot{
-		ID: "openlobster", Name: agentName, Version: a.Version, Status: "running",
+		ID: "mypal", Name: agentName, Version: a.Version, Status: "running",
 		Provider: provider, Channels: channels, AIProvider: provider,
 		MemoryBackend: string(cfg.Memory.Backend),
 	})
@@ -148,7 +148,7 @@ func (a *App) initGraphQL() {
 			if cur := a.AgentRegistry.GetAgent(); cur != nil {
 				name := reloaded.Agent.Name
 				if name == "" {
-					name = "OpenLobster"
+					name = "MyPal"
 				}
 				updated := *cur
 				updated.Name = name

@@ -11,18 +11,18 @@ import (
 	"github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/logging"
 )
 
-// initConfig loads openlobster.yaml, validates it, creates required
+// initConfig loads mypal.yaml, validates it, creates required
 // subdirectories under BaseDir (data/, logs/, workspace/) and initialises
 // the logger.
 //
 // Priority for base_dir (highest to lowest):
 //  1. --data-dir CLI flag
-//  2. OPENLOBSTER_BASE_DIR environment variable  (handled by viper AutomaticEnv)
-//  3. base_dir key in openlobster.yaml
-//  4. Default: $HOME/.openlobster  (set in config.setDefaults)
+//  2. MYPAL_BASE_DIR environment variable  (handled by viper AutomaticEnv)
+//  3. base_dir key in mypal.yaml
+//  4. Default: $HOME/.mypal  (set in config.setDefaults)
 //
 // Priority for host/port follows the same pattern via existing
-// OPENLOBSTER_GRAPHQL_HOST / OPENLOBSTER_GRAPHQL_PORT env vars and
+// MYPAL_GRAPHQL_HOST / MYPAL_GRAPHQL_PORT env vars and
 // --host / --port CLI flags.
 func (a *App) initConfig() {
 	// CLI flags have highest priority: inject into viper before Load so they
@@ -46,7 +46,7 @@ func (a *App) initConfig() {
 		if err != nil {
 			log.Fatalf("failed to resolve home directory: %v", err)
 		}
-		baseDir = filepath.Join(home, ".openlobster")
+		baseDir = filepath.Join(home, ".mypal")
 	}
 	if err := os.MkdirAll(baseDir, 0o755); err != nil {
 		log.Fatalf("failed to create base directory %s: %v", baseDir, err)
@@ -55,8 +55,8 @@ func (a *App) initConfig() {
 		log.Fatalf("failed to set working directory to %s: %v", baseDir, err)
 	}
 
-	a.CfgPath = "openlobster.yaml"
-	if v := os.Getenv("OPENLOBSTER_CONFIG"); v != "" {
+	a.CfgPath = "mypal.yaml"
+	if v := os.Getenv("MYPAL_CONFIG"); v != "" {
 		a.CfgPath = v
 	}
 	abs, err := filepath.Abs(a.CfgPath)
@@ -81,7 +81,7 @@ func (a *App) initConfig() {
 		}
 	}
 
-	logFile := filepath.Join(cfg.Logging.Path, "openlobster.log")
+	logFile := filepath.Join(cfg.Logging.Path, "mypal.log")
 	if err := logging.Init(logFile, cfg.Logging.Level); err != nil {
 		log.Fatalf("failed to initialize logger: %v", err)
 	}
@@ -134,7 +134,7 @@ func (a *App) initWorkspace() {
 const agentsMD = `# AGENTS.md - Behavioral Guidelines
 
 ## Overview
-You are an autonomous messaging agent running on the OpenLobster platform.
+You are an autonomous messaging agent running on the MyPal platform.
 
 ## Workflow
 1. Receive incoming messages from configured channels (Telegram, Discord, etc.)
@@ -183,7 +183,7 @@ Always rewrite the full file content — append the changed section and keep the
 const soulMD = `# SOUL.md - Personality & Values
 
 ## Identity
-You are openlobster, an autonomous messaging agent designed to assist users with their daily tasks.
+You are mypal, an autonomous messaging agent designed to assist users with their daily tasks.
 
 ## Core Values
 - **Helpfulness**: Always strive to be useful and assistance-oriented

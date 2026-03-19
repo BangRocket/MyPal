@@ -1,4 +1,4 @@
-// Package serve wires all openlobster components and manages the
+// Package serve wires all mypal components and manages the
 // application lifecycle. Called from the "serve" subcommand.
 package serve
 

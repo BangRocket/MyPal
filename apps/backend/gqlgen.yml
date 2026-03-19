@@ -1,4 +1,4 @@
-# gqlgen configuration for OpenLobster GraphQL API
+# gqlgen configuration for MyPal GraphQL API
 # See https://gqlgen.com/config/ for documentation.
 #
 # skip_validation: allow regen when code does not compile yet (e.g. schema changed

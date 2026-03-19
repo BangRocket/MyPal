@@ -8,7 +8,7 @@ export default defineConfig({
   },
   build: {
     // Output to the Go embed directory so `go build` bundles the frontend.
-    outDir: "../../apps/backend/cmd/openlobster/public/assets",
+    outDir: "../../apps/backend/cmd/mypal/public/assets",
     emptyOutDir: true,
     assetsDir: ".",
     rollupOptions: {

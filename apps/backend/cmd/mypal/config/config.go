@@ -2,11 +2,11 @@
 //
 // Usage:
 //
-//	openlobster config get <key> [<key> ...]
-//	openlobster config set <key> <value> [<key> <value> ...]
+//	mypal config get <key> [<key> ...]
+//	mypal config set <key> <value> [<key> <value> ...]
 //
-// The config file path is resolved from $OPENLOBSTER_CONFIG or the default
-// data/openlobster.yaml. Both encrypted (OLENC1 prefix) and plain YAML files
+// The config file path is resolved from $MYPAL_CONFIG or the default
+// data/mypal.yaml. Both encrypted (OLENC1 prefix) and plain YAML files
 // are supported transparently.
 //
 // # License
@@ -31,11 +31,11 @@ func Command() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "config",
 		Short: "Read or write configuration keys (encryption-aware)",
-		Long: `Read or write keys in the OpenLobster YAML config file.
+		Long: `Read or write keys in the MyPal YAML config file.
 Both plain and encrypted (OLENC1 prefix) files are supported transparently.`,
 	}
 
-	cmd.PersistentFlags().StringVar(&cfgPath, "config", defaultCfgPath(), "path to openlobster.yaml")
+	cmd.PersistentFlags().StringVar(&cfgPath, "config", defaultCfgPath(), "path to mypal.yaml")
 
 	cmd.AddCommand(
 		&cobra.Command{
@@ -120,8 +120,8 @@ func loadViper(cfgPath string) *viper.Viper {
 }
 
 func defaultCfgPath() string {
-	if v := os.Getenv("OPENLOBSTER_CONFIG"); v != "" {
+	if v := os.Getenv("MYPAL_CONFIG"); v != "" {
 		return v
 	}
-	return "data/openlobster.yaml"
+	return "data/mypal.yaml"
 }

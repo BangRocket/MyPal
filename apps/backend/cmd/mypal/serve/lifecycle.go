@@ -68,7 +68,7 @@ func (a *App) startAndWait() {
 	sig := make(chan os.Signal, 1)
 	signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
 
-	log.Printf("openlobster listening on http://%s", addr)
+	log.Printf("mypal listening on http://%s", addr)
 	go func() {
 		if err := a.HTTPServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("http server error: %v", err)

@@ -270,7 +270,7 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-**/cmd/openlobster/public/assets
+**/cmd/mypal/public/assets
 
 # End of https://www.toptal.com/developers/gitignore/api/node,visualstudiocode,linux,macos,windows,go,react
 

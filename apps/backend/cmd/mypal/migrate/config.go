@@ -9,7 +9,7 @@ import (
 )
 
 // migrateConfig sends an updateConfig mutation with every field found in the
-// OpenClaw config that has a known OpenLobster equivalent.
+// OpenClaw config that has a known MyPal equivalent.
 func migrateConfig(cfg viperReader, c *gqlClient) error {
 	input := map[string]any{}
 
@@ -101,7 +101,7 @@ func migrateConfig(cfg viperReader, c *gqlClient) error {
 	// Mark setup wizard as completed — migration constitutes setup.
 	input["wizardCompleted"] = true
 
-	// Channel field mappings: OpenClaw key → OpenLobster GraphQL input field.
+	// Channel field mappings: OpenClaw key → MyPal GraphQL input field.
 	type fieldMap struct{ src, dst string }
 	channelFields := []fieldMap{
 		// Telegram
@@ -178,7 +178,7 @@ func migrateConfig(cfg viperReader, c *gqlClient) error {
 	return nil
 }
 
-// detectProvider infers the OpenLobster provider name from an OpenClaw model string.
+// detectProvider infers the MyPal provider name from an OpenClaw model string.
 func detectProvider(model string) (provider, modelID string) {
 	lower := strings.ToLower(model)
 	switch {
@@ -188,7 +188,7 @@ func detectProvider(model string) (provider, modelID string) {
 		strings.HasPrefix(lower, "o1"), strings.HasPrefix(lower, "o3"), strings.HasPrefix(lower, "o4"):
 		return "openai", model
 	case strings.HasPrefix(lower, "gemini-"):
-		return "openai", model // OpenLobster uses openai-compatible endpoint for Gemini
+		return "openai", model // MyPal uses openai-compatible endpoint for Gemini
 	default:
 		return "", model
 	}

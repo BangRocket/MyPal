@@ -34,9 +34,9 @@ func Command(version string, publicFS fs.FS) *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&host, "host", "", "IP address to bind (overrides config and OPENLOBSTER_HOST)")
-	cmd.Flags().IntVar(&port, "port", 0, "TCP port to listen on (overrides config and OPENLOBSTER_PORT)")
-	cmd.Flags().StringVar(&dataDir, "data-dir", "", "Base data directory (overrides config and OPENLOBSTER_DATA_DIR)")
+	cmd.Flags().StringVar(&host, "host", "", "IP address to bind (overrides config and MYPAL_HOST)")
+	cmd.Flags().IntVar(&port, "port", 0, "TCP port to listen on (overrides config and MYPAL_PORT)")
+	cmd.Flags().StringVar(&dataDir, "data-dir", "", "Base data directory (overrides config and MYPAL_DATA_DIR)")
 
 	return cmd
 }
