@@ -57,6 +57,7 @@ type InternalTools struct {
 	Conversations       ConversationService
 	Skills              SkillsService
 	Heartbeat           HeartbeatService
+	Sandbox             SandboxService
 	// ConfigPath is the absolute path to the application configuration file.
 	// Terminal tools use this to deny any command that references that file.
 	ConfigPath string
@@ -125,6 +126,15 @@ type HeartbeatService interface {
 	BotComplete(ctx context.Context, id string, reason string) error
 	BotSnooze(ctx context.Context, id string, until time.Time, reason string) error
 	Cancel(ctx context.Context, id string) error
+}
+
+// SandboxService abstracts sandbox lifecycle management for the LLM tools.
+type SandboxService interface {
+	RunOnce(ctx context.Context, userID, image, cmd string) (*ports.SandboxResult, error)
+	CreateSandbox(ctx context.Context, userID string, cfg ports.SandboxConfig) (*ports.SandboxInstance, error)
+	Execute(ctx context.Context, sandboxID string, cmd ports.SandboxCommand) (*ports.SandboxResult, error)
+	ListUserSandboxes(ctx context.Context, userID string) ([]ports.SandboxInstance, error)
+	DestroySandbox(ctx context.Context, id string) error
 }
 
 // HeartbeatCreateParams carries the fields needed by the heartbeat_create tool.
@@ -1786,7 +1796,10 @@ func CapabilityForTool(name string) string {
 		"set_user_property": "memory", "edit_memory_node": "memory",
 		"delete_memory_node": "memory",
 		"add_relation":       "memory", "delete_relation": "memory", "update_relation": "memory",
-		"subagent_spawn": "subagents",
+		"sandbox_execute": "sandbox", "sandbox_create": "sandbox",
+		"sandbox_run": "sandbox", "sandbox_list": "sandbox",
+		"sandbox_destroy": "sandbox",
+		"subagent_spawn":  "subagents",
 		"read_file":      "filesystem", "write_file": "filesystem",
 		"edit_file": "filesystem", "list_content": "filesystem",
 		"list_conversations": "sessions", "get_conversation_messages": "sessions",
@@ -1847,6 +1860,13 @@ func RegisterAllInternalTools(reg *ToolRegistry, tools InternalTools) {
 	if tools.Skills != nil {
 		reg.RegisterInternal("load_skill", &LoadSkillTool{Tools: tools})
 		reg.RegisterInternal("read_skill_file", &ReadSkillFileTool{Tools: tools})
+	}
+	if tools.Sandbox != nil {
+		reg.RegisterInternal("sandbox_execute", &SandboxExecuteTool{Tools: tools})
+		reg.RegisterInternal("sandbox_create", &SandboxCreateTool{Tools: tools})
+		reg.RegisterInternal("sandbox_run", &SandboxRunTool{Tools: tools})
+		reg.RegisterInternal("sandbox_list", &SandboxListTool{Tools: tools})
+		reg.RegisterInternal("sandbox_destroy", &SandboxDestroyTool{Tools: tools})
 	}
 	if tools.Heartbeat != nil {
 		reg.RegisterInternal("heartbeat_create", &HeartbeatCreateTool{Tools: tools})
