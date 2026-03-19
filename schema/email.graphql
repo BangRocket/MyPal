@@ -1,0 +1,19 @@
+# ─── Email Channel Config ────────────────────────────────────────────────────
+
+type EmailChannelConfig {
+  enabled: Boolean!
+  imapHost: String!
+  imapPort: Int!
+  imapUser: String!
+  imapTls: Boolean!
+  smtpHost: String!
+  smtpPort: Int!
+  smtpFrom: String!
+  smtpTls: Boolean!
+  pollInterval: Int!
+  processedLabel: String!
+}
+
+extend type Query {
+  emailConfig: EmailChannelConfig!
+}
