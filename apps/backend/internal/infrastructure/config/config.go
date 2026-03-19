@@ -204,6 +204,16 @@ func (c *Config) Validate() error {
 		}
 	}
 
+	// Sandbox: when enabled, backend must be "docker" or "incus".
+	if c.Sandbox.Enabled {
+		switch c.Sandbox.Backend {
+		case "docker", "incus":
+			// valid
+		default:
+			errs = append(errs, fmt.Sprintf("sandbox.backend %q is not supported; use \"docker\" or \"incus\"", c.Sandbox.Backend))
+		}
+	}
+
 	// Email channel: when enabled, require IMAP and SMTP credentials.
 	if c.Channels.Email.Enabled {
 		if isPlaceholder(c.Channels.Email.IMAPHost) {
@@ -271,6 +281,7 @@ type Config struct {
 	Workspace   WorkspaceConfig   `mapstructure:"workspace"`
 	Wizard      WizardConfig      `mapstructure:"wizard"`
 	ModelTiers  ModelTiersConfig  `mapstructure:"model_tiers"`
+	Sandbox     SandboxConfig     `mapstructure:"sandbox"`
 }
 
 
@@ -512,6 +523,19 @@ type WorkspaceConfig struct {
 	Path string `mapstructure:"path"`
 }
 
+// SandboxConfig holds code-execution sandbox settings.
+type SandboxConfig struct {
+	Enabled     bool    `mapstructure:"enabled"`
+	Backend     string  `mapstructure:"backend"`      // "docker" or "incus"
+	PoolSize    int     `mapstructure:"pool_size"`     // pre-warmed containers
+	Timeout     int     `mapstructure:"timeout"`       // seconds, default 300
+	MemDefault  int64   `mapstructure:"mem_default"`   // bytes, default 268435456 (256MB)
+	CPUDefault  float64 `mapstructure:"cpu_default"`   // cores, default 1.0
+	NetDefault  string  `mapstructure:"net_default"`   // "none", "restricted", "full"
+	DockerHost  string  `mapstructure:"docker_host"`   // e.g., "unix:///var/run/docker.sock"
+	IncusSocket string  `mapstructure:"incus_socket"`  // e.g., "/var/lib/incus/unix.socket"
+}
+
 func setDefaults() {
 	home, _ := os.UserHomeDir()
 	viper.SetDefault("base_dir", filepath.Join(home, ".mypal"))
@@ -599,6 +623,13 @@ func setDefaults() {
 	viper.SetDefault("agent.capabilities.sessions", true)
 	viper.SetDefault("wizard.completed", false)
 	viper.SetDefault("model_tiers.enabled", false)
+	viper.SetDefault("sandbox.enabled", false)
+	viper.SetDefault("sandbox.backend", "docker")
+	viper.SetDefault("sandbox.pool_size", 2)
+	viper.SetDefault("sandbox.timeout", 300)
+	viper.SetDefault("sandbox.mem_default", 268435456)
+	viper.SetDefault("sandbox.cpu_default", 1.0)
+	viper.SetDefault("sandbox.net_default", "none")
 }
 
 // bootstrapEncryptedConfig creates a default config at path if the file does not exist.
