@@ -212,3 +212,22 @@ type Group struct {
 	Name            string
 	CreatedAt       int64
 }
+
+// PersonalityRepositoryPort manages personality configurations.
+type PersonalityRepositoryPort interface {
+	Create(ctx context.Context, p *models.PersonalityModel) error
+	GetByID(ctx context.Context, id string) (*models.PersonalityModel, error)
+	GetDefault(ctx context.Context) (*models.PersonalityModel, error)
+	List(ctx context.Context) ([]models.PersonalityModel, error)
+	Update(ctx context.Context, p *models.PersonalityModel) error
+	Delete(ctx context.Context, id string) error
+	SetDefault(ctx context.Context, id string) error // unset all other defaults, set this one
+}
+
+// UserPersonaRelationshipRepositoryPort manages per-user familiarity with personalities.
+type UserPersonaRelationshipRepositoryPort interface {
+	GetOrCreate(ctx context.Context, userID, personalityID string) (*models.UserPersonaRelationshipModel, error)
+	Update(ctx context.Context, r *models.UserPersonaRelationshipModel) error
+	GetByUser(ctx context.Context, userID string) ([]models.UserPersonaRelationshipModel, error)
+	IncrementInteraction(ctx context.Context, userID, personalityID string) error
+}
