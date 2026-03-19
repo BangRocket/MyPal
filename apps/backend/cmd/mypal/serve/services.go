@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"path/filepath"
+	"time"
 
 	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/subscriptions"
 	appcontext "github.com/BangRocket/MyPal/apps/backend/internal/domain/context"
@@ -16,6 +17,8 @@ import (
 	inframc "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/mcp"
 	browser "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/browser/chromedp"
 	"github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/filesystem"
+	dockerbackend "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/sandbox/docker"
+	incusbackend "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/sandbox/incus"
 	aifactory "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/ai/factory"
 	memfile "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/memory/file"
 	memneo4j "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/memory/neo4j"
@@ -24,6 +27,7 @@ import (
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/models"
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
 	heartbeatsvc "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/heartbeat"
+	sandboxsvc "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/sandbox"
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/services/modeltier"
 	organicsvc "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/organic"
 	personalitysvc "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/personality"
@@ -111,6 +115,41 @@ func (a *App) initServices() {
 	// the message handler is ready, so we pass nil here and set it later.
 	a.HeartbeatSvc = heartbeatsvc.NewService(a.HeartbeatRepo, nil, 0)
 
+	// Sandbox manager (optional, behind cfg.Sandbox.Enabled)
+	var sandboxAdapter *inframc.SandboxAdapter
+	if cfg.Sandbox.Enabled {
+		var backend ports.SandboxBackend
+		switch cfg.Sandbox.Backend {
+		case "incus":
+			backend = incusbackend.NewBackend(cfg.Sandbox.IncusSocket)
+			log.Println("sandbox backend: incus")
+		default: // "docker" or unset
+			backend = dockerbackend.NewBackend(cfg.Sandbox.DockerHost)
+			log.Println("sandbox backend: docker")
+		}
+
+		timeout := time.Duration(cfg.Sandbox.Timeout) * time.Second
+		if timeout == 0 {
+			timeout = 300 * time.Second
+		}
+		memDefault := cfg.Sandbox.MemDefault
+		if memDefault == 0 {
+			memDefault = 268435456 // 256 MB
+		}
+		cpuDefault := cfg.Sandbox.CPUDefault
+		if cpuDefault == 0 {
+			cpuDefault = 1.0
+		}
+		netDefault := cfg.Sandbox.NetDefault
+		if netDefault == "" {
+			netDefault = "none"
+		}
+
+		a.SandboxMgr = sandboxsvc.NewManager(backend, timeout, memDefault, cpuDefault, netDefault, cfg.Sandbox.PoolSize)
+		sandboxAdapter = &inframc.SandboxAdapter{Mgr: a.SandboxMgr}
+		log.Printf("sandbox: enabled (pool_size=%d, timeout=%s)", cfg.Sandbox.PoolSize, timeout)
+	}
+
 	// Register all internal tools
 	mcp.RegisterAllInternalTools(a.ToolRegistry, mcp.InternalTools{
 		Messaging:           &inframc.MessagingAdapter{Port: a.MsgRouter},
@@ -136,6 +175,7 @@ func (a *App) initServices() {
 		Conversations: &inframc.ConversationAdapter{ConvRepo: a.ConvRepo, MsgRepo: a.MessageRepo},
 		Skills:        a.SkillsAdapter,
 		Heartbeat:     &inframc.HeartbeatAdapter{Svc: a.HeartbeatSvc},
+		Sandbox:       sandboxAdapter,
 		ConfigPath:    a.CfgPath,
 		SchedulerNotify: func() {
 			if a.SchedulerNotify != nil {

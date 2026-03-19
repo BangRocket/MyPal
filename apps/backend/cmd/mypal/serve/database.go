@@ -41,6 +41,7 @@ func (a *App) initDatabase() {
 	a.PersonalityRepo = personalityrepo.NewPersonalityRepository(gormDB)
 	a.RelationshipRepo = personalityrepo.NewRelationshipRepository(gormDB)
 	a.HeartbeatRepo = heartbeatrepo.NewHeartbeatRepository(gormDB)
+	a.SandboxRepo = repositories.NewSandboxRepository(gormDB)
 }
 
 // loadPermissions loads tool-permission overrides from config and DB into permManager.

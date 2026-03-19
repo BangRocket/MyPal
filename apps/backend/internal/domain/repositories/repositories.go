@@ -11,6 +11,7 @@ import (
 	heartbeatPkg "github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories/heartbeat"
 	mcpServerPkg "github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories/mcp_server"
 	organicPkg "github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories/organic"
+	sandboxPkg "github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories/sandbox"
 	messagePkg "github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories/message"
 	pairingPkg "github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories/pairing"
 	sessionPkg "github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories/session"
@@ -37,6 +38,7 @@ var (
 	NewOrganicResponseConfigRepository = organicPkg.NewOrganicResponseConfigRepository
 	NewDashboardTaskRepository    = taskPkg.NewDashboardTaskRepository
 	NewHeartbeatRepository        = heartbeatPkg.NewHeartbeatRepository
+	NewSandboxRepository          = sandboxPkg.NewSandboxRepository
 )
 
 // Type aliases for types defined in subpackages.

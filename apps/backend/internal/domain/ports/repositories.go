@@ -243,6 +243,16 @@ type HeartbeatRepositoryPort interface {
 	GetLogs(ctx context.Context, itemID string, limit int) ([]models.HeartbeatLogModel, error)
 }
 
+// SandboxRepositoryPort manages sandbox instance persistence.
+type SandboxRepositoryPort interface {
+	Create(ctx context.Context, instance *models.SandboxInstanceModel) error
+	GetByID(ctx context.Context, id string) (*models.SandboxInstanceModel, error)
+	List(ctx context.Context) ([]models.SandboxInstanceModel, error)
+	ListByUser(ctx context.Context, userID string) ([]models.SandboxInstanceModel, error)
+	UpdateStatus(ctx context.Context, id, status string) error
+	Delete(ctx context.Context, id string) error
+}
+
 // UserPersonaRelationshipRepositoryPort manages per-user familiarity with personalities.
 type UserPersonaRelationshipRepositoryPort interface {
 	GetOrCreate(ctx context.Context, userID, personalityID string) (*models.UserPersonaRelationshipModel, error)
