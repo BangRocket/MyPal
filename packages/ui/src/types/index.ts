@@ -301,3 +301,43 @@ export interface McpUser {
   /** True for the reserved loopback/agent system user. */
   isAgent?: boolean;
 }
+
+// ─── Personalities ──────────────────────────────────────────────────────────
+
+/** An agent personality that defines tone, traits, and behavior. */
+export interface Personality {
+  id: string;
+  name: string;
+  basePrompt: string;
+  traits: string[];
+  tone: string;
+  boundaries: string[];
+  quirks: string[];
+  /** JSON-encoded map of channel -> adaptation text, or null. */
+  adaptations: string | null;
+  isDefault: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/** Input for creating or updating a personality. */
+export interface PersonalityInput {
+  name: string;
+  basePrompt: string;
+  traits?: string[];
+  tone?: string;
+  boundaries?: string[];
+  quirks?: string[];
+  adaptations?: string;
+  isDefault?: boolean;
+}
+
+/** A relationship between a user and the agent's personality. */
+export interface UserRelationship {
+  userId: string;
+  personalityId: string;
+  familiarity: number;
+  preferences: string | null;
+  interactionCount: number;
+  lastInteraction: string | null;
+}

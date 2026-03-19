@@ -21,3 +21,4 @@ export { useSkills } from "./useSkills";
 export { useConfig } from "./useConfig";
 export { useSystemFiles } from "./useSystemFiles";
 export { useMcpUsers, useToolPermissions } from "./usePermissions";
+export { usePersonalities } from "./usePersonalities";

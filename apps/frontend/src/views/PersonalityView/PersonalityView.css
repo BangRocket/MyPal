@@ -1,0 +1,293 @@
+/* Copyright (c) MyPal contributors. See LICENSE for details. */
+
+/* ── Page layout ─────────────────────────────────────────────── */
+
+.personality-view {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ── Header ──────────────────────────────────────────────────── */
+
+.personality-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 16px;
+}
+
+.personality-header h1 {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  margin: 0;
+}
+
+.personality-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ── Cards grid ──────────────────────────────────────────────── */
+
+.personality-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.personality-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  transition: border-color var(--duration-micro) var(--ease-out);
+  cursor: pointer;
+}
+
+.personality-card:hover {
+  border-color: var(--color-accent);
+}
+
+.personality-card--default {
+  border-color: var(--color-accent);
+}
+
+.personality-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.personality-card__name {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.personality-card__badges {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.personality-card__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: var(--weight-medium);
+  border-radius: var(--radius-sm);
+  background: var(--color-accent);
+  color: var(--color-toggle-knob);
+}
+
+.personality-card__tone {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+.personality-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.personality-card__tag {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  background: var(--color-bg-elevated);
+  border-radius: var(--radius-sm);
+}
+
+.personality-card__actions {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 8px;
+  border-top: 1px solid var(--color-border);
+}
+
+.personality-card__btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 28px;
+  padding: 0 10px;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  font-family: var(--font-sans);
+  color: var(--color-text-secondary);
+  background: var(--color-bg-elevated);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background var(--duration-micro) var(--ease-out);
+}
+
+.personality-card__btn:hover {
+  background: var(--color-bg-selected);
+  color: var(--color-text-primary);
+}
+
+.personality-card__btn--danger:hover {
+  color: var(--color-error);
+}
+
+.personality-card__btn .material-symbols-outlined {
+  font-size: 14px;
+  font-variation-settings: 'FILL' 0, 'wght' 400;
+}
+
+/* ── Empty state ─────────────────────────────────────────────── */
+
+.personality-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 24px;
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+.personality-empty__icon {
+  font-size: 48px;
+  opacity: 0.35;
+  font-variation-settings: 'FILL' 0, 'wght' 300;
+  margin-bottom: 8px;
+}
+
+.personality-empty__text {
+  font-size: var(--text-sm);
+  margin: 0;
+}
+
+/* ── Form (inside modal) ─────────────────────────────────────── */
+
+.personality-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.personality-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.personality-form__label {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-text-muted);
+}
+
+.personality-form__input {
+  height: 36px;
+  padding: 0 12px;
+  background: var(--color-bg-sunken);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  outline: none;
+}
+
+.personality-form__input:focus {
+  border-color: var(--color-accent);
+}
+
+.personality-form__textarea {
+  min-height: 100px;
+  padding: 10px 12px;
+  background: var(--color-bg-sunken);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-primary);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  resize: vertical;
+  outline: none;
+}
+
+.personality-form__textarea:focus {
+  border-color: var(--color-accent);
+}
+
+.personality-form__hint {
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+.personality-form__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 8px;
+}
+
+.personality-form__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 16px;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background var(--duration-micro) var(--ease-out);
+}
+
+.personality-form__btn--primary {
+  background: var(--color-accent);
+  color: var(--color-toggle-knob);
+  border: none;
+}
+
+.personality-form__btn--primary:hover {
+  opacity: 0.9;
+}
+
+.personality-form__btn--secondary {
+  background: var(--color-bg-elevated);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+}
+
+.personality-form__btn--secondary:hover {
+  background: var(--color-bg-selected);
+}
+
+/* ── Message bar ─────────────────────────────────────────────── */
+
+.personality-message {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+}
+
+.personality-message--success {
+  color: var(--color-success);
+}
+
+.personality-message--error {
+  color: var(--color-error);
+}

@@ -228,6 +228,42 @@ export const UPDATE_CONFIG_MUTATION = /* GraphQL */ `
 
 // ─── System Files ─────────────────────────────────────────────────────────────
 
+// ─── Personalities ────────────────────────────────────────────────────────────
+
+export const CREATE_PERSONALITY_MUTATION = /* GraphQL */ `
+  mutation CreatePersonality($input: PersonalityInput!) {
+    createPersonality(input: $input) {
+      id
+      name
+      isDefault
+    }
+  }
+`;
+
+export const UPDATE_PERSONALITY_MUTATION = /* GraphQL */ `
+  mutation UpdatePersonality($id: String!, $input: PersonalityInput!) {
+    updatePersonality(id: $id, input: $input) {
+      id
+      name
+      isDefault
+    }
+  }
+`;
+
+export const DELETE_PERSONALITY_MUTATION = /* GraphQL */ `
+  mutation DeletePersonality($id: String!) {
+    deletePersonality(id: $id)
+  }
+`;
+
+export const SET_DEFAULT_PERSONALITY_MUTATION = /* GraphQL */ `
+  mutation SetDefaultPersonality($id: String!) {
+    setDefaultPersonality(id: $id)
+  }
+`;
+
+// ─── System Files ─────────────────────────────────────────────────────────────
+
 export const WRITE_SYSTEM_FILE_MUTATION = /* GraphQL */ `
   mutation WriteSystemFile($name: String!, $content: String!) {
     writeSystemFile(name: $name, content: $content) {

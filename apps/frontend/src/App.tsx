@@ -16,6 +16,7 @@ const McpsView = lazy(() => import("./views/McpsView/McpsView"));
 const SkillsView = lazy(() => import("./views/SkillsView/SkillsView"));
 const SettingsView = lazy(() => import("./views/SettingsView/SettingsView"));
 const ModelTiersView = lazy(() => import("./views/ModelTiersView/ModelTiersView"));
+const PersonalityView = lazy(() => import("./views/PersonalityView/PersonalityView"));
 const Error404 = lazy(() => import("./views/ErrorView/ErrorView").then((m) => ({ default: m.Error404 })));
 import AuthModals from "./components/AuthModals";
 import BrowserCheck from "./components/BrowserCheck";
@@ -152,6 +153,7 @@ const Root: Component = () => {
                   <Route path="/skills" component={SkillsView} />
                   <Route path="/settings" component={SettingsView} />
                   <Route path="/settings/model-tiers" component={ModelTiersView} />
+                  <Route path="/personalities" component={PersonalityView} />
                   <Route path="*" component={Error404} />
                 </Suspense>
               </Router>
