@@ -2,7 +2,7 @@ package terminal
 
 import "strings"
 
-const openLobsterPrefix = "MYPAL_"
+const mypalPrefix = "MYPAL_"
 
 // FilterMyPalFromEnv returns a copy of env with all MYPAL_*
 // variables removed. Used when spawning subprocesses (terminal_exec,
@@ -13,7 +13,7 @@ func FilterMyPalFromEnv(env []string) []string {
 	out := make([]string, 0, len(env))
 	for _, e := range env {
 		if idx := strings.IndexByte(e, '='); idx > 0 {
-			if !strings.HasPrefix(strings.ToUpper(e[:idx]), openLobsterPrefix) {
+			if !strings.HasPrefix(strings.ToUpper(e[:idx]), mypalPrefix) {
 				out = append(out, e)
 			}
 		} else {
