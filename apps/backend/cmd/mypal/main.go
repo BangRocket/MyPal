@@ -24,6 +24,7 @@ import (
 	cmdconfig "github.com/BangRocket/MyPal/apps/backend/cmd/mypal/config"
 	cmddaemon "github.com/BangRocket/MyPal/apps/backend/cmd/mypal/daemon"
 	cmdmigrate "github.com/BangRocket/MyPal/apps/backend/cmd/mypal/migrate"
+	cmdmigratememory "github.com/BangRocket/MyPal/apps/backend/cmd/mypal/migrate_memory"
 	cmdserve "github.com/BangRocket/MyPal/apps/backend/cmd/mypal/serve"
 	cmdversion "github.com/BangRocket/MyPal/apps/backend/cmd/mypal/version"
 )
@@ -57,6 +58,7 @@ func main() {
 		cmdconfig.Command(),
 		cmddaemon.Command(),
 		cmdmigrate.Command(),
+		cmdmigratememory.Command(),
 		cmdserve.Command(version, public),
 		cmdversion.Command(version),
 	)
