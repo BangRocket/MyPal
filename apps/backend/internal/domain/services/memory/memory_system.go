@@ -3,6 +3,7 @@ package memory
 import (
 	"context"
 	"fmt"
+	"log"
 	"regexp"
 	"sort"
 	"strings"
@@ -48,6 +49,7 @@ func NewMemorySystem(vector *VectorMemory, graph ports.GraphBackend) *MemorySyst
 // Remember stores content in vector memory and, when a graph backend is
 // available, creates a "memory" entity linked to the user entity.
 func (m *MemorySystem) Remember(ctx context.Context, userID, content string, metadata map[string]any) error {
+	log.Printf("memory: remembering for user %s — vector=%v graph=%v", userID, m.Vector != nil, m.Graph != nil)
 	// Always store in vector memory.
 	if err := m.Vector.Remember(ctx, userID, content, metadata); err != nil {
 		return fmt.Errorf("memory system: vector remember: %w", err)
@@ -126,6 +128,12 @@ func (m *MemorySystem) Remember(ctx context.Context, userID, content string, met
 // Recall searches vector memory and optionally graph memory, merges and
 // deduplicates results, and returns them sorted by score descending.
 func (m *MemorySystem) Recall(ctx context.Context, userID, query string, topK int) ([]Memory, error) {
+	q := query
+	if len(q) > 50 {
+		q = q[:50] + "..."
+	}
+	log.Printf("memory: recalling for user %s query=%q", userID, q)
+
 	if topK <= 0 {
 		topK = 10
 	}
@@ -183,6 +191,7 @@ func (m *MemorySystem) Recall(ctx context.Context, userID, query string, topK in
 		memories = memories[:topK]
 	}
 
+	log.Printf("memory: recall returned %d results", len(memories))
 	return memories, nil
 }
 
@@ -190,6 +199,7 @@ func (m *MemorySystem) Recall(ctx context.Context, userID, query string, topK in
 // Each piece of profile data is stored as both a graph entity and a vector
 // memory entry for semantic search.
 func (m *MemorySystem) Bootstrap(ctx context.Context, userID string, profile UserProfile) error {
+	log.Printf("memory: bootstrapping user %s with %d interests, %d projects", userID, len(profile.Interests), len(profile.Projects))
 	if m.Graph == nil {
 		return nil
 	}
@@ -335,6 +345,7 @@ func (m *MemorySystem) Bootstrap(ctx context.Context, userID string, profile Use
 
 // Forget removes all vector memories and graph entities for the given user.
 func (m *MemorySystem) Forget(ctx context.Context, userID string) error {
+	log.Printf("memory: forgetting all memories for user %s", userID)
 	// Delete all vector memories for user.
 	if err := m.Vector.ForgetAll(ctx, userID); err != nil {
 		return fmt.Errorf("memory system: forget vector memories: %w", err)

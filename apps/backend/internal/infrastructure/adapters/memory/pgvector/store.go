@@ -6,6 +6,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
 	"strings"
 
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
@@ -27,6 +28,7 @@ func NewStore(db *gorm.DB) *Store {
 // Init creates the pgvector extension and the memory_vectors table. It is
 // idempotent and safe to call on every application startup.
 func (s *Store) Init(ctx context.Context, dimensions int) error {
+	log.Printf("pgvector: initializing table (dims=%d)", dimensions)
 	// Guard: pgvector only works on PostgreSQL.
 	if !isPostgres(s.db) {
 		return fmt.Errorf("pgvector: vector memory requires PostgreSQL (current driver: %s)", s.db.Dialector.Name())
@@ -59,6 +61,7 @@ func (s *Store) Init(ctx context.Context, dimensions int) error {
 
 // Upsert inserts a new vector entry or updates an existing one (matched by id).
 func (s *Store) Upsert(ctx context.Context, id, userID, content string, vector []float64, metadata map[string]any) error {
+	log.Printf("pgvector: upsert id=%s user=%s", id, userID)
 	metaJSON, err := json.Marshal(metadata)
 	if err != nil {
 		return fmt.Errorf("pgvector: marshal metadata: %w", err)
@@ -80,6 +83,7 @@ func (s *Store) Upsert(ctx context.Context, id, userID, content string, vector [
 // Search returns the top-K most similar entries for the given user, ordered by
 // descending cosine similarity (score = 1 - cosine distance).
 func (s *Store) Search(ctx context.Context, vector []float64, userID string, topK int) ([]ports.VectorResult, error) {
+	log.Printf("pgvector: search top_k=%d user=%s", topK, userID)
 	if topK <= 0 {
 		topK = 10
 	}
@@ -115,6 +119,7 @@ func (s *Store) Search(ctx context.Context, vector []float64, userID string, top
 	if err := rows.Err(); err != nil {
 		return nil, fmt.Errorf("pgvector: search rows: %w", err)
 	}
+	log.Printf("pgvector: returned %d rows", len(results))
 	return results, nil
 }
 

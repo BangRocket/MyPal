@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 )
 
@@ -59,6 +60,7 @@ type embeddingResponse struct {
 
 // Embed returns the embedding vector for a single text input.
 func (p *Provider) Embed(ctx context.Context, text string) ([]float64, error) {
+	log.Printf("embedding: ollama embed request (%d chars, model=%s)", len(text), p.model)
 	body, err := json.Marshal(embeddingRequest{
 		Model:  p.model,
 		Prompt: text,
@@ -104,6 +106,7 @@ func (p *Provider) Embed(ctx context.Context, text string) ([]float64, error) {
 // EmbedBatch returns embedding vectors for multiple text inputs. Ollama does
 // not support batch embeddings, so each text is embedded sequentially.
 func (p *Provider) EmbedBatch(ctx context.Context, texts []string) ([][]float64, error) {
+	log.Printf("embedding: ollama batch embed %d items (model=%s)", len(texts), p.model)
 	if len(texts) == 0 {
 		return nil, nil
 	}

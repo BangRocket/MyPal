@@ -3,6 +3,7 @@ package context
 import (
 	"context"
 	"fmt"
+	"log"
 	"os"
 	"strings"
 
@@ -91,6 +92,7 @@ func (c *contextInjector) SetGraphBackend(gb ports.GraphBackend) {
 }
 
 func (c *contextInjector) BuildContext(ctx context.Context, userID string, sessionID string) (*AgentLLMContext, error) {
+	log.Printf("context: building context for user %s", userID)
 	agentCtx := &AgentLLMContext{AgentName: c.agentName}
 
 	var err error
@@ -115,13 +117,23 @@ func (c *contextInjector) BuildContext(ctx context.Context, userID string, sessi
 		return nil, fmt.Errorf("failed to load memory file: %w", err)
 	}
 
+	promptCount := 0
+	for _, s := range []string{agentCtx.AgentsMD, agentCtx.SoulMD, agentCtx.IdentityMD, agentCtx.BootstrapMD, agentCtx.MemoryMD} {
+		if s != "" {
+			promptCount++
+		}
+	}
+	log.Printf("context: loaded %d system prompt files", promptCount)
+
 	agentCtx.MCPs = c.getMCPs()
 	agentCtx.Tools = c.getTools()
+	log.Printf("context: %d tools available for agent", len(agentCtx.Tools))
 
 	if userID != "" {
 		memoryDigest, err := c.getMemoryDigest(ctx, userID)
 		if err == nil && memoryDigest != "" {
 			agentCtx.UserMemory = memoryDigest
+			log.Printf("context: retrieved memory digest (%d chars)", len(memoryDigest))
 		}
 	}
 

@@ -3,6 +3,7 @@ package memory
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
 	"github.com/google/uuid"
@@ -34,12 +35,14 @@ func NewVectorMemory(store ports.VectorStore, embedder ports.EmbeddingProvider, 
 // Init initialises the underlying vector store for the embedder's
 // dimensionality. It is idempotent.
 func (vm *VectorMemory) Init(ctx context.Context) error {
+	log.Printf("vector: initialized store (%d dimensions)", vm.embedder.Dimensions())
 	return vm.store.Init(ctx, vm.embedder.Dimensions())
 }
 
 // Remember embeds content and upserts it into the vector store with a newly
 // generated UUID.
 func (vm *VectorMemory) Remember(ctx context.Context, userID, content string, metadata map[string]any) error {
+	log.Printf("vector: storing memory for user %s (%d chars)", userID, len(content))
 	id := uuid.New().String()
 
 	vec, err := vm.embedder.Embed(ctx, content)
@@ -61,6 +64,12 @@ func (vm *VectorMemory) Recall(ctx context.Context, userID, query string, topK i
 		topK = vm.topK
 	}
 
+	q := query
+	if len(q) > 50 {
+		q = q[:50] + "..."
+	}
+	log.Printf("vector: searching for user %s query=%q top_k=%d", userID, q, topK)
+
 	vec, err := vm.embedder.Embed(ctx, query)
 	if err != nil {
 		return nil, fmt.Errorf("vector memory: embed query: %w", err)
@@ -71,11 +80,20 @@ func (vm *VectorMemory) Recall(ctx context.Context, userID, query string, topK i
 		return nil, fmt.Errorf("vector memory: search: %w", err)
 	}
 
+	bestScore := 0.0
+	for _, r := range results {
+		if r.Score > bestScore {
+			bestScore = r.Score
+		}
+	}
+	log.Printf("vector: found %d results (best score=%.3f)", len(results), bestScore)
+
 	return results, nil
 }
 
 // Forget removes a memory entry by ID from the vector store.
 func (vm *VectorMemory) Forget(ctx context.Context, id string) error {
+	log.Printf("vector: deleting memory %s", id)
 	if err := vm.store.Delete(ctx, id); err != nil {
 		return fmt.Errorf("vector memory: delete: %w", err)
 	}

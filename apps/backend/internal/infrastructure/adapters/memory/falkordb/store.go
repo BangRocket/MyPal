@@ -13,6 +13,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
 	"strings"
 	"time"
 
@@ -85,6 +86,7 @@ func neighborsKey(entityID string) string  { return "neighbors:" + entityID }
 
 // AddEntity creates a node in FalkorDB and mirrors it to Redis hashes.
 func (s *Store) AddEntity(ctx context.Context, entity ports.GraphEntity) error {
+	log.Printf("falkordb: add entity %s type=%s name=%q user=%s", entity.ID, entity.Type, entity.Name, entity.UserID)
 	if entity.ID == "" {
 		entity.ID = uuid.New().String()
 	}
@@ -132,6 +134,7 @@ func (s *Store) AddEntity(ctx context.Context, entity ports.GraphEntity) error {
 
 // AddRelation creates a relationship in FalkorDB and mirrors it to Redis.
 func (s *Store) AddRelation(ctx context.Context, rel ports.GraphRelation) error {
+	log.Printf("falkordb: add relation %s→%s type=%s", rel.FromID, rel.ToID, rel.Type)
 	if rel.ID == "" {
 		rel.ID = uuid.New().String()
 	}
@@ -182,6 +185,7 @@ func (s *Store) GetEntity(ctx context.Context, id string) (*ports.GraphEntity, e
 // GetNeighbors returns entities and relations within `depth` hops of entityID.
 // Depth is implemented iteratively via the neighbor index.
 func (s *Store) GetNeighbors(ctx context.Context, entityID string, depth int) ([]ports.GraphEntity, []ports.GraphRelation, error) {
+	log.Printf("falkordb: get neighbors of %s depth=%d", entityID, depth)
 	if depth <= 0 {
 		depth = 1
 	}
@@ -230,11 +234,17 @@ func (s *Store) GetNeighbors(ctx context.Context, entityID string, depth int) ([
 		frontier = nextFrontier
 	}
 
+	log.Printf("falkordb: found %d entities, %d relations", len(entities), len(relations))
 	return entities, relations, nil
 }
 
 // Search finds entities belonging to userID whose name contains the given text.
 func (s *Store) Search(ctx context.Context, userID, text string, limit int) ([]ports.GraphEntity, error) {
+	q := text
+	if len(q) > 50 {
+		q = q[:50] + "..."
+	}
+	log.Printf("falkordb: search user=%s query=%q limit=%d", userID, q, limit)
 	if limit <= 0 {
 		limit = 10
 	}
@@ -258,6 +268,7 @@ func (s *Store) Search(ctx context.Context, userID, text string, limit int) ([]p
 			results = append(results, *ent)
 		}
 	}
+	log.Printf("falkordb: found %d entities", len(results))
 	return results, nil
 }
 
@@ -299,6 +310,7 @@ func (s *Store) DeleteEntity(ctx context.Context, id string) error {
 // Params are not directly supported by GRAPH.QUERY (no prepared statements);
 // callers should interpolate safely or use this for read-only exploration.
 func (s *Store) Query(ctx context.Context, cypher string, params map[string]any) ([]map[string]any, error) {
+	log.Printf("falkordb: cypher query (%d chars)", len(cypher))
 	// FalkorDB supports GRAPH.QUERY <key> <cypher> but does not support
 	// parameterised queries in the Redis protocol layer. For safety we
 	// only execute the raw cypher string here.

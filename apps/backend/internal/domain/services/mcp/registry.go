@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
 
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/services/permissions"
 )
@@ -81,14 +82,22 @@ func (r *ToolRegistry) Dispatch(ctx context.Context, toolName string, params map
 	}
 
 	if !r.permManager.CheckPermission(userID, toolName) {
+		log.Printf("mcp: %q denied for user %s", toolName, userID)
 		return nil, fmt.Errorf("tool %q is not permitted", toolName)
 	}
+
+	log.Printf("mcp: dispatching %q for user %s", toolName, userID)
 
 	if t, ok := r.internal[toolName]; ok {
 		if isRestrictedTool(toolName) && !r.isMaster {
 			return nil, fmt.Errorf("tool %q is only available to the master agent", toolName)
 		}
-		return t.Execute(ctx, params)
+		result, err := t.Execute(ctx, params)
+		if err != nil {
+			return nil, err
+		}
+		log.Printf("mcp: %q completed (%d bytes result)", toolName, len(result))
+		return result, nil
 	}
 	if t, ok := r.mcp[toolName]; ok {
 		raw, err := t.Client.CallTool(ctx, toolName, params)
@@ -98,7 +107,9 @@ func (r *ToolRegistry) Dispatch(ctx context.Context, toolName string, params map
 		// Sanitize the raw result (truncate, strip control chars) but do NOT wrap
 		// in <tool_result> XML — standard OpenAI/Ollama tool_calls protocol expects
 		// plain content in the tool role message.
-		return r.sanitizer.Sanitize(raw), nil
+		sanitized := r.sanitizer.Sanitize(raw)
+		log.Printf("mcp: %q completed (%d bytes result)", toolName, len(sanitized))
+		return sanitized, nil
 	}
 	return nil, fmt.Errorf("tool %q not found in registry", toolName)
 }

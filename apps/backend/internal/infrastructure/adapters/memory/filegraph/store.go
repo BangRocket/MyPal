@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -89,6 +90,7 @@ func (s *Store) save() error {
 
 // AddEntity adds an entity to the graph and persists to disk.
 func (s *Store) AddEntity(_ context.Context, entity ports.GraphEntity) error {
+	log.Printf("filegraph: add entity %s type=%s", entity.ID, entity.Type)
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
@@ -120,6 +122,7 @@ func (s *Store) GetEntity(_ context.Context, id string) (*ports.GraphEntity, err
 // GetNeighbors returns entities and relations connected to the given entity ID,
 // traversing up to depth hops via breadth-first search.
 func (s *Store) GetNeighbors(_ context.Context, entityID string, depth int) ([]ports.GraphEntity, []ports.GraphRelation, error) {
+	log.Printf("filegraph: get neighbors of %s depth=%d", entityID, depth)
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 
@@ -173,6 +176,11 @@ func (s *Store) GetNeighbors(_ context.Context, entityID string, depth int) ([]p
 // Search finds entities where UserID matches userID and Name contains query
 // text (case-insensitive). Returns up to limit results.
 func (s *Store) Search(_ context.Context, userID, text string, limit int) ([]ports.GraphEntity, error) {
+	q := text
+	if len(q) > 50 {
+		q = q[:50] + "..."
+	}
+	log.Printf("filegraph: search user=%s query=%q", userID, q)
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 

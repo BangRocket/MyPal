@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 )
 
@@ -46,6 +47,7 @@ func (p *Provider) Dimensions() int {
 
 // Embed returns the embedding vector for a single text input.
 func (p *Provider) Embed(ctx context.Context, text string) ([]float64, error) {
+	log.Printf("embedding: openai embed request (%d chars, model=%s)", len(text), p.model)
 	vecs, err := p.EmbedBatch(ctx, []string{text})
 	if err != nil {
 		return nil, err
@@ -75,6 +77,7 @@ type embeddingResponse struct {
 // EmbedBatch returns embedding vectors for multiple text inputs in a single
 // API call.
 func (p *Provider) EmbedBatch(ctx context.Context, texts []string) ([][]float64, error) {
+	log.Printf("embedding: openai batch embed %d items (model=%s)", len(texts), p.model)
 	if len(texts) == 0 {
 		return nil, nil
 	}
