@@ -152,8 +152,18 @@ func (m *Manager) GetSandbox(ctx context.Context, id string) (*ports.SandboxInst
 	return m.backend.Get(ctx, id)
 }
 
-// WarmPool pre-creates count containers for the given image.
+// WarmPool pre-creates count containers for the given image. Any existing
+// pool containers from a previous run are destroyed first to avoid name
+// collisions.
 func (m *Manager) WarmPool(ctx context.Context, image string, count int) error {
+	// Clean up stale pool containers from previous runs.
+	for i := 0; i < count; i++ {
+		_ = m.backend.Destroy(ctx, fmt.Sprintf("pool-%d", i))
+	}
+	m.poolMu.Lock()
+	m.pool = nil
+	m.poolMu.Unlock()
+
 	for i := 0; i < count; i++ {
 		instance, err := m.backend.Create(ctx, ports.SandboxConfig{
 			Image:     image,
