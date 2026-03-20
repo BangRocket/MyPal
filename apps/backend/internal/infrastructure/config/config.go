@@ -125,6 +125,60 @@ func (c *Config) Validate() error {
 		errs = append(errs, fmt.Sprintf("memory.backend %q is not supported; use \"file\" or \"neo4j\"", c.Memory.Backend))
 	}
 
+	// Enhanced vector memory: validate backend when enabled.
+	if c.Memory.Vector.Enabled {
+		switch c.Memory.Vector.Backend {
+		case "pgvector":
+			// pgvector requires a PostgreSQL database driver.
+			switch c.Database.Driver {
+			case "postgres", "pgx":
+				// OK
+			default:
+				errs = append(errs, fmt.Sprintf("memory.vector.backend \"pgvector\" requires database.driver to be \"postgres\" or \"pgx\", got %q", c.Database.Driver))
+			}
+		case "":
+			errs = append(errs, "memory.vector.backend is required when memory.vector.enabled is true")
+		default:
+			errs = append(errs, fmt.Sprintf("memory.vector.backend %q is not supported; use \"pgvector\"", c.Memory.Vector.Backend))
+		}
+	}
+
+	// Enhanced graph memory: validate backend when enabled.
+	if c.Memory.Graph.Enabled {
+		switch c.Memory.Graph.Backend {
+		case "falkordb":
+			if c.Memory.Graph.FalkorDB.Addr == "" {
+				errs = append(errs, "memory.graph.falkordb.addr is required when memory.graph.backend is \"falkordb\"")
+			}
+		case "file":
+			if c.Memory.Graph.FilePath == "" {
+				errs = append(errs, "memory.graph.file_path is required when memory.graph.backend is \"file\"")
+			}
+		case "":
+			errs = append(errs, "memory.graph.backend is required when memory.graph.enabled is true")
+		default:
+			errs = append(errs, fmt.Sprintf("memory.graph.backend %q is not supported; use \"falkordb\" or \"file\"", c.Memory.Graph.Backend))
+		}
+	}
+
+	// Embedding provider: required when vector memory is enabled.
+	if c.Memory.Vector.Enabled {
+		switch c.Embedding.Provider {
+		case "openai":
+			if isPlaceholder(c.Embedding.OpenAI.APIKey) {
+				errs = append(errs, "embedding.openai.api_key is required when memory.vector.enabled is true and embedding.provider is \"openai\"")
+			}
+		case "ollama":
+			if c.Embedding.Ollama.Endpoint == "" {
+				errs = append(errs, "embedding.ollama.endpoint is required when memory.vector.enabled is true and embedding.provider is \"ollama\"")
+			}
+		case "":
+			errs = append(errs, "embedding.provider is required when memory.vector.enabled is true")
+		default:
+			errs = append(errs, fmt.Sprintf("embedding.provider %q is not supported; use \"openai\" or \"ollama\"", c.Embedding.Provider))
+		}
+	}
+
 	// AI provider: at least one must be configured.
 	hasOpenAI := !isPlaceholder(c.Providers.OpenAI.APIKey)
 	hasOpenRouter := !isPlaceholder(c.Providers.OpenRouter.APIKey)
@@ -328,6 +382,27 @@ type MemoryConfig struct {
 	File     MemoryFileConfig         `mapstructure:"file"`
 	Neo4j    MemoryNeo4jConfig        `mapstructure:"neo4j"`
 	Postgres PostgresMemoryConfig     `mapstructure:"postgres"`
+	Vector   VectorMemoryConfig       `mapstructure:"vector"`
+	Graph    GraphMemoryConfig        `mapstructure:"graph"`
+}
+
+// VectorMemoryConfig controls the enhanced vector (semantic) memory subsystem.
+type VectorMemoryConfig struct {
+	Enabled bool   `mapstructure:"enabled"`
+	Backend string `mapstructure:"backend"` // "pgvector" (default)
+	TopK    int    `mapstructure:"top_k"`   // default 10
+}
+
+// GraphMemoryConfig controls the enhanced graph memory subsystem.
+type GraphMemoryConfig struct {
+	Enabled  bool   `mapstructure:"enabled"`
+	Backend  string `mapstructure:"backend"` // "falkordb" or "file"
+	FalkorDB struct {
+		Addr     string `mapstructure:"addr"`     // default "localhost:6379"
+		Password string `mapstructure:"password"`
+		Graph    string `mapstructure:"graph"`    // default "mypal_memory"
+	} `mapstructure:"falkordb"`
+	FilePath string `mapstructure:"file_path"` // default "data/graph.json"
 }
 
 type MemoryFileConfig struct {
@@ -638,6 +713,15 @@ func setDefaults() {
 	viper.SetDefault("agent.capabilities.sessions", true)
 	viper.SetDefault("wizard.completed", false)
 	viper.SetDefault("model_tiers.enabled", false)
+	viper.SetDefault("memory.vector.enabled", false)
+	viper.SetDefault("memory.vector.backend", "pgvector")
+	viper.SetDefault("memory.vector.top_k", 10)
+	viper.SetDefault("memory.graph.enabled", false)
+	viper.SetDefault("memory.graph.backend", "file")
+	viper.SetDefault("memory.graph.falkordb.addr", "localhost:6379")
+	viper.SetDefault("memory.graph.falkordb.password", "")
+	viper.SetDefault("memory.graph.falkordb.graph", "mypal_memory")
+	viper.SetDefault("memory.graph.file_path", "data/graph.json")
 	viper.SetDefault("embedding.provider", "openai")
 	viper.SetDefault("embedding.openai.model", "text-embedding-3-small")
 	viper.SetDefault("embedding.ollama.endpoint", "http://localhost:11434")

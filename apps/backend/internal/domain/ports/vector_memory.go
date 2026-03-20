@@ -20,6 +20,9 @@ type VectorStore interface {
 
 	// Delete removes a vector memory entry by ID.
 	Delete(ctx context.Context, id string) error
+
+	// DeleteByUser removes all vector memory entries for the given user.
+	DeleteByUser(ctx context.Context, userID string) error
 }
 
 // VectorResult represents a single result from a vector similarity search.

@@ -16,6 +16,7 @@ import (
 	appcontext "github.com/BangRocket/MyPal/apps/backend/internal/domain/context"
 	domainhandlers "github.com/BangRocket/MyPal/apps/backend/internal/domain/handlers"
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
+	memory "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/memory"
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/repositories"
 	domainservices "github.com/BangRocket/MyPal/apps/backend/internal/domain/services"
 	heartbeatsvc "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/heartbeat"
@@ -63,6 +64,7 @@ type App struct {
 	// Infrastructure
 	AIProvider    ports.AIProviderPort
 	MemoryAdapter ports.MemoryPort
+	MemorySys     *memory.MemorySystem
 
 	// Messaging
 	ChanReg          *msgrouter.Registry

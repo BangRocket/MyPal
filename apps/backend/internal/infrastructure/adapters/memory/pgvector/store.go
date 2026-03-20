@@ -126,6 +126,14 @@ func (s *Store) Delete(ctx context.Context, id string) error {
 	return nil
 }
 
+// DeleteByUser removes all vector memory entries for the given user.
+func (s *Store) DeleteByUser(ctx context.Context, userID string) error {
+	if err := s.db.WithContext(ctx).Exec("DELETE FROM memory_vectors WHERE user_id = $1", userID).Error; err != nil {
+		return fmt.Errorf("pgvector: delete by user: %w", err)
+	}
+	return nil
+}
+
 // formatVector converts a float64 slice to the pgvector text format: [0.1,0.2,0.3]
 func formatVector(v []float64) string {
 	var b strings.Builder

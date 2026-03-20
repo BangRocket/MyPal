@@ -108,3 +108,10 @@ var NewSandboxManager = svcsandbox.NewManager
 type VectorMemory = svcmemory.VectorMemory
 
 var NewVectorMemory = svcmemory.NewVectorMemory
+
+// Unified Memory System
+type MemorySystem = svcmemory.MemorySystem
+type Memory = svcmemory.Memory
+type UserProfile = svcmemory.UserProfile
+
+var NewMemorySystem = svcmemory.NewMemorySystem

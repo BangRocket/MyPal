@@ -20,12 +20,18 @@ import (
 	dockerbackend "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/sandbox/docker"
 	incusbackend "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/sandbox/incus"
 	aifactory "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/ai/factory"
+	embeddingollama "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/embedding/ollama"
+	embeddingopenai "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/embedding/openai"
+	memfalkordb "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/memory/falkordb"
 	memfile "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/memory/file"
+	memfilegraph "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/memory/filegraph"
 	memneo4j "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/memory/neo4j"
+	mempgvector "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/memory/pgvector"
 	"github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/terminal"
 
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/models"
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
+	memorysvc "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/memory"
 	heartbeatsvc "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/heartbeat"
 	sandboxsvc "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/sandbox"
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/services/modeltier"
@@ -67,6 +73,9 @@ func (a *App) initServices() {
 		a.MemoryAdapter = gmlBackend
 		log.Printf("memory backend: file (%s)", cfg.Memory.File.Path)
 	}
+
+	// Enhanced memory system (vector + graph)
+	a.MemorySys = a.initEnhancedMemory()
 
 	// Event bus + subscription manager
 	eventBus := domainservices.NewEventBus()
@@ -258,6 +267,90 @@ func (a *App) initServices() {
 
 	// Seed the default personality if none exist yet.
 	seedDefaultPersonality(context.Background(), pSvc)
+}
+
+// initEnhancedMemory creates the enhanced MemorySystem (vector + graph)
+// based on configuration. Returns nil when both subsystems are disabled.
+func (a *App) initEnhancedMemory() *memorysvc.MemorySystem {
+	cfg := a.Cfg
+
+	// Neither enabled → nothing to do.
+	if !cfg.Memory.Vector.Enabled && !cfg.Memory.Graph.Enabled {
+		log.Println("enhanced memory: disabled")
+		return nil
+	}
+
+	// Build embedding provider (needed by vector memory).
+	var embedder ports.EmbeddingProvider
+	if cfg.Memory.Vector.Enabled {
+		switch cfg.Embedding.Provider {
+		case "openai":
+			embedder = embeddingopenai.NewProvider(
+				cfg.Embedding.OpenAI.APIKey,
+				cfg.Embedding.OpenAI.Model,
+			)
+			log.Printf("embedding provider: openai (model=%s)", cfg.Embedding.OpenAI.Model)
+		case "ollama":
+			embedder = embeddingollama.NewProvider(
+				cfg.Embedding.Ollama.Endpoint,
+				cfg.Embedding.Ollama.Model,
+			)
+			log.Printf("embedding provider: ollama (model=%s, endpoint=%s)", cfg.Embedding.Ollama.Model, cfg.Embedding.Ollama.Endpoint)
+		default:
+			log.Fatalf("enhanced memory: unknown embedding.provider %q", cfg.Embedding.Provider)
+		}
+	}
+
+	// Build vector memory subsystem.
+	var vectorMem *memorysvc.VectorMemory
+	if cfg.Memory.Vector.Enabled && embedder != nil {
+		switch cfg.Memory.Vector.Backend {
+		case "pgvector":
+			gormDB := a.db.GormDB()
+			store := mempgvector.NewStore(gormDB)
+			vectorMem = memorysvc.NewVectorMemory(store, embedder, cfg.Memory.Vector.TopK)
+			ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+			defer cancel()
+			if err := vectorMem.Init(ctx); err != nil {
+				log.Fatalf("enhanced memory: vector init failed: %v", err)
+			}
+			log.Println("enhanced memory: vector (pgvector) ready")
+		default:
+			log.Fatalf("enhanced memory: unknown memory.vector.backend %q", cfg.Memory.Vector.Backend)
+		}
+	}
+
+	// Build graph memory subsystem.
+	var graphBackend ports.GraphBackend
+	if cfg.Memory.Graph.Enabled {
+		switch cfg.Memory.Graph.Backend {
+		case "falkordb":
+			store, err := memfalkordb.NewStore(
+				cfg.Memory.Graph.FalkorDB.Addr,
+				cfg.Memory.Graph.FalkorDB.Password,
+				cfg.Memory.Graph.FalkorDB.Graph,
+			)
+			if err != nil {
+				log.Fatalf("enhanced memory: falkordb connect failed: %v", err)
+			}
+			graphBackend = store
+			log.Printf("enhanced memory: graph (falkordb @ %s) ready", cfg.Memory.Graph.FalkorDB.Addr)
+		case "file":
+			filePath := cfg.Memory.Graph.FilePath
+			store, err := memfilegraph.NewStore(filePath)
+			if err != nil {
+				log.Fatalf("enhanced memory: file graph load failed: %v", err)
+			}
+			graphBackend = store
+			log.Printf("enhanced memory: graph (file @ %s) ready", filePath)
+		default:
+			log.Fatalf("enhanced memory: unknown memory.graph.backend %q", cfg.Memory.Graph.Backend)
+		}
+	}
+
+	sys := memorysvc.NewMemorySystem(vectorMem, graphBackend)
+	log.Printf("enhanced memory: system ready (vector=%v, graph=%v)", sys.Vector != nil, sys.Graph != nil)
+	return sys
 }
 
 // seedDefaultPersonality creates the built-in "MyPal" personality when the

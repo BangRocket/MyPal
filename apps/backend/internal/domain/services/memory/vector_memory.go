@@ -81,3 +81,11 @@ func (vm *VectorMemory) Forget(ctx context.Context, id string) error {
 	}
 	return nil
 }
+
+// ForgetAll removes all memory entries for a user from the vector store.
+func (vm *VectorMemory) ForgetAll(ctx context.Context, userID string) error {
+	if err := vm.store.DeleteByUser(ctx, userID); err != nil {
+		return fmt.Errorf("vector memory: delete by user: %w", err)
+	}
+	return nil
+}
