@@ -226,55 +226,6 @@ export const configSchema: ConfigSchema = {
     },
 
     // ========== MEMORY CONFIGURATION ==========
-    memoryBackend: {
-      type: "string",
-      title: "Legacy Memory Backend",
-      description: "Backend for the legacy memory graph (file-based GML or Neo4j). Use Vector/Graph settings below for the enhanced memory system.",
-      enum: ["file", "neo4j"],
-      default: "file",
-    },
-    memoryFilePath: {
-      type: "string",
-      title: "Legacy File Path",
-      description: "Path for file-based legacy memory storage (GML format)",
-      default: "./data/memory.gml",
-      dependencies: {
-        memoryBackend: {
-          properties: { memoryBackend: { const: "file" } },
-        },
-      },
-    },
-    memoryNeo4jURI: {
-      type: "string",
-      title: "Neo4j URI",
-      description: "Neo4j database URI",
-      dependencies: {
-        memoryBackend: {
-          properties: { memoryBackend: { const: "neo4j" } },
-        },
-      },
-    },
-    memoryNeo4jUser: {
-      type: "string",
-      title: "Neo4j User",
-      description: "Neo4j username",
-      dependencies: {
-        memoryBackend: {
-          properties: { memoryBackend: { const: "neo4j" } },
-        },
-      },
-    },
-    memoryNeo4jPassword: {
-      type: "string",
-      title: "Neo4j Password",
-      description: "Neo4j password",
-      format: "password",
-      dependencies: {
-        memoryBackend: {
-          properties: { memoryBackend: { const: "neo4j" } },
-        },
-      },
-    },
 
     // --- Vector Memory (Semantic Search) ---
     memoryVectorEnabled: {
@@ -744,7 +695,6 @@ export const configGroups = [
     id: "memory",
     title: "MEMORY CONFIGURATION",
     fields: [
-      "memoryBackend", "memoryFilePath", "memoryNeo4jURI", "memoryNeo4jUser", "memoryNeo4jPassword",
       "memoryVectorEnabled", "memoryVectorBackend", "memoryVectorTopK",
       "memoryVectorQdrantEndpoint", "memoryVectorQdrantCollection", "memoryVectorQdrantApiKey",
       "memoryGraphEnabled", "memoryGraphBackend",
