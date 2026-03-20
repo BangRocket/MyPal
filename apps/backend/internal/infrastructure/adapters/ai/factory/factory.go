@@ -58,6 +58,9 @@ func BuildFromConfig(cfg *config.Config) ports.AIProviderPort {
 		if model == "" {
 			model = "claude-sonnet-4-6"
 		}
+		if cfg.Providers.Anthropic.BaseURL != "" {
+			return aianthropicadapter.NewAdapterWithBaseURL(cfg.Providers.Anthropic.BaseURL, cfg.Providers.Anthropic.APIKey, model, MaxOutputTokens)
+		}
 		return aianthropicadapter.NewAdapter(cfg.Providers.Anthropic.APIKey, model, MaxOutputTokens)
 	case "opencode-zen":
 		model := cfg.Providers.OpenCode.Model
@@ -96,6 +99,9 @@ func BuildProvider(cfg *config.Config, providerName, model string) ports.AIProvi
 	case "ollama":
 		return aiollama.NewAdapterWithOptions(cfg.Providers.Ollama.Endpoint, cfg.Providers.Ollama.APIKey, model, MaxOutputTokens, cfg.Logging.Level)
 	case "anthropic":
+		if cfg.Providers.Anthropic.BaseURL != "" {
+			return aianthropicadapter.NewAdapterWithBaseURL(cfg.Providers.Anthropic.BaseURL, cfg.Providers.Anthropic.APIKey, model, MaxOutputTokens)
+		}
 		return aianthropicadapter.NewAdapter(cfg.Providers.Anthropic.APIKey, model, MaxOutputTokens)
 	case "opencode-zen", "opencode":
 		return aizenadapter.NewAdapter(cfg.Providers.OpenCode.APIKey, model, MaxOutputTokens)

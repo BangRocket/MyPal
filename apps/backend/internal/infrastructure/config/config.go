@@ -471,8 +471,9 @@ type OpenAICompatConfig struct {
 
 // AnthropicConfig holds settings for the Anthropic Messages API.
 type AnthropicConfig struct {
-	APIKey string `mapstructure:"api_key"`
-	Model  string `mapstructure:"model"`
+	APIKey  string `mapstructure:"api_key"`
+	Model   string `mapstructure:"model"`
+	BaseURL string `mapstructure:"base_url"`
 }
 
 // DockerModelRunnerConfig holds settings for Docker Desktop's Model Runner.
@@ -700,6 +701,7 @@ func setDefaults() {
 	viper.SetDefault("providers.openaicompat.base_url", "")
 	viper.SetDefault("providers.anthropic.api_key", "")
 	viper.SetDefault("providers.anthropic.model", "")
+	viper.SetDefault("providers.anthropic.base_url", "")
 	viper.SetDefault("providers.docker_model_runner.endpoint", "")
 	viper.SetDefault("providers.docker_model_runner.default_model", "")
 	viper.SetDefault("channels.telegram.enabled", false)

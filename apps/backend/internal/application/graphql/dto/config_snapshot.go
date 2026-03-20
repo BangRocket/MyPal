@@ -32,6 +32,7 @@ func BuildConfigSnapshot(cfg *config.Config, providerNameFn func(*config.Config)
 		model = cfg.Providers.OpenAICompat.Model
 	case "anthropic":
 		anthropicApiKey = cfg.Providers.Anthropic.APIKey
+		baseURL = cfg.Providers.Anthropic.BaseURL
 		model = cfg.Providers.Anthropic.Model
 	case "docker-model-runner":
 		ollamaHost = cfg.Providers.DockerModelRunner.Endpoint
