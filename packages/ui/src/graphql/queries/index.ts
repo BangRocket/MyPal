@@ -342,6 +342,7 @@ export const CONFIG_QUERY = /* GraphQL */ `
         twilioFromNumber
       }
       wizardCompleted
+      configEncryptionEnabled
     }
   }
 `;

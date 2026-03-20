@@ -6,6 +6,10 @@
       "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**", "cmd/mypal/public/**"]
     },
+    "@mypal/frontend#build": {
+      "dependsOn": ["^build"],
+      "outputs": ["../../apps/backend/cmd/mypal/public/assets/**"]
+    },
     "@mypal/backend#build": {
       "dependsOn": ["^build", "@mypal/frontend#build"],
       "outputs": ["../../dist/**"]
