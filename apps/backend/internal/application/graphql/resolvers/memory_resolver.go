@@ -7,10 +7,14 @@ package resolvers
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
+	"time"
 
 	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/generated"
 	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/resolvers/mappers"
 	"github.com/BangRocket/MyPal/apps/backend/internal/application/graphql/resolvers/utils"
+	memorysvc "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/memory"
 	"github.com/google/uuid"
 )
 
@@ -104,6 +108,49 @@ func (r *mutationResolver) ExecuteCypher(ctx context.Context, cypher string) (*g
 	return result, nil
 }
 
+// RememberMemory is the resolver for the rememberMemory field.
+func (r *mutationResolver) RememberMemory(ctx context.Context, userID string, content string, metadata *string) (bool, error) {
+	if r.Deps == nil || r.Deps.MemorySys == nil {
+		return false, fmt.Errorf("memory system not available")
+	}
+	var meta map[string]any
+	if metadata != nil && *metadata != "" {
+		if err := json.Unmarshal([]byte(*metadata), &meta); err != nil {
+			return false, fmt.Errorf("invalid metadata JSON: %w", err)
+		}
+	}
+	if err := r.Deps.MemorySys.Remember(ctx, userID, content, meta); err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
+// ForgetMemory is the resolver for the forgetMemory field.
+func (r *mutationResolver) ForgetMemory(ctx context.Context, id string) (bool, error) {
+	if r.Deps == nil || r.Deps.MemorySys == nil {
+		return false, fmt.Errorf("memory system not available")
+	}
+	if err := r.Deps.MemorySys.Vector.Forget(ctx, id); err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
+// BootstrapMemory is the resolver for the bootstrapMemory field.
+func (r *mutationResolver) BootstrapMemory(ctx context.Context, userID string, profile string) (bool, error) {
+	if r.Deps == nil || r.Deps.MemorySys == nil {
+		return false, fmt.Errorf("memory system not available")
+	}
+	var p memorysvc.UserProfile
+	if err := json.Unmarshal([]byte(profile), &p); err != nil {
+		return false, fmt.Errorf("invalid profile JSON: %w", err)
+	}
+	if err := r.Deps.MemorySys.Bootstrap(ctx, userID, p); err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
 // SearchMemory is the resolver for the searchMemory field.
 func (r *queryResolver) SearchMemory(ctx context.Context, query string) (*generated.SearchMemoryResult, error) {
 	if r.Deps == nil {
@@ -157,5 +204,134 @@ func (r *queryResolver) Memory(ctx context.Context) (*generated.MemoryGraph, err
 	return &generated.MemoryGraph{
 		Nodes: mappers.MemoryNodesFromSnapshot(snap.Nodes),
 		Edges: mappers.MemoryEdgesFromSnapshot(snap.Edges),
+	}, nil
+}
+
+// VectorSearch is the resolver for the vectorSearch field.
+func (r *queryResolver) VectorSearch(ctx context.Context, userID string, query string, topK *int) ([]*generated.VectorSearchResult, error) {
+	if r.Deps == nil || r.Deps.MemorySys == nil {
+		return []*generated.VectorSearchResult{}, nil
+	}
+	k := 10
+	if topK != nil && *topK > 0 {
+		k = *topK
+	}
+	results, err := r.Deps.MemorySys.Recall(ctx, userID, query, k)
+	if err != nil {
+		return nil, err
+	}
+	var out []*generated.VectorSearchResult
+	for _, m := range results {
+		var metaStr *string
+		if m.Metadata != nil {
+			b, _ := json.Marshal(m.Metadata)
+			s := string(b)
+			metaStr = &s
+		}
+		createdAt := time.Now().UTC().Format(time.RFC3339)
+		if t, ok := m.Metadata["created_at"].(string); ok && t != "" {
+			createdAt = t
+		}
+		out = append(out, &generated.VectorSearchResult{
+			ID:        m.ID,
+			Content:   m.Content,
+			Score:     m.Score,
+			UserID:    userID,
+			Metadata:  metaStr,
+			CreatedAt: createdAt,
+		})
+	}
+	return out, nil
+}
+
+// GraphNeighbors is the resolver for the graphNeighbors field.
+func (r *queryResolver) GraphNeighbors(ctx context.Context, entityID string, depth *int) (*generated.GraphNeighborResult, error) {
+	if r.Deps == nil || r.Deps.MemorySys == nil || r.Deps.MemorySys.Graph == nil {
+		return &generated.GraphNeighborResult{
+			Entities:  []*generated.GraphEntity{},
+			Relations: []*generated.GraphRelation{},
+		}, nil
+	}
+	d := 1
+	if depth != nil && *depth > 0 {
+		d = *depth
+	}
+	entities, relations, err := r.Deps.MemorySys.Graph.GetNeighbors(ctx, entityID, d)
+	if err != nil {
+		return nil, err
+	}
+	var gqlEntities []*generated.GraphEntity
+	for _, e := range entities {
+		var propsStr *string
+		if e.Properties != nil {
+			b, _ := json.Marshal(e.Properties)
+			s := string(b)
+			propsStr = &s
+		}
+		gqlEntities = append(gqlEntities, &generated.GraphEntity{
+			ID:         e.ID,
+			Type:       e.Type,
+			Name:       e.Name,
+			UserID:     e.UserID,
+			Properties: propsStr,
+			CreatedAt:  e.CreatedAt.Format(time.RFC3339),
+		})
+	}
+	var gqlRelations []*generated.GraphRelation
+	for _, rel := range relations {
+		var metaStr *string
+		if rel.Metadata != nil {
+			b, _ := json.Marshal(rel.Metadata)
+			s := string(b)
+			metaStr = &s
+		}
+		gqlRelations = append(gqlRelations, &generated.GraphRelation{
+			ID:       rel.ID,
+			FromID:   rel.FromID,
+			ToID:     rel.ToID,
+			Type:     rel.Type,
+			Weight:   rel.Weight,
+			Metadata: metaStr,
+		})
+	}
+	if gqlEntities == nil {
+		gqlEntities = []*generated.GraphEntity{}
+	}
+	if gqlRelations == nil {
+		gqlRelations = []*generated.GraphRelation{}
+	}
+	return &generated.GraphNeighborResult{
+		Entities:  gqlEntities,
+		Relations: gqlRelations,
+	}, nil
+}
+
+// MemoryStats is the resolver for the memoryStats field.
+func (r *queryResolver) MemoryStats(ctx context.Context, userID string) (*generated.MemoryStats, error) {
+	if r.Deps == nil || r.Deps.MemorySys == nil {
+		return &generated.MemoryStats{}, nil
+	}
+	// Vector count: search with a broad query, count results.
+	// For a proper count we'd need a Count method on VectorStore; for now
+	// we approximate by searching with a high topK using a generic query.
+	vectorCount := 0
+	results, err := r.Deps.MemorySys.Recall(ctx, userID, "", 1000)
+	if err == nil {
+		vectorCount = len(results)
+	}
+
+	entityCount := 0
+	relationCount := 0
+	if r.Deps.MemorySys.Graph != nil {
+		entities, relations, err := r.Deps.MemorySys.Graph.UserGraph(ctx, userID)
+		if err == nil {
+			entityCount = len(entities)
+			relationCount = len(relations)
+		}
+	}
+	return &generated.MemoryStats{
+		VectorCount:   vectorCount,
+		EntityCount:   entityCount,
+		RelationCount: relationCount,
 	}, nil
 }

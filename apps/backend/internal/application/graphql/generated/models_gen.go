@@ -186,6 +186,20 @@ type GraphEdge struct {
 	Label  *string `json:"label,omitempty"`
 }
 
+type GraphEntity struct {
+	ID         string  `json:"id"`
+	Type       string  `json:"type"`
+	Name       string  `json:"name"`
+	UserID     string  `json:"userId"`
+	Properties *string `json:"properties,omitempty"`
+	CreatedAt  string  `json:"createdAt"`
+}
+
+type GraphNeighborResult struct {
+	Entities  []*GraphEntity   `json:"entities"`
+	Relations []*GraphRelation `json:"relations"`
+}
+
 type GraphNode struct {
 	ID         string         `json:"id"`
 	Label      *string        `json:"label,omitempty"`
@@ -199,6 +213,15 @@ type GraphQLConfig struct {
 	Port    *int    `json:"port,omitempty"`
 	Host    *string `json:"host,omitempty"`
 	BaseURL *string `json:"baseUrl,omitempty"`
+}
+
+type GraphRelation struct {
+	ID       string  `json:"id"`
+	FromID   string  `json:"fromId"`
+	ToID     string  `json:"toId"`
+	Type     string  `json:"type"`
+	Weight   float64 `json:"weight"`
+	Metadata *string `json:"metadata,omitempty"`
 }
 
 type Heartbeat struct {
@@ -327,6 +350,12 @@ type MemoryNode struct {
 	Value      *string        `json:"value,omitempty"`
 	CreatedAt  *string        `json:"createdAt,omitempty"`
 	Properties map[string]any `json:"properties,omitempty"`
+}
+
+type MemoryStats struct {
+	VectorCount   int `json:"vectorCount"`
+	EntityCount   int `json:"entityCount"`
+	RelationCount int `json:"relationCount"`
 }
 
 type Message struct {
@@ -668,4 +697,13 @@ type UserRelationship struct {
 	Preferences      *string `json:"preferences,omitempty"`
 	InteractionCount int     `json:"interactionCount"`
 	LastInteraction  *string `json:"lastInteraction,omitempty"`
+}
+
+type VectorSearchResult struct {
+	ID        string  `json:"id"`
+	Content   string  `json:"content"`
+	Score     float64 `json:"score"`
+	UserID    string  `json:"userId"`
+	Metadata  *string `json:"metadata,omitempty"`
+	CreatedAt string  `json:"createdAt"`
 }

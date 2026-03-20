@@ -209,6 +209,20 @@ type ComplexityRoot struct {
 		Target func(childComplexity int) int
 	}
 
+	GraphEntity struct {
+		CreatedAt  func(childComplexity int) int
+		ID         func(childComplexity int) int
+		Name       func(childComplexity int) int
+		Properties func(childComplexity int) int
+		Type       func(childComplexity int) int
+		UserID     func(childComplexity int) int
+	}
+
+	GraphNeighborResult struct {
+		Entities  func(childComplexity int) int
+		Relations func(childComplexity int) int
+	}
+
 	GraphNode struct {
 		ID         func(childComplexity int) int
 		Label      func(childComplexity int) int
@@ -222,6 +236,15 @@ type ComplexityRoot struct {
 		Enabled func(childComplexity int) int
 		Host    func(childComplexity int) int
 		Port    func(childComplexity int) int
+	}
+
+	GraphRelation struct {
+		FromID   func(childComplexity int) int
+		ID       func(childComplexity int) int
+		Metadata func(childComplexity int) int
+		ToID     func(childComplexity int) int
+		Type     func(childComplexity int) int
+		Weight   func(childComplexity int) int
 	}
 
 	Heartbeat struct {
@@ -342,6 +365,12 @@ type ComplexityRoot struct {
 		Value      func(childComplexity int) int
 	}
 
+	MemoryStats struct {
+		EntityCount   func(childComplexity int) int
+		RelationCount func(childComplexity int) int
+		VectorCount   func(childComplexity int) int
+	}
+
 	Message struct {
 		Attachments    func(childComplexity int) int
 		Content        func(childComplexity int) int
@@ -402,6 +431,7 @@ type ComplexityRoot struct {
 		AddRelation           func(childComplexity int, from string, to string, relationType string) int
 		AddTask               func(childComplexity int, prompt string, schedule *string) int
 		ApprovePairing        func(childComplexity int, code string, userID *string, displayName *string) int
+		BootstrapMemory       func(childComplexity int, userID string, profile string) int
 		CompleteHeartbeatItem func(childComplexity int, id string) int
 		CompleteTask          func(childComplexity int, taskID string) int
 		ConnectMcp            func(childComplexity int, name string, transport string, url string, clientID *string) int
@@ -421,9 +451,11 @@ type ComplexityRoot struct {
 		EnableSkill           func(childComplexity int, name string) int
 		ExecuteCypher         func(childComplexity int, cypher string) int
 		ExecuteSandbox        func(childComplexity int, id string, command string) int
+		ForgetMemory          func(childComplexity int, id string) int
 		ImportSkill           func(childComplexity int, data string) int
 		InitiateOAuth         func(childComplexity int, name string, url string) int
 		KillSubAgent          func(childComplexity int, id string) int
+		RememberMemory        func(childComplexity int, userID string, content string, metadata *string) int
 		RemoveTask            func(childComplexity int, taskID string) int
 		SendMessage           func(childComplexity int, conversationID *string, channelID *string, content string) int
 		SetAllToolPermissions func(childComplexity int, userID string, mode string) int
@@ -510,6 +542,7 @@ type ComplexityRoot struct {
 		Config            func(childComplexity int) int
 		Conversations     func(childComplexity int) int
 		EmailConfig       func(childComplexity int) int
+		GraphNeighbors    func(childComplexity int, entityID string, depth *int) int
 		Heartbeat         func(childComplexity int) int
 		HeartbeatItem     func(childComplexity int, id string) int
 		HeartbeatItems    func(childComplexity int) int
@@ -520,6 +553,7 @@ type ComplexityRoot struct {
 		McpUsers          func(childComplexity int) int
 		Mcps              func(childComplexity int) int
 		Memory            func(childComplexity int) int
+		MemoryStats       func(childComplexity int, userID string) int
 		Messages          func(childComplexity int, conversationID string, before *string, limit *int) int
 		Metrics           func(childComplexity int) int
 		ModelTiers        func(childComplexity int) int
@@ -540,6 +574,7 @@ type ComplexityRoot struct {
 		UserGraph         func(childComplexity int, userID *string) int
 		UserRelationships func(childComplexity int, userID string) int
 		Users             func(childComplexity int) int
+		VectorSearch      func(childComplexity int, userID string, query string, topK *int) int
 	}
 
 	SandboxInstance struct {
@@ -702,6 +737,15 @@ type ComplexityRoot struct {
 		Preferences      func(childComplexity int) int
 		UserID           func(childComplexity int) int
 	}
+
+	VectorSearchResult struct {
+		Content   func(childComplexity int) int
+		CreatedAt func(childComplexity int) int
+		ID        func(childComplexity int) int
+		Metadata  func(childComplexity int) int
+		Score     func(childComplexity int) int
+		UserID    func(childComplexity int) int
+	}
 }
 
 type MutationResolver interface {
@@ -716,6 +760,9 @@ type MutationResolver interface {
 	DeleteMemoryNode(ctx context.Context, id string) (bool, error)
 	AddRelation(ctx context.Context, from string, to string, relationType string) (*AddRelationResult, error)
 	ExecuteCypher(ctx context.Context, cypher string) (*CypherResult, error)
+	RememberMemory(ctx context.Context, userID string, content string, metadata *string) (bool, error)
+	ForgetMemory(ctx context.Context, id string) (bool, error)
+	BootstrapMemory(ctx context.Context, userID string, profile string) (bool, error)
 	ConnectMcp(ctx context.Context, name string, transport string, url string, clientID *string) (*MCPConnectResult, error)
 	DisconnectMcp(ctx context.Context, name string) (bool, error)
 	InitiateOAuth(ctx context.Context, name string, url string) (*OAuthInitiateResult, error)
@@ -762,6 +809,9 @@ type QueryResolver interface {
 	SearchMemory(ctx context.Context, query string) (*SearchMemoryResult, error)
 	UserGraph(ctx context.Context, userID *string) (*UserGraphResult, error)
 	Memory(ctx context.Context) (*MemoryGraph, error)
+	VectorSearch(ctx context.Context, userID string, query string, topK *int) ([]*VectorSearchResult, error)
+	GraphNeighbors(ctx context.Context, entityID string, depth *int) (*GraphNeighborResult, error)
+	MemoryStats(ctx context.Context, userID string) (*MemoryStats, error)
 	Mcps(ctx context.Context) ([]*Mcp, error)
 	McpServers(ctx context.Context) ([]*MCPServer, error)
 	McpTools(ctx context.Context) ([]*MCPTool, error)
@@ -1542,6 +1592,56 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.ComplexityRoot.GraphEdge.Target(childComplexity), true
 
+	case "GraphEntity.createdAt":
+		if e.ComplexityRoot.GraphEntity.CreatedAt == nil {
+			break
+		}
+
+		return e.ComplexityRoot.GraphEntity.CreatedAt(childComplexity), true
+	case "GraphEntity.id":
+		if e.ComplexityRoot.GraphEntity.ID == nil {
+			break
+		}
+
+		return e.ComplexityRoot.GraphEntity.ID(childComplexity), true
+	case "GraphEntity.name":
+		if e.ComplexityRoot.GraphEntity.Name == nil {
+			break
+		}
+
+		return e.ComplexityRoot.GraphEntity.Name(childComplexity), true
+	case "GraphEntity.properties":
+		if e.ComplexityRoot.GraphEntity.Properties == nil {
+			break
+		}
+
+		return e.ComplexityRoot.GraphEntity.Properties(childComplexity), true
+	case "GraphEntity.type":
+		if e.ComplexityRoot.GraphEntity.Type == nil {
+			break
+		}
+
+		return e.ComplexityRoot.GraphEntity.Type(childComplexity), true
+	case "GraphEntity.userId":
+		if e.ComplexityRoot.GraphEntity.UserID == nil {
+			break
+		}
+
+		return e.ComplexityRoot.GraphEntity.UserID(childComplexity), true
+
+	case "GraphNeighborResult.entities":
+		if e.ComplexityRoot.GraphNeighborResult.Entities == nil {
+			break
+		}
+
+		return e.ComplexityRoot.GraphNeighborResult.Entities(childComplexity), true
+	case "GraphNeighborResult.relations":
+		if e.ComplexityRoot.GraphNeighborResult.Relations == nil {
+			break
+		}
+
+		return e.ComplexityRoot.GraphNeighborResult.Relations(childComplexity), true
+
 	case "GraphNode.id":
 		if e.ComplexityRoot.GraphNode.ID == nil {
 			break
@@ -1597,6 +1697,43 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.ComplexityRoot.GraphQLConfig.Port(childComplexity), true
+
+	case "GraphRelation.fromId":
+		if e.ComplexityRoot.GraphRelation.FromID == nil {
+			break
+		}
+
+		return e.ComplexityRoot.GraphRelation.FromID(childComplexity), true
+	case "GraphRelation.id":
+		if e.ComplexityRoot.GraphRelation.ID == nil {
+			break
+		}
+
+		return e.ComplexityRoot.GraphRelation.ID(childComplexity), true
+	case "GraphRelation.metadata":
+		if e.ComplexityRoot.GraphRelation.Metadata == nil {
+			break
+		}
+
+		return e.ComplexityRoot.GraphRelation.Metadata(childComplexity), true
+	case "GraphRelation.toId":
+		if e.ComplexityRoot.GraphRelation.ToID == nil {
+			break
+		}
+
+		return e.ComplexityRoot.GraphRelation.ToID(childComplexity), true
+	case "GraphRelation.type":
+		if e.ComplexityRoot.GraphRelation.Type == nil {
+			break
+		}
+
+		return e.ComplexityRoot.GraphRelation.Type(childComplexity), true
+	case "GraphRelation.weight":
+		if e.ComplexityRoot.GraphRelation.Weight == nil {
+			break
+		}
+
+		return e.ComplexityRoot.GraphRelation.Weight(childComplexity), true
 
 	case "Heartbeat.lastCheck":
 		if e.ComplexityRoot.Heartbeat.LastCheck == nil {
@@ -2034,6 +2171,25 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.ComplexityRoot.MemoryNode.Value(childComplexity), true
 
+	case "MemoryStats.entityCount":
+		if e.ComplexityRoot.MemoryStats.EntityCount == nil {
+			break
+		}
+
+		return e.ComplexityRoot.MemoryStats.EntityCount(childComplexity), true
+	case "MemoryStats.relationCount":
+		if e.ComplexityRoot.MemoryStats.RelationCount == nil {
+			break
+		}
+
+		return e.ComplexityRoot.MemoryStats.RelationCount(childComplexity), true
+	case "MemoryStats.vectorCount":
+		if e.ComplexityRoot.MemoryStats.VectorCount == nil {
+			break
+		}
+
+		return e.ComplexityRoot.MemoryStats.VectorCount(childComplexity), true
+
 	case "Message.attachments":
 		if e.ComplexityRoot.Message.Attachments == nil {
 			break
@@ -2311,6 +2467,17 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.ComplexityRoot.Mutation.ApprovePairing(childComplexity, args["code"].(string), args["userID"].(*string), args["displayName"].(*string)), true
+	case "Mutation.bootstrapMemory":
+		if e.ComplexityRoot.Mutation.BootstrapMemory == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_bootstrapMemory_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.ComplexityRoot.Mutation.BootstrapMemory(childComplexity, args["userId"].(string), args["profile"].(string)), true
 	case "Mutation.completeHeartbeatItem":
 		if e.ComplexityRoot.Mutation.CompleteHeartbeatItem == nil {
 			break
@@ -2520,6 +2687,17 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.ComplexityRoot.Mutation.ExecuteSandbox(childComplexity, args["id"].(string), args["command"].(string)), true
+	case "Mutation.forgetMemory":
+		if e.ComplexityRoot.Mutation.ForgetMemory == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_forgetMemory_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.ComplexityRoot.Mutation.ForgetMemory(childComplexity, args["id"].(string)), true
 	case "Mutation.importSkill":
 		if e.ComplexityRoot.Mutation.ImportSkill == nil {
 			break
@@ -2553,6 +2731,17 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.ComplexityRoot.Mutation.KillSubAgent(childComplexity, args["id"].(string)), true
+	case "Mutation.rememberMemory":
+		if e.ComplexityRoot.Mutation.RememberMemory == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_rememberMemory_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.ComplexityRoot.Mutation.RememberMemory(childComplexity, args["userId"].(string), args["content"].(string), args["metadata"].(*string)), true
 	case "Mutation.removeTask":
 		if e.ComplexityRoot.Mutation.RemoveTask == nil {
 			break
@@ -2991,6 +3180,17 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.ComplexityRoot.Query.EmailConfig(childComplexity), true
+	case "Query.graphNeighbors":
+		if e.ComplexityRoot.Query.GraphNeighbors == nil {
+			break
+		}
+
+		args, err := ec.field_Query_graphNeighbors_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.ComplexityRoot.Query.GraphNeighbors(childComplexity, args["entityId"].(string), args["depth"].(*int)), true
 	case "Query.heartbeat":
 		if e.ComplexityRoot.Query.Heartbeat == nil {
 			break
@@ -3067,6 +3267,17 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.ComplexityRoot.Query.Memory(childComplexity), true
+	case "Query.memoryStats":
+		if e.ComplexityRoot.Query.MemoryStats == nil {
+			break
+		}
+
+		args, err := ec.field_Query_memoryStats_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.ComplexityRoot.Query.MemoryStats(childComplexity, args["userId"].(string)), true
 	case "Query.messages":
 		if e.ComplexityRoot.Query.Messages == nil {
 			break
@@ -3227,6 +3438,17 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.ComplexityRoot.Query.Users(childComplexity), true
+	case "Query.vectorSearch":
+		if e.ComplexityRoot.Query.VectorSearch == nil {
+			break
+		}
+
+		args, err := ec.field_Query_vectorSearch_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.ComplexityRoot.Query.VectorSearch(childComplexity, args["userId"].(string), args["query"].(string), args["topK"].(*int)), true
 
 	case "SandboxInstance.cpuLimit":
 		if e.ComplexityRoot.SandboxInstance.CPULimit == nil {
@@ -3859,6 +4081,43 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.ComplexityRoot.UserRelationship.UserID(childComplexity), true
 
+	case "VectorSearchResult.content":
+		if e.ComplexityRoot.VectorSearchResult.Content == nil {
+			break
+		}
+
+		return e.ComplexityRoot.VectorSearchResult.Content(childComplexity), true
+	case "VectorSearchResult.createdAt":
+		if e.ComplexityRoot.VectorSearchResult.CreatedAt == nil {
+			break
+		}
+
+		return e.ComplexityRoot.VectorSearchResult.CreatedAt(childComplexity), true
+	case "VectorSearchResult.id":
+		if e.ComplexityRoot.VectorSearchResult.ID == nil {
+			break
+		}
+
+		return e.ComplexityRoot.VectorSearchResult.ID(childComplexity), true
+	case "VectorSearchResult.metadata":
+		if e.ComplexityRoot.VectorSearchResult.Metadata == nil {
+			break
+		}
+
+		return e.ComplexityRoot.VectorSearchResult.Metadata(childComplexity), true
+	case "VectorSearchResult.score":
+		if e.ComplexityRoot.VectorSearchResult.Score == nil {
+			break
+		}
+
+		return e.ComplexityRoot.VectorSearchResult.Score(childComplexity), true
+	case "VectorSearchResult.userId":
+		if e.ComplexityRoot.VectorSearchResult.UserID == nil {
+			break
+		}
+
+		return e.ComplexityRoot.VectorSearchResult.UserID(childComplexity), true
+
 	}
 	return 0, false
 }
@@ -4407,10 +4666,53 @@ type CypherResult {
   error:   String
 }
 
+# ─── Enhanced memory (vector + graph) ────────────────────────────────────────
+
+type VectorSearchResult {
+  id:        String!
+  content:   String!
+  score:     Float!
+  userId:    String!
+  metadata:  String
+  createdAt: String!
+}
+
+type GraphEntity {
+  id:         String!
+  type:       String!
+  name:       String!
+  userId:     String!
+  properties: String
+  createdAt:  String!
+}
+
+type GraphRelation {
+  id:       String!
+  fromId:   String!
+  toId:     String!
+  type:     String!
+  weight:   Float!
+  metadata: String
+}
+
+type GraphNeighborResult {
+  entities:  [GraphEntity!]!
+  relations: [GraphRelation!]!
+}
+
+type MemoryStats {
+  vectorCount:   Int!
+  entityCount:   Int!
+  relationCount: Int!
+}
+
 extend type Query {
   searchMemory(query: String!): SearchMemoryResult
   userGraph(userId: String): UserGraphResult
   memory: MemoryGraph
+  vectorSearch(userId: String!, query: String!, topK: Int): [VectorSearchResult!]!
+  graphNeighbors(entityId: String!, depth: Int): GraphNeighborResult!
+  memoryStats(userId: String!): MemoryStats!
 }
 
 extend type Mutation {
@@ -4434,6 +4736,9 @@ extend type Mutation {
     relationType: String!
   ): AddRelationResult!
   executeCypher(cypher: String!): CypherResult!
+  rememberMemory(userId: String!, content: String!, metadata: String): Boolean!
+  forgetMemory(id: String!): Boolean!
+  bootstrapMemory(userId: String!, profile: String!): Boolean!
 }
 `, BuiltIn: false},
 	{Name: "../../../../../../schema/mcp.graphql", Input: `# ─── Tools / MCP ──────────────────────────────────────────────────────────────
@@ -4986,6 +5291,22 @@ func (ec *executionContext) field_Mutation_approvePairing_args(ctx context.Conte
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_bootstrapMemory_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "userId", ec.unmarshalNString2string)
+	if err != nil {
+		return nil, err
+	}
+	args["userId"] = arg0
+	arg1, err := graphql.ProcessArgField(ctx, rawArgs, "profile", ec.unmarshalNString2string)
+	if err != nil {
+		return nil, err
+	}
+	args["profile"] = arg1
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_completeHeartbeatItem_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
@@ -5230,6 +5551,17 @@ func (ec *executionContext) field_Mutation_executeSandbox_args(ctx context.Conte
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_forgetMemory_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNString2string)
+	if err != nil {
+		return nil, err
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_importSkill_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
@@ -5265,6 +5597,27 @@ func (ec *executionContext) field_Mutation_killSubAgent_args(ctx context.Context
 		return nil, err
 	}
 	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_rememberMemory_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "userId", ec.unmarshalNString2string)
+	if err != nil {
+		return nil, err
+	}
+	args["userId"] = arg0
+	arg1, err := graphql.ProcessArgField(ctx, rawArgs, "content", ec.unmarshalNString2string)
+	if err != nil {
+		return nil, err
+	}
+	args["content"] = arg1
+	arg2, err := graphql.ProcessArgField(ctx, rawArgs, "metadata", ec.unmarshalOString2ᚖstring)
+	if err != nil {
+		return nil, err
+	}
+	args["metadata"] = arg2
 	return args, nil
 }
 
@@ -5539,6 +5892,22 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 	return args, nil
 }
 
+func (ec *executionContext) field_Query_graphNeighbors_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "entityId", ec.unmarshalNString2string)
+	if err != nil {
+		return nil, err
+	}
+	args["entityId"] = arg0
+	arg1, err := graphql.ProcessArgField(ctx, rawArgs, "depth", ec.unmarshalOInt2ᚖint)
+	if err != nil {
+		return nil, err
+	}
+	args["depth"] = arg1
+	return args, nil
+}
+
 func (ec *executionContext) field_Query_heartbeatItem_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
@@ -5574,6 +5943,17 @@ func (ec *executionContext) field_Query_mcpOAuthStatus_args(ctx context.Context,
 		return nil, err
 	}
 	args["name"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_memoryStats_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "userId", ec.unmarshalNString2string)
+	if err != nil {
+		return nil, err
+	}
+	args["userId"] = arg0
 	return args, nil
 }
 
@@ -5672,6 +6052,27 @@ func (ec *executionContext) field_Query_userRelationships_args(ctx context.Conte
 		return nil, err
 	}
 	args["userId"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_vectorSearch_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "userId", ec.unmarshalNString2string)
+	if err != nil {
+		return nil, err
+	}
+	args["userId"] = arg0
+	arg1, err := graphql.ProcessArgField(ctx, rawArgs, "query", ec.unmarshalNString2string)
+	if err != nil {
+		return nil, err
+	}
+	args["query"] = arg1
+	arg2, err := graphql.ProcessArgField(ctx, rawArgs, "topK", ec.unmarshalOInt2ᚖint)
+	if err != nil {
+		return nil, err
+	}
+	args["topK"] = arg2
 	return args, nil
 }
 
@@ -9311,6 +9712,266 @@ func (ec *executionContext) fieldContext_GraphEdge_label(_ context.Context, fiel
 	return fc, nil
 }
 
+func (ec *executionContext) _GraphEntity_id(ctx context.Context, field graphql.CollectedField, obj *GraphEntity) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_GraphEntity_id,
+		func(ctx context.Context) (any, error) {
+			return obj.ID, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_GraphEntity_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GraphEntity",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GraphEntity_type(ctx context.Context, field graphql.CollectedField, obj *GraphEntity) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_GraphEntity_type,
+		func(ctx context.Context) (any, error) {
+			return obj.Type, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_GraphEntity_type(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GraphEntity",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GraphEntity_name(ctx context.Context, field graphql.CollectedField, obj *GraphEntity) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_GraphEntity_name,
+		func(ctx context.Context) (any, error) {
+			return obj.Name, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_GraphEntity_name(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GraphEntity",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GraphEntity_userId(ctx context.Context, field graphql.CollectedField, obj *GraphEntity) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_GraphEntity_userId,
+		func(ctx context.Context) (any, error) {
+			return obj.UserID, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_GraphEntity_userId(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GraphEntity",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GraphEntity_properties(ctx context.Context, field graphql.CollectedField, obj *GraphEntity) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_GraphEntity_properties,
+		func(ctx context.Context) (any, error) {
+			return obj.Properties, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_GraphEntity_properties(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GraphEntity",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GraphEntity_createdAt(ctx context.Context, field graphql.CollectedField, obj *GraphEntity) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_GraphEntity_createdAt,
+		func(ctx context.Context) (any, error) {
+			return obj.CreatedAt, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_GraphEntity_createdAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GraphEntity",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GraphNeighborResult_entities(ctx context.Context, field graphql.CollectedField, obj *GraphNeighborResult) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_GraphNeighborResult_entities,
+		func(ctx context.Context) (any, error) {
+			return obj.Entities, nil
+		},
+		nil,
+		ec.marshalNGraphEntity2ᚕᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐGraphEntityᚄ,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_GraphNeighborResult_entities(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GraphNeighborResult",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_GraphEntity_id(ctx, field)
+			case "type":
+				return ec.fieldContext_GraphEntity_type(ctx, field)
+			case "name":
+				return ec.fieldContext_GraphEntity_name(ctx, field)
+			case "userId":
+				return ec.fieldContext_GraphEntity_userId(ctx, field)
+			case "properties":
+				return ec.fieldContext_GraphEntity_properties(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_GraphEntity_createdAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type GraphEntity", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GraphNeighborResult_relations(ctx context.Context, field graphql.CollectedField, obj *GraphNeighborResult) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_GraphNeighborResult_relations,
+		func(ctx context.Context) (any, error) {
+			return obj.Relations, nil
+		},
+		nil,
+		ec.marshalNGraphRelation2ᚕᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐGraphRelationᚄ,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_GraphNeighborResult_relations(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GraphNeighborResult",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_GraphRelation_id(ctx, field)
+			case "fromId":
+				return ec.fieldContext_GraphRelation_fromId(ctx, field)
+			case "toId":
+				return ec.fieldContext_GraphRelation_toId(ctx, field)
+			case "type":
+				return ec.fieldContext_GraphRelation_type(ctx, field)
+			case "weight":
+				return ec.fieldContext_GraphRelation_weight(ctx, field)
+			case "metadata":
+				return ec.fieldContext_GraphRelation_metadata(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type GraphRelation", field.Name)
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _GraphNode_id(ctx context.Context, field graphql.CollectedField, obj *GraphNode) (ret graphql.Marshaler) {
 	return graphql.ResolveField(
 		ctx,
@@ -9562,6 +10223,180 @@ func (ec *executionContext) _GraphQLConfig_baseUrl(ctx context.Context, field gr
 func (ec *executionContext) fieldContext_GraphQLConfig_baseUrl(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "GraphQLConfig",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GraphRelation_id(ctx context.Context, field graphql.CollectedField, obj *GraphRelation) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_GraphRelation_id,
+		func(ctx context.Context) (any, error) {
+			return obj.ID, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_GraphRelation_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GraphRelation",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GraphRelation_fromId(ctx context.Context, field graphql.CollectedField, obj *GraphRelation) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_GraphRelation_fromId,
+		func(ctx context.Context) (any, error) {
+			return obj.FromID, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_GraphRelation_fromId(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GraphRelation",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GraphRelation_toId(ctx context.Context, field graphql.CollectedField, obj *GraphRelation) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_GraphRelation_toId,
+		func(ctx context.Context) (any, error) {
+			return obj.ToID, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_GraphRelation_toId(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GraphRelation",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GraphRelation_type(ctx context.Context, field graphql.CollectedField, obj *GraphRelation) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_GraphRelation_type,
+		func(ctx context.Context) (any, error) {
+			return obj.Type, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_GraphRelation_type(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GraphRelation",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GraphRelation_weight(ctx context.Context, field graphql.CollectedField, obj *GraphRelation) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_GraphRelation_weight,
+		func(ctx context.Context) (any, error) {
+			return obj.Weight, nil
+		},
+		nil,
+		ec.marshalNFloat2float64,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_GraphRelation_weight(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GraphRelation",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Float does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GraphRelation_metadata(ctx context.Context, field graphql.CollectedField, obj *GraphRelation) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_GraphRelation_metadata,
+		func(ctx context.Context) (any, error) {
+			return obj.Metadata, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_GraphRelation_metadata(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GraphRelation",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -11642,6 +12477,93 @@ func (ec *executionContext) fieldContext_MemoryNode_properties(_ context.Context
 	return fc, nil
 }
 
+func (ec *executionContext) _MemoryStats_vectorCount(ctx context.Context, field graphql.CollectedField, obj *MemoryStats) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_MemoryStats_vectorCount,
+		func(ctx context.Context) (any, error) {
+			return obj.VectorCount, nil
+		},
+		nil,
+		ec.marshalNInt2int,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_MemoryStats_vectorCount(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "MemoryStats",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _MemoryStats_entityCount(ctx context.Context, field graphql.CollectedField, obj *MemoryStats) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_MemoryStats_entityCount,
+		func(ctx context.Context) (any, error) {
+			return obj.EntityCount, nil
+		},
+		nil,
+		ec.marshalNInt2int,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_MemoryStats_entityCount(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "MemoryStats",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _MemoryStats_relationCount(ctx context.Context, field graphql.CollectedField, obj *MemoryStats) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_MemoryStats_relationCount,
+		func(ctx context.Context) (any, error) {
+			return obj.RelationCount, nil
+		},
+		nil,
+		ec.marshalNInt2int,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_MemoryStats_relationCount(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "MemoryStats",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Message_id(ctx context.Context, field graphql.CollectedField, obj *Message) (ret graphql.Marshaler) {
 	return graphql.ResolveField(
 		ctx,
@@ -13249,6 +14171,129 @@ func (ec *executionContext) fieldContext_Mutation_executeCypher(ctx context.Cont
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_executeCypher_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_rememberMemory(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Mutation_rememberMemory,
+		func(ctx context.Context) (any, error) {
+			fc := graphql.GetFieldContext(ctx)
+			return ec.Resolvers.Mutation().RememberMemory(ctx, fc.Args["userId"].(string), fc.Args["content"].(string), fc.Args["metadata"].(*string))
+		},
+		nil,
+		ec.marshalNBoolean2bool,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Mutation_rememberMemory(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_rememberMemory_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_forgetMemory(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Mutation_forgetMemory,
+		func(ctx context.Context) (any, error) {
+			fc := graphql.GetFieldContext(ctx)
+			return ec.Resolvers.Mutation().ForgetMemory(ctx, fc.Args["id"].(string))
+		},
+		nil,
+		ec.marshalNBoolean2bool,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Mutation_forgetMemory(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_forgetMemory_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_bootstrapMemory(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Mutation_bootstrapMemory,
+		func(ctx context.Context) (any, error) {
+			fc := graphql.GetFieldContext(ctx)
+			return ec.Resolvers.Mutation().BootstrapMemory(ctx, fc.Args["userId"].(string), fc.Args["profile"].(string))
+		},
+		nil,
+		ec.marshalNBoolean2bool,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Mutation_bootstrapMemory(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_bootstrapMemory_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -16570,6 +17615,157 @@ func (ec *executionContext) fieldContext_Query_memory(_ context.Context, field g
 			}
 			return nil, fmt.Errorf("no field named %q was found under type MemoryGraph", field.Name)
 		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_vectorSearch(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Query_vectorSearch,
+		func(ctx context.Context) (any, error) {
+			fc := graphql.GetFieldContext(ctx)
+			return ec.Resolvers.Query().VectorSearch(ctx, fc.Args["userId"].(string), fc.Args["query"].(string), fc.Args["topK"].(*int))
+		},
+		nil,
+		ec.marshalNVectorSearchResult2ᚕᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐVectorSearchResultᚄ,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Query_vectorSearch(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_VectorSearchResult_id(ctx, field)
+			case "content":
+				return ec.fieldContext_VectorSearchResult_content(ctx, field)
+			case "score":
+				return ec.fieldContext_VectorSearchResult_score(ctx, field)
+			case "userId":
+				return ec.fieldContext_VectorSearchResult_userId(ctx, field)
+			case "metadata":
+				return ec.fieldContext_VectorSearchResult_metadata(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_VectorSearchResult_createdAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type VectorSearchResult", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_vectorSearch_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_graphNeighbors(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Query_graphNeighbors,
+		func(ctx context.Context) (any, error) {
+			fc := graphql.GetFieldContext(ctx)
+			return ec.Resolvers.Query().GraphNeighbors(ctx, fc.Args["entityId"].(string), fc.Args["depth"].(*int))
+		},
+		nil,
+		ec.marshalNGraphNeighborResult2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐGraphNeighborResult,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Query_graphNeighbors(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "entities":
+				return ec.fieldContext_GraphNeighborResult_entities(ctx, field)
+			case "relations":
+				return ec.fieldContext_GraphNeighborResult_relations(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type GraphNeighborResult", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_graphNeighbors_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_memoryStats(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Query_memoryStats,
+		func(ctx context.Context) (any, error) {
+			fc := graphql.GetFieldContext(ctx)
+			return ec.Resolvers.Query().MemoryStats(ctx, fc.Args["userId"].(string))
+		},
+		nil,
+		ec.marshalNMemoryStats2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMemoryStats,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Query_memoryStats(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "vectorCount":
+				return ec.fieldContext_MemoryStats_vectorCount(ctx, field)
+			case "entityCount":
+				return ec.fieldContext_MemoryStats_entityCount(ctx, field)
+			case "relationCount":
+				return ec.fieldContext_MemoryStats_relationCount(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type MemoryStats", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_memoryStats_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
 	}
 	return fc, nil
 }
@@ -20989,6 +22185,180 @@ func (ec *executionContext) fieldContext_UserRelationship_lastInteraction(_ cont
 	return fc, nil
 }
 
+func (ec *executionContext) _VectorSearchResult_id(ctx context.Context, field graphql.CollectedField, obj *VectorSearchResult) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_VectorSearchResult_id,
+		func(ctx context.Context) (any, error) {
+			return obj.ID, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_VectorSearchResult_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "VectorSearchResult",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _VectorSearchResult_content(ctx context.Context, field graphql.CollectedField, obj *VectorSearchResult) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_VectorSearchResult_content,
+		func(ctx context.Context) (any, error) {
+			return obj.Content, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_VectorSearchResult_content(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "VectorSearchResult",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _VectorSearchResult_score(ctx context.Context, field graphql.CollectedField, obj *VectorSearchResult) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_VectorSearchResult_score,
+		func(ctx context.Context) (any, error) {
+			return obj.Score, nil
+		},
+		nil,
+		ec.marshalNFloat2float64,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_VectorSearchResult_score(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "VectorSearchResult",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Float does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _VectorSearchResult_userId(ctx context.Context, field graphql.CollectedField, obj *VectorSearchResult) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_VectorSearchResult_userId,
+		func(ctx context.Context) (any, error) {
+			return obj.UserID, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_VectorSearchResult_userId(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "VectorSearchResult",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _VectorSearchResult_metadata(ctx context.Context, field graphql.CollectedField, obj *VectorSearchResult) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_VectorSearchResult_metadata,
+		func(ctx context.Context) (any, error) {
+			return obj.Metadata, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_VectorSearchResult_metadata(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "VectorSearchResult",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _VectorSearchResult_createdAt(ctx context.Context, field graphql.CollectedField, obj *VectorSearchResult) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_VectorSearchResult_createdAt,
+		func(ctx context.Context) (any, error) {
+			return obj.CreatedAt, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_VectorSearchResult_createdAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "VectorSearchResult",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) ___Directive_name(ctx context.Context, field graphql.CollectedField, obj *introspection.Directive) (ret graphql.Marshaler) {
 	return graphql.ResolveField(
 		ctx,
@@ -24131,6 +25501,111 @@ func (ec *executionContext) _GraphEdge(ctx context.Context, sel ast.SelectionSet
 	return out
 }
 
+var graphEntityImplementors = []string{"GraphEntity"}
+
+func (ec *executionContext) _GraphEntity(ctx context.Context, sel ast.SelectionSet, obj *GraphEntity) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, graphEntityImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("GraphEntity")
+		case "id":
+			out.Values[i] = ec._GraphEntity_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "type":
+			out.Values[i] = ec._GraphEntity_type(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "name":
+			out.Values[i] = ec._GraphEntity_name(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "userId":
+			out.Values[i] = ec._GraphEntity_userId(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "properties":
+			out.Values[i] = ec._GraphEntity_properties(ctx, field, obj)
+		case "createdAt":
+			out.Values[i] = ec._GraphEntity_createdAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.Deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.ProcessDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var graphNeighborResultImplementors = []string{"GraphNeighborResult"}
+
+func (ec *executionContext) _GraphNeighborResult(ctx context.Context, sel ast.SelectionSet, obj *GraphNeighborResult) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, graphNeighborResultImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("GraphNeighborResult")
+		case "entities":
+			out.Values[i] = ec._GraphNeighborResult_entities(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "relations":
+			out.Values[i] = ec._GraphNeighborResult_relations(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.Deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.ProcessDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
 var graphNodeImplementors = []string{"GraphNode"}
 
 func (ec *executionContext) _GraphNode(ctx context.Context, sel ast.SelectionSet, obj *GraphNode) graphql.Marshaler {
@@ -24197,6 +25672,67 @@ func (ec *executionContext) _GraphQLConfig(ctx context.Context, sel ast.Selectio
 			out.Values[i] = ec._GraphQLConfig_host(ctx, field, obj)
 		case "baseUrl":
 			out.Values[i] = ec._GraphQLConfig_baseUrl(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.Deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.ProcessDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var graphRelationImplementors = []string{"GraphRelation"}
+
+func (ec *executionContext) _GraphRelation(ctx context.Context, sel ast.SelectionSet, obj *GraphRelation) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, graphRelationImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("GraphRelation")
+		case "id":
+			out.Values[i] = ec._GraphRelation_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "fromId":
+			out.Values[i] = ec._GraphRelation_fromId(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "toId":
+			out.Values[i] = ec._GraphRelation_toId(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "type":
+			out.Values[i] = ec._GraphRelation_type(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "weight":
+			out.Values[i] = ec._GraphRelation_weight(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "metadata":
+			out.Values[i] = ec._GraphRelation_metadata(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -24994,6 +26530,55 @@ func (ec *executionContext) _MemoryNode(ctx context.Context, sel ast.SelectionSe
 	return out
 }
 
+var memoryStatsImplementors = []string{"MemoryStats"}
+
+func (ec *executionContext) _MemoryStats(ctx context.Context, sel ast.SelectionSet, obj *MemoryStats) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, memoryStatsImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("MemoryStats")
+		case "vectorCount":
+			out.Values[i] = ec._MemoryStats_vectorCount(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "entityCount":
+			out.Values[i] = ec._MemoryStats_entityCount(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "relationCount":
+			out.Values[i] = ec._MemoryStats_relationCount(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.Deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.ProcessDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
 var messageImplementors = []string{"Message"}
 
 func (ec *executionContext) _Message(ctx context.Context, sel ast.SelectionSet, obj *Message) graphql.Marshaler {
@@ -25434,6 +27019,27 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "executeCypher":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_executeCypher(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "rememberMemory":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_rememberMemory(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "forgetMemory":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_forgetMemory(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "bootstrapMemory":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_bootstrapMemory(ctx, field)
 			})
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
@@ -26366,6 +27972,72 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_memory(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "vectorSearch":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_vectorSearch(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "graphNeighbors":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_graphNeighbors(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "memoryStats":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_memoryStats(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
 				return res
 			}
 
@@ -27864,6 +29536,67 @@ func (ec *executionContext) _UserRelationship(ctx context.Context, sel ast.Selec
 	return out
 }
 
+var vectorSearchResultImplementors = []string{"VectorSearchResult"}
+
+func (ec *executionContext) _VectorSearchResult(ctx context.Context, sel ast.SelectionSet, obj *VectorSearchResult) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, vectorSearchResultImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("VectorSearchResult")
+		case "id":
+			out.Values[i] = ec._VectorSearchResult_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "content":
+			out.Values[i] = ec._VectorSearchResult_content(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "score":
+			out.Values[i] = ec._VectorSearchResult_score(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "userId":
+			out.Values[i] = ec._VectorSearchResult_userId(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "metadata":
+			out.Values[i] = ec._VectorSearchResult_metadata(ctx, field, obj)
+		case "createdAt":
+			out.Values[i] = ec._VectorSearchResult_createdAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.Deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.ProcessDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
 var __DirectiveImplementors = []string{"__Directive"}
 
 func (ec *executionContext) ___Directive(ctx context.Context, sel ast.SelectionSet, obj *introspection.Directive) graphql.Marshaler {
@@ -28415,6 +30148,46 @@ func (ec *executionContext) marshalNGraphEdge2ᚖgithubᚗcomᚋBangRocketᚋMyP
 	return ec._GraphEdge(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNGraphEntity2ᚕᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐGraphEntityᚄ(ctx context.Context, sel ast.SelectionSet, v []*GraphEntity) graphql.Marshaler {
+	ret := graphql.MarshalSliceConcurrently(ctx, len(v), 0, false, func(ctx context.Context, i int) graphql.Marshaler {
+		fc := graphql.GetFieldContext(ctx)
+		fc.Result = &v[i]
+		return ec.marshalNGraphEntity2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐGraphEntity(ctx, sel, v[i])
+	})
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNGraphEntity2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐGraphEntity(ctx context.Context, sel ast.SelectionSet, v *GraphEntity) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._GraphEntity(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNGraphNeighborResult2githubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐGraphNeighborResult(ctx context.Context, sel ast.SelectionSet, v GraphNeighborResult) graphql.Marshaler {
+	return ec._GraphNeighborResult(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNGraphNeighborResult2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐGraphNeighborResult(ctx context.Context, sel ast.SelectionSet, v *GraphNeighborResult) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._GraphNeighborResult(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNGraphNode2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐGraphNode(ctx context.Context, sel ast.SelectionSet, v *GraphNode) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -28423,6 +30196,32 @@ func (ec *executionContext) marshalNGraphNode2ᚖgithubᚗcomᚋBangRocketᚋMyP
 		return graphql.Null
 	}
 	return ec._GraphNode(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNGraphRelation2ᚕᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐGraphRelationᚄ(ctx context.Context, sel ast.SelectionSet, v []*GraphRelation) graphql.Marshaler {
+	ret := graphql.MarshalSliceConcurrently(ctx, len(v), 0, false, func(ctx context.Context, i int) graphql.Marshaler {
+		fc := graphql.GetFieldContext(ctx)
+		fc.Result = &v[i]
+		return ec.marshalNGraphRelation2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐGraphRelation(ctx, sel, v[i])
+	})
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNGraphRelation2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐGraphRelation(ctx context.Context, sel ast.SelectionSet, v *GraphRelation) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._GraphRelation(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNHeartbeatItem2githubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐHeartbeatItem(ctx context.Context, sel ast.SelectionSet, v HeartbeatItem) graphql.Marshaler {
@@ -28702,6 +30501,20 @@ func (ec *executionContext) marshalNMemoryNode2ᚖgithubᚗcomᚋBangRocketᚋMy
 		return graphql.Null
 	}
 	return ec._MemoryNode(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNMemoryStats2githubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMemoryStats(ctx context.Context, sel ast.SelectionSet, v MemoryStats) graphql.Marshaler {
+	return ec._MemoryStats(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNMemoryStats2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMemoryStats(ctx context.Context, sel ast.SelectionSet, v *MemoryStats) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._MemoryStats(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNMessage2ᚕᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐMessageᚄ(ctx context.Context, sel ast.SelectionSet, v []*Message) graphql.Marshaler {
@@ -29249,6 +31062,32 @@ func (ec *executionContext) marshalNUserRelationship2ᚖgithubᚗcomᚋBangRocke
 		return graphql.Null
 	}
 	return ec._UserRelationship(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNVectorSearchResult2ᚕᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐVectorSearchResultᚄ(ctx context.Context, sel ast.SelectionSet, v []*VectorSearchResult) graphql.Marshaler {
+	ret := graphql.MarshalSliceConcurrently(ctx, len(v), 0, false, func(ctx context.Context, i int) graphql.Marshaler {
+		fc := graphql.GetFieldContext(ctx)
+		fc.Result = &v[i]
+		return ec.marshalNVectorSearchResult2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐVectorSearchResult(ctx, sel, v[i])
+	})
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNVectorSearchResult2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐVectorSearchResult(ctx context.Context, sel ast.SelectionSet, v *VectorSearchResult) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._VectorSearchResult(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalN__Directive2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐDirective(ctx context.Context, sel ast.SelectionSet, v introspection.Directive) graphql.Marshaler {

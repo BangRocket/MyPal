@@ -19,6 +19,7 @@ import (
 	heartbeatsvc "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/heartbeat"
 	sandboxsvc "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/sandbox"
 	personalitysvc "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/personality"
+	memorysvc "github.com/BangRocket/MyPal/apps/backend/internal/domain/services/memory"
 )
 
 // MessageDispatcherPort processes messages through the unified handler.
@@ -60,6 +61,7 @@ type Deps struct {
 	OrganicConfigRepo ports.OrganicResponseConfigRepositoryPort
 	HeartbeatSvc      *heartbeatsvc.Service
 	SandboxMgr        *sandboxsvc.Manager
+	MemorySys         *memorysvc.MemorySystem
 }
 
 // Agent implements agent.Provider.

@@ -59,10 +59,53 @@ type CypherResult {
   error:   String
 }
 
+# ─── Enhanced memory (vector + graph) ────────────────────────────────────────
+
+type VectorSearchResult {
+  id:        String!
+  content:   String!
+  score:     Float!
+  userId:    String!
+  metadata:  String
+  createdAt: String!
+}
+
+type GraphEntity {
+  id:         String!
+  type:       String!
+  name:       String!
+  userId:     String!
+  properties: String
+  createdAt:  String!
+}
+
+type GraphRelation {
+  id:       String!
+  fromId:   String!
+  toId:     String!
+  type:     String!
+  weight:   Float!
+  metadata: String
+}
+
+type GraphNeighborResult {
+  entities:  [GraphEntity!]!
+  relations: [GraphRelation!]!
+}
+
+type MemoryStats {
+  vectorCount:   Int!
+  entityCount:   Int!
+  relationCount: Int!
+}
+
 extend type Query {
   searchMemory(query: String!): SearchMemoryResult
   userGraph(userId: String): UserGraphResult
   memory: MemoryGraph
+  vectorSearch(userId: String!, query: String!, topK: Int): [VectorSearchResult!]!
+  graphNeighbors(entityId: String!, depth: Int): GraphNeighborResult!
+  memoryStats(userId: String!): MemoryStats!
 }
 
 extend type Mutation {
@@ -86,4 +129,7 @@ extend type Mutation {
     relationType: String!
   ): AddRelationResult!
   executeCypher(cypher: String!): CypherResult!
+  rememberMemory(userId: String!, content: String!, metadata: String): Boolean!
+  forgetMemory(id: String!): Boolean!
+  bootstrapMemory(userId: String!, profile: String!): Boolean!
 }

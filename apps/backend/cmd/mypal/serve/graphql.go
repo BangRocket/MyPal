@@ -98,6 +98,7 @@ func (a *App) initGraphQL() {
 		OrganicConfigRepo: a.OrganicConfigRepo,
 		HeartbeatSvc:      hbSvc,
 		SandboxMgr:        a.SandboxMgr,
+		MemorySys:         a.MemorySys,
 	}
 
 	a.MsgHandler.SetCapabilitiesChecker(func(cap string) bool {
