@@ -5,7 +5,7 @@ import { createSignal, createMemo, For, Show } from "solid-js";
 import { createMutation, createQuery, useQueryClient } from "@tanstack/solid-query";
 import { useHeartbeatItems } from "@mypal/ui/hooks";
 import type { HeartbeatItem, HeartbeatItemInput, HeartbeatLog } from "@mypal/ui/types";
-import { HEARTBEAT_LOGS_QUERY } from "@mypal/ui/graphql/queries";
+import { HEARTBEAT_LOGS_QUERY, EXPORT_HEARTBEAT_QUERY } from "@mypal/ui/graphql/queries";
 import {
   CREATE_HEARTBEAT_ITEM_MUTATION,
   UPDATE_HEARTBEAT_ITEM_MUTATION,
@@ -107,6 +107,26 @@ const HeartbeatView: Component = () => {
   const flash = (type: "success" | "error", text: string) => {
     setMessage({ type, text });
     setTimeout(clearMessage, 3000);
+  };
+
+  // ── Export handler ──────────────────────────────────────────────────────
+
+  const handleExport = async () => {
+    try {
+      const data = await client.request<{ exportHeartbeat: string }>(EXPORT_HEARTBEAT_QUERY);
+      const blob = new Blob([data.exportHeartbeat], { type: "text/markdown" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "HEARTBEAT.md";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      flash("success", "Heartbeat exported");
+    } catch (err) {
+      flash("error", err instanceof Error ? err.message : "Export failed");
+    }
   };
 
   // ── Sorted items ─────────────────────────────────────────────────────────
@@ -285,6 +305,10 @@ const HeartbeatView: Component = () => {
                 {message()?.text}
               </span>
             </Show>
+            <button class="save-btn" onClick={handleExport}>
+              <span class="material-symbols-outlined" style={{ "font-size": "16px" }}>download</span>
+              Export
+            </button>
             <button class="save-btn" onClick={openCreate}>
               <span class="material-symbols-outlined" style={{ "font-size": "16px" }}>add</span>
               New Heartbeat

@@ -236,6 +236,7 @@ type HeartbeatRepositoryPort interface {
 	Create(ctx context.Context, item *models.HeartbeatItemModel) error
 	GetByID(ctx context.Context, id string) (*models.HeartbeatItemModel, error)
 	ListActive(ctx context.Context) ([]models.HeartbeatItemModel, error)
+	ListAll(ctx context.Context) ([]models.HeartbeatItemModel, error)
 	ListDue(ctx context.Context, now time.Time) ([]models.HeartbeatItemModel, error)
 	Update(ctx context.Context, item *models.HeartbeatItemModel) error
 	Delete(ctx context.Context, id string) error

@@ -46,6 +46,16 @@ func (r *repository) ListActive(ctx context.Context) ([]domainmodels.HeartbeatIt
 	return models, nil
 }
 
+func (r *repository) ListAll(ctx context.Context) ([]domainmodels.HeartbeatItemModel, error) {
+	var models []domainmodels.HeartbeatItemModel
+	if err := r.db.WithContext(ctx).
+		Order("priority ASC, next_run ASC").
+		Find(&models).Error; err != nil {
+		return nil, err
+	}
+	return models, nil
+}
+
 func (r *repository) ListDue(ctx context.Context, now time.Time) ([]domainmodels.HeartbeatItemModel, error) {
 	var models []domainmodels.HeartbeatItemModel
 	if err := r.db.WithContext(ctx).

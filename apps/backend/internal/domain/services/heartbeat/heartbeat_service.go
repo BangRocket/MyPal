@@ -85,6 +85,11 @@ func (s *Service) List(ctx context.Context) ([]models.HeartbeatItemModel, error)
 	return s.repo.ListActive(ctx)
 }
 
+// ListAll returns all heartbeat items regardless of status.
+func (s *Service) ListAll(ctx context.Context) ([]models.HeartbeatItemModel, error) {
+	return s.repo.ListAll(ctx)
+}
+
 // Delete removes a heartbeat item by ID.
 func (s *Service) Delete(ctx context.Context, id string) error {
 	return s.repo.Delete(ctx, id)

@@ -1375,6 +1375,80 @@ func (d *Deps) CompleteHeartbeatItem(ctx context.Context, id string) (bool, erro
 	return err == nil, err
 }
 
+// ExportHeartbeat returns a markdown-formatted export of all heartbeat items.
+func (d *Deps) ExportHeartbeat(ctx context.Context) (string, error) {
+	if d.HeartbeatSvc == nil {
+		return "", nil
+	}
+	items, err := d.HeartbeatSvc.ListAll(ctx)
+	if err != nil {
+		return "", err
+	}
+
+	// Group items by status.
+	var active, snoozed, completed []models.HeartbeatItemModel
+	for _, item := range items {
+		switch item.Status {
+		case "active":
+			active = append(active, item)
+		case "snoozed":
+			snoozed = append(snoozed, item)
+		case "completed":
+			completed = append(completed, item)
+		default:
+			// cancelled or unknown — group with completed
+			completed = append(completed, item)
+		}
+	}
+
+	var sb strings.Builder
+	sb.WriteString("# MyPal Heartbeat\n\n")
+	sb.WriteString(fmt.Sprintf("Generated: %s\n", time.Now().UTC().Format(time.RFC3339)))
+
+	writeSection := func(heading string, group []models.HeartbeatItemModel) {
+		sb.WriteString(fmt.Sprintf("\n## %s\n", heading))
+		if len(group) == 0 {
+			sb.WriteString("\n_None_\n")
+			return
+		}
+		for _, item := range group {
+			sb.WriteString(fmt.Sprintf("\n### [P%d] %s\n", item.Priority, item.Title))
+			if item.Schedule != "" {
+				sb.WriteString(fmt.Sprintf("- **Schedule**: %s\n", item.Schedule))
+			}
+			target := ""
+			if item.TargetUser != "" {
+				target = "user:" + item.TargetUser
+			}
+			if item.TargetChannel != "" {
+				if target != "" {
+					target += " via " + item.TargetChannel
+				} else {
+					target = item.TargetChannel
+				}
+			}
+			if target != "" {
+				sb.WriteString(fmt.Sprintf("- **Target**: %s\n", target))
+			}
+			if item.Context != "" {
+				sb.WriteString(fmt.Sprintf("- **Context**: %s\n", item.Context))
+			}
+			if !item.LastRun.IsZero() {
+				sb.WriteString(fmt.Sprintf("- **Last Run**: %s\n", item.LastRun.UTC().Format(time.RFC3339)))
+			}
+			if !item.NextRun.IsZero() {
+				sb.WriteString(fmt.Sprintf("- **Next Run**: %s\n", item.NextRun.UTC().Format(time.RFC3339)))
+			}
+		}
+	}
+
+	writeSection("Active Items", active)
+	writeSection("Snoozed Items", snoozed)
+	writeSection("Completed Items", completed)
+
+	return sb.String(), nil
+}
+
 // ─── Heartbeat mapping helpers ───────────────────────────────────────────────
 
 func heartbeatItemModelToGenerated(m *models.HeartbeatItemModel) *generated.HeartbeatItem {

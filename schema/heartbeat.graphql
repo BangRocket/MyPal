@@ -38,6 +38,7 @@ extend type Query {
   heartbeatItems: [HeartbeatItem!]!
   heartbeatItem(id: String!): HeartbeatItem
   heartbeatLogs(itemId: String!, limit: Int): [HeartbeatLog!]!
+  exportHeartbeat: String!
 }
 
 extend type Mutation {

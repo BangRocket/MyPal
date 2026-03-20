@@ -464,6 +464,12 @@ export const HEARTBEAT_LOGS_QUERY = /* GraphQL */ `
   }
 `;
 
+export const EXPORT_HEARTBEAT_QUERY = /* GraphQL */ `
+  query ExportHeartbeat {
+    exportHeartbeat
+  }
+`;
+
 // ─── Sandbox ──────────────────────────────────────────────────────────────────
 
 export const SANDBOX_INSTANCES_QUERY = /* GraphQL */ `

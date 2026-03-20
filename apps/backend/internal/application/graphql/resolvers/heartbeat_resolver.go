@@ -74,3 +74,11 @@ func (r *queryResolver) HeartbeatLogs(ctx context.Context, itemID string, limit 
 	}
 	return r.Deps.HeartbeatLogs(ctx, itemID, limit)
 }
+
+// ExportHeartbeat is the resolver for the exportHeartbeat field.
+func (r *queryResolver) ExportHeartbeat(ctx context.Context) (string, error) {
+	if r.Deps == nil {
+		return "", nil
+	}
+	return r.Deps.ExportHeartbeat(ctx)
+}
