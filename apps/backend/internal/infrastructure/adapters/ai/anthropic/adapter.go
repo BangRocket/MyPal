@@ -15,6 +15,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
+	"time"
 
 	anthropic "github.com/anthropics/anthropic-sdk-go"
 	"github.com/anthropics/anthropic-sdk-go/option"
@@ -128,6 +129,25 @@ func (a *Adapter) GetMaxTokens() int { return a.maxTokens }
 // for the Anthropic API (which does not allow colons in tool names).
 func encodeToolName(name string) string {
 	return strings.ReplaceAll(name, ":", "__")
+}
+
+// sanitizeToolID ensures a tool_use_id matches Anthropic's required pattern
+// ^[a-zA-Z0-9_-]+$. Any invalid character is replaced with an underscore.
+// This handles IDs from other providers (e.g. OpenAI's "call_..." format
+// or UUIDs) that may appear in conversation history after a provider switch.
+func sanitizeToolID(id string) string {
+	if id == "" {
+		return "tool_" + fmt.Sprintf("%d", time.Now().UnixNano())
+	}
+	var b strings.Builder
+	for _, r := range id {
+		if (r >= 'a' && r <= 'z') || (r >= 'A' && r <= 'Z') || (r >= '0' && r <= '9') || r == '_' || r == '-' {
+			b.WriteRune(r)
+		} else {
+			b.WriteByte('_')
+		}
+	}
+	return b.String()
 }
 
 // decodeToolName restores "__" back to ":" after receiving tool calls from the
@@ -246,7 +266,7 @@ func convertMessages(msgs []ports.ChatMessage) ([]anthropic.TextBlockParam, []an
 			params = append(params, anthropic.NewUserMessage(
 				anthropic.ContentBlockParamUnion{
 					OfToolResult: &anthropic.ToolResultBlockParam{
-						ToolUseID: m.ToolCallID,
+						ToolUseID: sanitizeToolID(m.ToolCallID),
 						Content:   resultContent,
 					},
 				},
@@ -263,7 +283,7 @@ func convertMessages(msgs []ports.ChatMessage) ([]anthropic.TextBlockParam, []an
 				inputRaw := json.RawMessage(tc.Function.Arguments)
 				blocks = append(blocks, anthropic.ContentBlockParamUnion{
 					OfToolUse: &anthropic.ToolUseBlockParam{
-						ID:    tc.ID,
+						ID:    sanitizeToolID(tc.ID),
 						Name:  encodeToolName(tc.Function.Name),
 						Input: inputRaw,
 					},
