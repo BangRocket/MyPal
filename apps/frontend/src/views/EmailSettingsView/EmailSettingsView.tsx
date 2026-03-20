@@ -1,13 +1,19 @@
 // Copyright (c) MyPal contributors. See LICENSE for details.
 
 import type { Component } from "solid-js";
-import { createSignal, Show, onMount } from "solid-js";
+import { createSignal, Show, For, onMount } from "solid-js";
 import { A } from "@solidjs/router";
 import { EMAIL_CONFIG_QUERY } from "@mypal/ui/graphql/queries";
 import { GRAPHQL_ENDPOINT } from "../../graphql/client";
 import { getStoredToken, setNeedsAuth } from "../../stores/authStore";
 import AppShell from "../../components/AppShell";
 import "./EmailSettingsView.css";
+
+interface EmailFilterRule {
+  field: string;
+  pattern: string;
+  action: string;
+}
 
 interface EmailConfig {
   enabled: boolean;
@@ -21,6 +27,7 @@ interface EmailConfig {
   smtpTls: boolean;
   pollInterval: number;
   processedLabel: string;
+  filters: EmailFilterRule[];
 }
 
 function graphqlHeaders(): Record<string, string> {
@@ -205,6 +212,49 @@ const EmailSettingsView: Component = () => {
                   </tr>
                 </tbody>
               </table>
+            </section>
+          </Show>
+
+          <Show when={config()?.filters && config()!.filters.length > 0}>
+            <section>
+              <h2 class="email-settings-section__title">Filter Rules</h2>
+              <table class="email-settings-table">
+                <thead>
+                  <tr>
+                    <th>Field</th>
+                    <th>Pattern</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <For each={config()!.filters}>
+                    {(filter) => (
+                      <tr>
+                        <td><code class="email-settings-table__mono">{filter.field}</code></td>
+                        <td><code class="email-settings-table__mono">{filter.pattern}</code></td>
+                        <td>
+                          <span
+                            class="email-settings-table__bool"
+                            classList={{
+                              "email-settings-table__bool--yes": filter.action === "process",
+                              "email-settings-table__bool--no": filter.action === "ignore",
+                            }}
+                          >
+                            {filter.action}
+                          </span>
+                        </td>
+                      </tr>
+                    )}
+                  </For>
+                </tbody>
+              </table>
+            </section>
+          </Show>
+
+          <Show when={!config()?.filters || config()!.filters.length === 0}>
+            <section>
+              <h2 class="email-settings-section__title">Filter Rules</h2>
+              <p class="email-settings-empty">No filter rules configured. All incoming emails will be processed.</p>
             </section>
           </Show>
 
