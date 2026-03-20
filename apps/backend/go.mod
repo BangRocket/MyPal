@@ -25,7 +25,7 @@ require (
 	github.com/spf13/cobra v1.10.2
 	github.com/spf13/viper v1.21.0
 	github.com/stretchr/testify v1.11.1
-	github.com/twilio/twilio-go v1.30.2
+	github.com/twilio/twilio-go v1.30.3
 	github.com/vektah/gqlparser/v2 v2.5.32
 	github.com/wapikit/wapi.go v0.7.5
 	golang.org/x/crypto v0.48.0
