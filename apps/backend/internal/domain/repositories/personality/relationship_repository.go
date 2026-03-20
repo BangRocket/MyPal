@@ -65,7 +65,7 @@ func (r *relationshipRepository) IncrementInteraction(ctx context.Context, userI
 		`UPDATE user_persona_relationships
 		 SET interaction_count = interaction_count + 1,
 		     last_interaction  = ?,
-		     familiarity       = MIN(1.0, familiarity + 0.01 * (1.0 - familiarity)),
+		     familiarity       = LEAST(1.0, familiarity + 0.01 * (1.0 - familiarity)),
 		     updated_at        = ?
 		 WHERE user_id = ? AND personality_id = ?`,
 		now, now, userID, personalityID,

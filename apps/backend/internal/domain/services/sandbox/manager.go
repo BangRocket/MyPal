@@ -160,7 +160,7 @@ func (m *Manager) WarmPool(ctx context.Context, image string, count int) error {
 			MemLimit:  m.memDefault,
 			CPULimit:  m.cpuDefault,
 			NetPolicy: m.netDefault,
-			UserID:    "__pool__",
+			UserID:    fmt.Sprintf("pool-%d", i),
 		})
 		if err != nil {
 			return err
