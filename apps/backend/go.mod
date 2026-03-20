@@ -17,7 +17,7 @@ require (
 	github.com/jackc/pgx/v5 v5.6.0
 	github.com/mark3labs/mcp-go v0.45.0
 	github.com/neo4j/neo4j-go-driver/v5 v5.28.4
-	github.com/openai/openai-go/v3 v3.26.0
+	github.com/openai/openai-go/v3 v3.29.0
 	github.com/pion/opus v0.0.0-20260219180131-abe26becac00
 	github.com/prometheus/client_golang v1.23.2
 	github.com/redis/go-redis/v9 v9.18.0
