@@ -84,6 +84,14 @@ func (b *Backend) Create(ctx context.Context, cfg ports.SandboxConfig) (*ports.S
 		args = append(args, "--network", net)
 	}
 
+	for _, m := range cfg.Mounts {
+		vol := m.HostPath + ":" + m.ContainerPath
+		if m.ReadOnly {
+			vol += ":ro"
+		}
+		args = append(args, "-v", vol)
+	}
+
 	args = append(args, image, "sleep", "infinity")
 
 	var createOut, createErr bytes.Buffer

@@ -136,10 +136,14 @@ func (c *Config) Validate() error {
 			default:
 				errs = append(errs, fmt.Sprintf("memory.vector.backend \"pgvector\" requires database.driver to be \"postgres\" or \"pgx\", got %q", c.Database.Driver))
 			}
+		case "qdrant":
+			if c.Memory.Vector.Qdrant.Endpoint == "" {
+				errs = append(errs, "memory.vector.qdrant.endpoint is required when memory.vector.backend is \"qdrant\"")
+			}
 		case "":
 			errs = append(errs, "memory.vector.backend is required when memory.vector.enabled is true")
 		default:
-			errs = append(errs, fmt.Sprintf("memory.vector.backend %q is not supported; use \"pgvector\"", c.Memory.Vector.Backend))
+			errs = append(errs, fmt.Sprintf("memory.vector.backend %q is not supported; use \"pgvector\" or \"qdrant\"", c.Memory.Vector.Backend))
 		}
 	}
 
@@ -389,8 +393,13 @@ type MemoryConfig struct {
 // VectorMemoryConfig controls the enhanced vector (semantic) memory subsystem.
 type VectorMemoryConfig struct {
 	Enabled bool   `mapstructure:"enabled"`
-	Backend string `mapstructure:"backend"` // "pgvector" (default)
+	Backend string `mapstructure:"backend"` // "pgvector" or "qdrant"
 	TopK    int    `mapstructure:"top_k"`   // default 10
+	Qdrant  struct {
+		Endpoint   string `mapstructure:"endpoint"`   // default "http://localhost:6333"
+		Collection string `mapstructure:"collection"` // default "mypal_memories"
+		APIKey     string `mapstructure:"api_key"`     // optional
+	} `mapstructure:"qdrant"`
 }
 
 // GraphMemoryConfig controls the enhanced graph memory subsystem.
@@ -728,6 +737,9 @@ func setDefaults() {
 	viper.SetDefault("memory.vector.enabled", false)
 	viper.SetDefault("memory.vector.backend", "pgvector")
 	viper.SetDefault("memory.vector.top_k", 10)
+	viper.SetDefault("memory.vector.qdrant.endpoint", "http://localhost:6333")
+	viper.SetDefault("memory.vector.qdrant.collection", "mypal_memories")
+	viper.SetDefault("memory.vector.qdrant.api_key", "")
 	viper.SetDefault("memory.graph.enabled", false)
 	viper.SetDefault("memory.graph.backend", "file")
 	viper.SetDefault("memory.graph.falkordb.addr", "localhost:6379")

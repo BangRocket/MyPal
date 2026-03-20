@@ -1,5 +1,11 @@
 # ─── Sandbox / Code Execution ─────────────────────────────────────────────────
 
+input SandboxMountInput {
+  hostPath: String!
+  containerPath: String!
+  readOnly: Boolean
+}
+
 type SandboxInstance {
   id: String!
   image: String!
@@ -25,7 +31,7 @@ extend type Query {
 }
 
 extend type Mutation {
-  createSandbox(image: String!, persistent: Boolean): SandboxInstance!
+  createSandbox(image: String!, persistent: Boolean, mounts: [SandboxMountInput!]): SandboxInstance!
   executeSandbox(id: String!, command: String!): SandboxResult!
   destroySandbox(id: String!): Boolean!
 }

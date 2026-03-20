@@ -14,7 +14,7 @@ import (
 )
 
 // CreateSandbox is the resolver for the createSandbox field.
-func (r *mutationResolver) CreateSandbox(ctx context.Context, image string, persistent *bool) (*generated.SandboxInstance, error) {
+func (r *mutationResolver) CreateSandbox(ctx context.Context, image string, persistent *bool, mounts []*generated.SandboxMountInput) (*generated.SandboxInstance, error) {
 	if r.Deps == nil || r.Deps.SandboxMgr == nil {
 		return nil, fmt.Errorf("sandbox not enabled")
 	}
@@ -22,9 +22,24 @@ func (r *mutationResolver) CreateSandbox(ctx context.Context, image string, pers
 	if persistent != nil {
 		persist = *persistent
 	}
+
+	var portMounts []ports.Mount
+	for _, m := range mounts {
+		ro := false
+		if m.ReadOnly != nil {
+			ro = *m.ReadOnly
+		}
+		portMounts = append(portMounts, ports.Mount{
+			HostPath:      m.HostPath,
+			ContainerPath: m.ContainerPath,
+			ReadOnly:      ro,
+		})
+	}
+
 	inst, err := r.Deps.SandboxMgr.CreateSandbox(ctx, "dashboard", ports.SandboxConfig{
 		Image:      image,
 		Persistent: persist,
+		Mounts:     portMounts,
 	})
 	if err != nil {
 		return nil, err

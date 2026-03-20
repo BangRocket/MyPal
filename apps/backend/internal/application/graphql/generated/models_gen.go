@@ -522,6 +522,12 @@ type SandboxInstance struct {
 	CreatedAt  string  `json:"createdAt"`
 }
 
+type SandboxMountInput struct {
+	HostPath      string `json:"hostPath"`
+	ContainerPath string `json:"containerPath"`
+	ReadOnly      *bool  `json:"readOnly,omitempty"`
+}
+
 type SandboxResult struct {
 	ExitCode   int    `json:"exitCode"`
 	Stdout     string `json:"stdout"`

@@ -83,7 +83,8 @@ func (t *SandboxCreateTool) Definition() ToolDefinition {
 			"type": "object",
 			"properties": {
 				"image":    {"type": "string", "description": "Container image to use (e.g. python:3.12, node:20, ubuntu:22.04)"},
-				"packages": {"type": "array", "items": {"type": "string"}, "description": "Packages to pre-install in the sandbox (optional)"}
+				"packages": {"type": "array", "items": {"type": "string"}, "description": "Packages to pre-install in the sandbox (optional)"},
+				"mounts":   {"type": "array", "items": {"type": "object", "properties": {"host_path": {"type": "string"}, "container_path": {"type": "string"}, "read_only": {"type": "boolean"}}, "required": ["host_path", "container_path"]}, "description": "Host paths to mount into the sandbox (optional). Each entry has host_path, container_path, and an optional read_only flag (defaults to false)."}
 			},
 			"required": ["image"]
 		}`),
@@ -109,11 +110,32 @@ func (t *SandboxCreateTool) Execute(ctx context.Context, params map[string]inter
 		}
 	}
 
+	var mounts []ports.Mount
+	if raw, ok := params["mounts"].([]interface{}); ok {
+		for _, v := range raw {
+			m, ok := v.(map[string]interface{})
+			if !ok {
+				continue
+			}
+			mount := ports.Mount{
+				HostPath:      strVal(m, "host_path"),
+				ContainerPath: strVal(m, "container_path"),
+			}
+			if ro, ok := m["read_only"].(bool); ok {
+				mount.ReadOnly = ro
+			}
+			if mount.HostPath != "" && mount.ContainerPath != "" {
+				mounts = append(mounts, mount)
+			}
+		}
+	}
+
 	userID, _ := ctx.Value(ContextKeyUserID).(string)
 
 	cfg := ports.SandboxConfig{
 		Image:      image,
 		Packages:   packages,
+		Mounts:     mounts,
 		Persistent: true,
 	}
 
@@ -255,4 +277,10 @@ func (t *SandboxDestroyTool) Execute(ctx context.Context, params map[string]inte
 		"status": "destroyed",
 		"id":     id,
 	})
+}
+
+// strVal extracts a string value from a map[string]interface{}.
+func strVal(m map[string]interface{}, key string) string {
+	v, _ := m[key].(string)
+	return v
 }

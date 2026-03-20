@@ -120,6 +120,24 @@ func (b *Backend) Create(ctx context.Context, cfg ports.SandboxConfig) (*ports.S
 		return nil, fmt.Errorf("incus launch failed: %s: %w", strings.TrimSpace(stderr), err)
 	}
 
+	// Attach bind-mount disk devices for each configured mount.
+	for i, m := range cfg.Mounts {
+		devName := fmt.Sprintf("mount%d", i)
+		devArgs := []string{
+			"config", "device", "add", name, devName, "disk",
+			fmt.Sprintf("source=%s", m.HostPath),
+			fmt.Sprintf("path=%s", m.ContainerPath),
+		}
+		if m.ReadOnly {
+			devArgs = append(devArgs, "readonly=true")
+		}
+		if _, devStderr, devErr := b.run(ctx, devArgs...); devErr != nil {
+			// Best-effort cleanup on failure.
+			_, _, _ = b.run(ctx, "delete", name, "--force")
+			return nil, fmt.Errorf("incus device add %q failed: %s: %w", devName, strings.TrimSpace(devStderr), devErr)
+		}
+	}
+
 	return &ports.SandboxInstance{
 		ID:         cfg.UserID,
 		Image:      cfg.Image,

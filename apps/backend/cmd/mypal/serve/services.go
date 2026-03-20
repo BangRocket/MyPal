@@ -27,6 +27,7 @@ import (
 	memfilegraph "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/memory/filegraph"
 	memneo4j "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/memory/neo4j"
 	mempgvector "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/memory/pgvector"
+	memqdrant "github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/memory/qdrant"
 	"github.com/BangRocket/MyPal/apps/backend/internal/infrastructure/adapters/terminal"
 
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/models"
@@ -327,6 +328,19 @@ func (a *App) initEnhancedMemory() *memorysvc.MemorySystem {
 				log.Fatalf("enhanced memory: vector init failed: %v", err)
 			}
 			log.Println("enhanced memory: vector (pgvector) ready")
+		case "qdrant":
+			store := memqdrant.NewStore(
+				cfg.Memory.Vector.Qdrant.Endpoint,
+				cfg.Memory.Vector.Qdrant.Collection,
+				cfg.Memory.Vector.Qdrant.APIKey,
+			)
+			vectorMem = memorysvc.NewVectorMemory(store, embedder, cfg.Memory.Vector.TopK)
+			ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+			defer cancel()
+			if err := vectorMem.Init(ctx); err != nil {
+				log.Fatalf("enhanced memory: vector init failed: %v", err)
+			}
+			log.Printf("enhanced memory: vector (qdrant @ %s) ready", cfg.Memory.Vector.Qdrant.Endpoint)
 		default:
 			log.Fatalf("enhanced memory: unknown memory.vector.backend %q", cfg.Memory.Vector.Backend)
 		}

@@ -16,10 +16,18 @@ type SandboxBackend interface {
 	Get(ctx context.Context, id string) (*SandboxInstance, error)
 }
 
+// Mount describes a host path to bind-mount into a sandbox container.
+type Mount struct {
+	HostPath      string `json:"host_path"`
+	ContainerPath string `json:"container_path"`
+	ReadOnly      bool   `json:"read_only"`
+}
+
 // SandboxConfig describes the desired sandbox environment.
 type SandboxConfig struct {
 	Image      string
 	Packages   []string
+	Mounts     []Mount
 	MemLimit   int64         // bytes
 	CPULimit   float64       // cores
 	Timeout    time.Duration
