@@ -3,12 +3,15 @@
 package docker
 
 import (
+	"bufio"
 	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"os/exec"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/google/uuid"
@@ -189,6 +192,76 @@ func (b *Backend) Execute(ctx context.Context, id string, cmd ports.SandboxComma
 		Stderr:   stderr.String(),
 		Duration: duration,
 	}, nil
+}
+
+// ExecuteStream runs a command inside the sandbox and streams stdout/stderr
+// lines back via the returned SandboxOutputStream. The Lines channel receives
+// each line as it arrives; Done is closed when the command completes.
+func (b *Backend) ExecuteStream(ctx context.Context, id string, cmd ports.SandboxCommand) (*ports.SandboxOutputStream, error) {
+	name := containerName(id)
+
+	if cmd.Timeout > 0 {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, cmd.Timeout)
+		defer cancel()
+	}
+
+	args := []string{"exec"}
+	for k, v := range cmd.Env {
+		args = append(args, "-e", k+"="+v)
+	}
+	if cmd.WorkDir != "" {
+		args = append(args, "-w", cmd.WorkDir)
+	}
+	args = append(args, name, "sh", "-c", cmd.Cmd)
+
+	execCmd := b.docker(ctx, args...)
+
+	stdoutPipe, err := execCmd.StdoutPipe()
+	if err != nil {
+		return nil, fmt.Errorf("docker exec stdout pipe: %w", err)
+	}
+	stderrPipe, err := execCmd.StderrPipe()
+	if err != nil {
+		return nil, fmt.Errorf("docker exec stderr pipe: %w", err)
+	}
+
+	if cmd.Stdin != "" {
+		execCmd.Stdin = strings.NewReader(cmd.Stdin)
+	}
+
+	if err := execCmd.Start(); err != nil {
+		return nil, fmt.Errorf("docker exec start: %w", err)
+	}
+
+	stream := &ports.SandboxOutputStream{
+		Lines: make(chan string, 256),
+		Done:  make(chan struct{}),
+	}
+
+	var wg sync.WaitGroup
+	wg.Add(2)
+	scan := func(r io.Reader) {
+		defer wg.Done()
+		scanner := bufio.NewScanner(r)
+		for scanner.Scan() {
+			select {
+			case stream.Lines <- scanner.Text():
+			case <-ctx.Done():
+				return
+			}
+		}
+	}
+	go scan(stdoutPipe)
+	go scan(stderrPipe)
+
+	go func() {
+		wg.Wait()
+		_ = execCmd.Wait()
+		close(stream.Done)
+	}()
+
+	return stream, nil
 }
 
 // Destroy force-removes the sandbox container.

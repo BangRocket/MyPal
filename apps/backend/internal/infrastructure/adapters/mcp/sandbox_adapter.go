@@ -44,6 +44,20 @@ func (a *SandboxAdapter) ListUserSandboxes(ctx context.Context, userID string) (
 	return a.Mgr.ListUserSandboxes(ctx, userID)
 }
 
+func (a *SandboxAdapter) SpawnExecution(ctx context.Context, sandboxID string, cmd ports.SandboxCommand) (string, error) {
+	if a.Mgr == nil {
+		return "", fmt.Errorf("sandbox: not configured")
+	}
+	return a.Mgr.SpawnExecution(ctx, sandboxID, cmd)
+}
+
+func (a *SandboxAdapter) GetExecutionOutput(executionID string, tail int) (*sandbox.ExecutionOutput, error) {
+	if a.Mgr == nil {
+		return nil, fmt.Errorf("sandbox: not configured")
+	}
+	return a.Mgr.GetExecutionOutput(executionID, tail)
+}
+
 func (a *SandboxAdapter) DestroySandbox(ctx context.Context, id string) error {
 	if a.Mgr == nil {
 		return fmt.Errorf("sandbox: not configured")

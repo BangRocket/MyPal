@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
+	"github.com/BangRocket/MyPal/apps/backend/internal/domain/services/sandbox"
 )
 
 // contextKey is used to avoid collisions in context keys.
@@ -133,6 +134,8 @@ type SandboxService interface {
 	RunOnce(ctx context.Context, userID, image, cmd string) (*ports.SandboxResult, error)
 	CreateSandbox(ctx context.Context, userID string, cfg ports.SandboxConfig) (*ports.SandboxInstance, error)
 	Execute(ctx context.Context, sandboxID string, cmd ports.SandboxCommand) (*ports.SandboxResult, error)
+	SpawnExecution(ctx context.Context, sandboxID string, cmd ports.SandboxCommand) (string, error)
+	GetExecutionOutput(executionID string, tail int) (*sandbox.ExecutionOutput, error)
 	ListUserSandboxes(ctx context.Context, userID string) ([]ports.SandboxInstance, error)
 	DestroySandbox(ctx context.Context, id string) error
 }
@@ -1865,6 +1868,8 @@ func RegisterAllInternalTools(reg *ToolRegistry, tools InternalTools) {
 		reg.RegisterInternal("sandbox_execute", &SandboxExecuteTool{Tools: tools})
 		reg.RegisterInternal("sandbox_create", &SandboxCreateTool{Tools: tools})
 		reg.RegisterInternal("sandbox_run", &SandboxRunTool{Tools: tools})
+		reg.RegisterInternal("sandbox_spawn", &SandboxSpawnTool{Tools: tools})
+		reg.RegisterInternal("sandbox_get_output", &SandboxGetOutputTool{Tools: tools})
 		reg.RegisterInternal("sandbox_list", &SandboxListTool{Tools: tools})
 		reg.RegisterInternal("sandbox_destroy", &SandboxDestroyTool{Tools: tools})
 	}

@@ -65,6 +65,21 @@ func (r *mutationResolver) ExecuteSandbox(ctx context.Context, id string, comman
 	}, nil
 }
 
+// SpawnSandbox is the resolver for the spawnSandbox field.
+func (r *mutationResolver) SpawnSandbox(ctx context.Context, id string, command string) (*generated.SandboxSpawnResult, error) {
+	if r.Deps == nil || r.Deps.SandboxMgr == nil {
+		return nil, fmt.Errorf("sandbox not enabled")
+	}
+	execID, err := r.Deps.SandboxMgr.SpawnExecution(ctx, id, ports.SandboxCommand{Cmd: command})
+	if err != nil {
+		return nil, err
+	}
+	return &generated.SandboxSpawnResult{
+		ExecutionID: execID,
+		Status:      "running",
+	}, nil
+}
+
 // DestroySandbox is the resolver for the destroySandbox field.
 func (r *mutationResolver) DestroySandbox(ctx context.Context, id string) (bool, error) {
 	if r.Deps == nil || r.Deps.SandboxMgr == nil {
@@ -105,4 +120,28 @@ func (r *queryResolver) SandboxInstance(ctx context.Context, id string) (*genera
 		return nil, nil
 	}
 	return sandboxInstanceToGenerated(inst), nil
+}
+
+// SandboxOutput is the resolver for the sandboxOutput field.
+func (r *queryResolver) SandboxOutput(ctx context.Context, executionID string, tail *int) (*generated.SandboxOutputStream, error) {
+	if r.Deps == nil || r.Deps.SandboxMgr == nil {
+		return nil, fmt.Errorf("sandbox not enabled")
+	}
+	t := 0
+	if tail != nil {
+		t = *tail
+	}
+	out, err := r.Deps.SandboxMgr.GetExecutionOutput(executionID, t)
+	if err != nil {
+		return nil, err
+	}
+	result := &generated.SandboxOutputStream{
+		Output:  out.Output,
+		Running: out.Running,
+	}
+	if !out.Running {
+		ec := out.ExitCode
+		result.ExitCode = &ec
+	}
+	return result, nil
 }

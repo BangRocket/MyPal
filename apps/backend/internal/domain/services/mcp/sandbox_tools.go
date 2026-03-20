@@ -279,6 +279,105 @@ func (t *SandboxDestroyTool) Execute(ctx context.Context, params map[string]inte
 	})
 }
 
+// ---------------------------------------------------------------------------
+// sandbox_spawn
+// ---------------------------------------------------------------------------
+
+// SandboxSpawnTool starts a streaming command in an existing sandbox and
+// returns an execution ID that can be polled with sandbox_get_output.
+type SandboxSpawnTool struct{ Tools InternalTools }
+
+func (t *SandboxSpawnTool) Definition() ToolDefinition {
+	return ToolDefinition{
+		Name:        "sandbox_spawn",
+		Description: "Start a long-running command in a sandbox and return an execution ID. Poll sandbox_get_output to retrieve streaming output.",
+		InputSchema: json.RawMessage(`{
+			"type": "object",
+			"properties": {
+				"id":      {"type": "string", "description": "The sandbox ID returned by sandbox_create"},
+				"command": {"type": "string", "description": "Shell command to execute inside the sandbox"}
+			},
+			"required": ["id", "command"]
+		}`),
+	}
+}
+
+func (t *SandboxSpawnTool) Execute(ctx context.Context, params map[string]interface{}) (json.RawMessage, error) {
+	if t.Tools.Sandbox == nil {
+		return nil, fmt.Errorf("sandbox service unavailable")
+	}
+
+	id, _ := params["id"].(string)
+	if id == "" {
+		return nil, fmt.Errorf("id is required")
+	}
+	command, _ := params["command"].(string)
+	if command == "" {
+		return nil, fmt.Errorf("command is required")
+	}
+
+	cmd := ports.SandboxCommand{Cmd: command}
+	execID, err := t.Tools.Sandbox.SpawnExecution(ctx, id, cmd)
+	if err != nil {
+		return nil, fmt.Errorf("sandbox_spawn: %w", err)
+	}
+
+	return json.Marshal(map[string]interface{}{
+		"execution_id": execID,
+		"status":       "running",
+	})
+}
+
+// ---------------------------------------------------------------------------
+// sandbox_get_output
+// ---------------------------------------------------------------------------
+
+// SandboxGetOutputTool polls the accumulated output of a spawned sandbox
+// execution.
+type SandboxGetOutputTool struct{ Tools InternalTools }
+
+func (t *SandboxGetOutputTool) Definition() ToolDefinition {
+	return ToolDefinition{
+		Name:        "sandbox_get_output",
+		Description: "Get the current output of a running or completed sandbox execution started with sandbox_spawn.",
+		InputSchema: json.RawMessage(`{
+			"type": "object",
+			"properties": {
+				"execution_id": {"type": "string", "description": "The execution ID returned by sandbox_spawn"},
+				"tail":         {"type": "integer", "description": "Return only the last N lines of output (optional, returns all if omitted)"}
+			},
+			"required": ["execution_id"]
+		}`),
+	}
+}
+
+func (t *SandboxGetOutputTool) Execute(ctx context.Context, params map[string]interface{}) (json.RawMessage, error) {
+	if t.Tools.Sandbox == nil {
+		return nil, fmt.Errorf("sandbox service unavailable")
+	}
+
+	execID, _ := params["execution_id"].(string)
+	if execID == "" {
+		return nil, fmt.Errorf("execution_id is required")
+	}
+
+	tail := 0
+	if t, ok := params["tail"].(float64); ok && t > 0 {
+		tail = int(t)
+	}
+
+	out, err := t.Tools.Sandbox.GetExecutionOutput(execID, tail)
+	if err != nil {
+		return nil, fmt.Errorf("sandbox_get_output: %w", err)
+	}
+
+	return json.Marshal(map[string]interface{}{
+		"output":    out.Output,
+		"running":   out.Running,
+		"exit_code": out.ExitCode,
+	})
+}
+
 // strVal extracts a string value from a map[string]interface{}.
 func strVal(m map[string]interface{}, key string) string {
 	v, _ := m[key].(string)

@@ -11,9 +11,17 @@ import (
 type SandboxBackend interface {
 	Create(ctx context.Context, cfg SandboxConfig) (*SandboxInstance, error)
 	Execute(ctx context.Context, id string, cmd SandboxCommand) (*SandboxResult, error)
+	ExecuteStream(ctx context.Context, id string, cmd SandboxCommand) (*SandboxOutputStream, error)
 	Destroy(ctx context.Context, id string) error
 	List(ctx context.Context) ([]SandboxInstance, error)
 	Get(ctx context.Context, id string) (*SandboxInstance, error)
+}
+
+// SandboxOutputStream delivers stdout/stderr lines in real-time from a
+// running sandbox command. Consumers read from Lines until Done is closed.
+type SandboxOutputStream struct {
+	Lines chan string
+	Done  chan struct{}
 }
 
 // Mount describes a host path to bind-mount into a sandbox container.

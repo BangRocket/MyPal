@@ -528,11 +528,22 @@ type SandboxMountInput struct {
 	ReadOnly      *bool  `json:"readOnly,omitempty"`
 }
 
+type SandboxOutputStream struct {
+	Output   string `json:"output"`
+	Running  bool   `json:"running"`
+	ExitCode *int   `json:"exitCode,omitempty"`
+}
+
 type SandboxResult struct {
 	ExitCode   int    `json:"exitCode"`
 	Stdout     string `json:"stdout"`
 	Stderr     string `json:"stderr"`
 	DurationMs int    `json:"durationMs"`
+}
+
+type SandboxSpawnResult struct {
+	ExecutionID string `json:"executionId"`
+	Status      string `json:"status"`
 }
 
 type SchedulerConfig struct {

@@ -25,13 +25,26 @@ type SandboxResult {
   durationMs: Int!
 }
 
+type SandboxOutputStream {
+  output: String!
+  running: Boolean!
+  exitCode: Int
+}
+
 extend type Query {
   sandboxInstances: [SandboxInstance!]!
   sandboxInstance(id: String!): SandboxInstance
+  sandboxOutput(executionId: String!, tail: Int): SandboxOutputStream!
 }
 
 extend type Mutation {
   createSandbox(image: String!, persistent: Boolean, mounts: [SandboxMountInput!]): SandboxInstance!
   executeSandbox(id: String!, command: String!): SandboxResult!
+  spawnSandbox(id: String!, command: String!): SandboxSpawnResult!
   destroySandbox(id: String!): Boolean!
+}
+
+type SandboxSpawnResult {
+  executionId: String!
+  status: String!
 }

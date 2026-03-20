@@ -3,13 +3,16 @@
 package incus
 
 import (
+	"bufio"
 	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"os/exec"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
@@ -192,6 +195,74 @@ func (b *Backend) Execute(ctx context.Context, id string, cmd ports.SandboxComma
 		Stderr:   stderr,
 		Duration: dur,
 	}, nil
+}
+
+// ExecuteStream runs a command inside the sandbox and streams stdout/stderr
+// lines back via the returned SandboxOutputStream. The Lines channel receives
+// each line as it arrives; Done is closed when the command completes.
+func (b *Backend) ExecuteStream(ctx context.Context, id string, cmd ports.SandboxCommand) (*ports.SandboxOutputStream, error) {
+	if err := checkInstalled(); err != nil {
+		return nil, err
+	}
+
+	if cmd.Timeout > 0 {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, cmd.Timeout)
+		defer cancel()
+	}
+
+	args := []string{"exec", containerName(id)}
+	for k, v := range cmd.Env {
+		args = append(args, "--env", fmt.Sprintf("%s=%s", k, v))
+	}
+	if cmd.WorkDir != "" {
+		args = append(args, "--cwd", cmd.WorkDir)
+	}
+	args = append(args, "--", "sh", "-c", cmd.Cmd)
+
+	execCmd := b.incusCmd(ctx, args...)
+
+	stdoutPipe, err := execCmd.StdoutPipe()
+	if err != nil {
+		return nil, fmt.Errorf("incus exec stdout pipe: %w", err)
+	}
+	stderrPipe, err := execCmd.StderrPipe()
+	if err != nil {
+		return nil, fmt.Errorf("incus exec stderr pipe: %w", err)
+	}
+
+	if err := execCmd.Start(); err != nil {
+		return nil, fmt.Errorf("incus exec start: %w", err)
+	}
+
+	stream := &ports.SandboxOutputStream{
+		Lines: make(chan string, 256),
+		Done:  make(chan struct{}),
+	}
+
+	var wg sync.WaitGroup
+	wg.Add(2)
+	scan := func(r io.Reader) {
+		defer wg.Done()
+		scanner := bufio.NewScanner(r)
+		for scanner.Scan() {
+			select {
+			case stream.Lines <- scanner.Text():
+			case <-ctx.Done():
+				return
+			}
+		}
+	}
+	go scan(stdoutPipe)
+	go scan(stderrPipe)
+
+	go func() {
+		wg.Wait()
+		_ = execCmd.Wait()
+		close(stream.Done)
+	}()
+
+	return stream, nil
 }
 
 // Destroy forcibly deletes the specified sandbox container.

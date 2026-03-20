@@ -7,8 +7,11 @@ package sandbox
 import (
 	"context"
 	"fmt"
+	"strings"
 	"sync"
 	"time"
+
+	"github.com/google/uuid"
 
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
 )
@@ -17,6 +20,20 @@ import (
 type poolEntry struct {
 	ID    string
 	Image string
+}
+
+// StreamingExecution tracks a sandbox command that was spawned for streaming
+// output via a poll-based pattern (sandbox_spawn + sandbox_get_output).
+type StreamingExecution struct {
+	ID          string
+	SandboxID   string
+	Command     string
+	StartedAt   time.Time
+	stream      *ports.SandboxOutputStream
+	mu          sync.Mutex
+	outputLines []string
+	running     bool
+	exitCode    int
 }
 
 // Manager coordinates sandbox lifecycle through a SandboxBackend and maintains
@@ -30,6 +47,9 @@ type Manager struct {
 	poolSize   int
 	poolMu     sync.Mutex
 	pool       []poolEntry
+
+	execMu     sync.Mutex
+	executions map[string]*StreamingExecution
 }
 
 // NewManager creates a Manager with the given backend and default resource
@@ -50,6 +70,7 @@ func NewManager(
 		cpuDefault: cpuDefault,
 		netDefault: netDefault,
 		poolSize:   poolSize,
+		executions: make(map[string]*StreamingExecution),
 	}
 }
 
@@ -170,6 +191,114 @@ func (m *Manager) ClaimFromPool(ctx context.Context, userID, image string) (*por
 	}
 	m.poolMu.Unlock()
 	return nil, nil // no match, caller should create fresh
+}
+
+// ExecuteStream starts a streaming command in an existing sandbox and returns
+// the raw SandboxOutputStream. If the command has no timeout set, the
+// manager's default is applied.
+func (m *Manager) ExecuteStream(ctx context.Context, sandboxID string, cmd ports.SandboxCommand) (*ports.SandboxOutputStream, error) {
+	if cmd.Timeout == 0 {
+		cmd.Timeout = m.timeout
+	}
+	execCtx, cancel := context.WithTimeout(ctx, cmd.Timeout)
+	_ = cancel // kept alive by the background goroutine in the backend
+	return m.backend.ExecuteStream(execCtx, sandboxID, cmd)
+}
+
+// SpawnExecution starts a streaming command and registers it for later polling
+// via GetExecutionOutput. Returns the execution ID.
+func (m *Manager) SpawnExecution(ctx context.Context, sandboxID string, cmd ports.SandboxCommand) (string, error) {
+	stream, err := m.ExecuteStream(ctx, sandboxID, cmd)
+	if err != nil {
+		return "", err
+	}
+
+	execID := uuid.New().String()
+	exec := &StreamingExecution{
+		ID:        execID,
+		SandboxID: sandboxID,
+		Command:   cmd.Cmd,
+		StartedAt: time.Now(),
+		stream:    stream,
+		running:   true,
+	}
+
+	m.execMu.Lock()
+	m.executions[execID] = exec
+	m.execMu.Unlock()
+
+	// Background goroutine: drain lines from the stream into the buffer.
+	go func() {
+		for {
+			select {
+			case line, ok := <-stream.Lines:
+				if !ok {
+					// Channel closed; command finished.
+					exec.mu.Lock()
+					exec.running = false
+					exec.mu.Unlock()
+					return
+				}
+				exec.mu.Lock()
+				exec.outputLines = append(exec.outputLines, line)
+				exec.mu.Unlock()
+			case <-stream.Done:
+				// Drain any remaining lines.
+				for {
+					select {
+					case line, ok := <-stream.Lines:
+						if !ok {
+							break
+						}
+						exec.mu.Lock()
+						exec.outputLines = append(exec.outputLines, line)
+						exec.mu.Unlock()
+						continue
+					default:
+					}
+					break
+				}
+				exec.mu.Lock()
+				exec.running = false
+				exec.mu.Unlock()
+				return
+			}
+		}
+	}()
+
+	return execID, nil
+}
+
+// ExecutionOutput holds the current state of a streaming execution for polling.
+type ExecutionOutput struct {
+	Output   string
+	Running  bool
+	ExitCode int
+}
+
+// GetExecutionOutput returns the accumulated output and status of a spawned
+// execution. If tail > 0, only the last tail lines are returned.
+func (m *Manager) GetExecutionOutput(executionID string, tail int) (*ExecutionOutput, error) {
+	m.execMu.Lock()
+	exec, ok := m.executions[executionID]
+	m.execMu.Unlock()
+	if !ok {
+		return nil, fmt.Errorf("execution %q not found", executionID)
+	}
+
+	exec.mu.Lock()
+	defer exec.mu.Unlock()
+
+	lines := exec.outputLines
+	if tail > 0 && tail < len(lines) {
+		lines = lines[len(lines)-tail:]
+	}
+
+	return &ExecutionOutput{
+		Output:   strings.Join(lines, "\n"),
+		Running:  exec.running,
+		ExitCode: exec.exitCode,
+	}, nil
 }
 
 // applyDefaults fills zero-value fields in cfg with the manager's defaults.
