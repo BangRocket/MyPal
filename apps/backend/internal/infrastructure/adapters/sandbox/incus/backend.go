@@ -121,7 +121,7 @@ func (b *Backend) Create(ctx context.Context, cfg ports.SandboxConfig) (*ports.S
 		args = append(args, "--config", fmt.Sprintf("limits.memory=%s", formatMemLimit(cfg.MemLimit)))
 	}
 	if cfg.CPULimit > 0 {
-		args = append(args, "--config", fmt.Sprintf("limits.cpu=%.2f", cfg.CPULimit))
+		args = append(args, "--config", fmt.Sprintf("limits.cpu=%d", int(cfg.CPULimit)))
 	}
 
 	// Network policy mapping.
