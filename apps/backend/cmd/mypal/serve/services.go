@@ -157,6 +157,18 @@ func (a *App) initServices() {
 		a.SandboxMgr = sandboxsvc.NewManager(backend, timeout, memDefault, cpuDefault, netDefault, cfg.Sandbox.PoolSize)
 		sandboxAdapter = &inframc.SandboxAdapter{Mgr: a.SandboxMgr}
 		log.Printf("sandbox: enabled (pool_size=%d, timeout=%s)", cfg.Sandbox.PoolSize, timeout)
+
+		if cfg.Sandbox.PoolSize > 0 {
+			poolImage := cfg.Sandbox.PoolImage
+			if poolImage == "" {
+				poolImage = "python:3.12-slim"
+			}
+			if err := a.SandboxMgr.WarmPool(context.Background(), poolImage, cfg.Sandbox.PoolSize); err != nil {
+				log.Printf("sandbox: warm pool failed: %v", err)
+			} else {
+				log.Printf("sandbox: warmed %d containers (image=%s)", cfg.Sandbox.PoolSize, poolImage)
+			}
+		}
 	}
 
 	// Register all internal tools

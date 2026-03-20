@@ -618,6 +618,7 @@ type SandboxConfig struct {
 	Enabled     bool    `mapstructure:"enabled"`
 	Backend     string  `mapstructure:"backend"`      // "docker" or "incus"
 	PoolSize    int     `mapstructure:"pool_size"`     // pre-warmed containers
+	PoolImage   string  `mapstructure:"pool_image"`    // image for pre-warmed containers
 	Timeout     int     `mapstructure:"timeout"`       // seconds, default 300
 	MemDefault  int64   `mapstructure:"mem_default"`   // bytes, default 268435456 (256MB)
 	CPUDefault  float64 `mapstructure:"cpu_default"`   // cores, default 1.0

@@ -13,8 +13,14 @@ import (
 	"github.com/BangRocket/MyPal/apps/backend/internal/domain/ports"
 )
 
+// poolEntry tracks a single pre-warmed container in the pool.
+type poolEntry struct {
+	ID    string
+	Image string
+}
+
 // Manager coordinates sandbox lifecycle through a SandboxBackend and maintains
-// an optional pool of pre-warmed instances keyed by container image.
+// an optional pool of pre-warmed instances.
 type Manager struct {
 	backend    ports.SandboxBackend
 	timeout    time.Duration
@@ -22,8 +28,8 @@ type Manager struct {
 	cpuDefault float64
 	netDefault string
 	poolSize   int
-	mu         sync.RWMutex
-	pool       map[string][]*ports.SandboxInstance // image -> pre-warmed instances
+	poolMu     sync.Mutex
+	pool       []poolEntry
 }
 
 // NewManager creates a Manager with the given backend and default resource
@@ -44,13 +50,22 @@ func NewManager(
 		cpuDefault: cpuDefault,
 		netDefault: netDefault,
 		poolSize:   poolSize,
-		pool:       make(map[string][]*ports.SandboxInstance),
 	}
 }
 
 // CreateSandbox creates a new sandbox, filling zero-value config fields from
-// the manager's defaults.
+// the manager's defaults. If a pre-warmed container matching the requested
+// image is available in the pool it is claimed instead of creating fresh.
 func (m *Manager) CreateSandbox(ctx context.Context, userID string, cfg ports.SandboxConfig) (*ports.SandboxInstance, error) {
+	if cfg.Image != "" {
+		inst, err := m.ClaimFromPool(ctx, userID, cfg.Image)
+		if err != nil {
+			return nil, err
+		}
+		if inst != nil {
+			return inst, nil
+		}
+	}
 	cfg.UserID = userID
 	m.applyDefaults(&cfg)
 	return m.backend.Create(ctx, cfg)
@@ -116,43 +131,45 @@ func (m *Manager) GetSandbox(ctx context.Context, id string) (*ports.SandboxInst
 	return m.backend.Get(ctx, id)
 }
 
-// WarmPool pre-creates count sandbox instances for the given image, storing
-// them in the internal pool for later claiming.
+// WarmPool pre-creates count containers for the given image.
 func (m *Manager) WarmPool(ctx context.Context, image string, count int) error {
-	for range count {
-		inst, err := m.backend.Create(ctx, ports.SandboxConfig{
+	for i := 0; i < count; i++ {
+		instance, err := m.backend.Create(ctx, ports.SandboxConfig{
 			Image:     image,
 			MemLimit:  m.memDefault,
 			CPULimit:  m.cpuDefault,
 			NetPolicy: m.netDefault,
-			Timeout:   m.timeout,
+			UserID:    "__pool__",
 		})
 		if err != nil {
-			return fmt.Errorf("warm pool create: %w", err)
+			return err
 		}
-		m.mu.Lock()
-		m.pool[image] = append(m.pool[image], inst)
-		m.mu.Unlock()
+		m.poolMu.Lock()
+		m.pool = append(m.pool, poolEntry{ID: instance.ID, Image: image})
+		m.poolMu.Unlock()
 	}
 	return nil
 }
 
-// ClaimFromPool returns a pre-warmed instance for the requested image,
-// assigning it to userID. If the pool is empty for that image a new sandbox
-// is created on the fly.
+// ClaimFromPool takes a pre-warmed container from the pool for the given user and image.
+// Returns nil if no matching container is available.
 func (m *Manager) ClaimFromPool(ctx context.Context, userID, image string) (*ports.SandboxInstance, error) {
-	m.mu.Lock()
-	if instances := m.pool[image]; len(instances) > 0 {
-		inst := instances[0]
-		m.pool[image] = instances[1:]
-		m.mu.Unlock()
-		inst.UserID = userID
-		return inst, nil
+	m.poolMu.Lock()
+	for i, entry := range m.pool {
+		if entry.Image == image {
+			m.pool = append(m.pool[:i], m.pool[i+1:]...)
+			m.poolMu.Unlock()
+			// Retrieve the instance from the backend and reassign ownership.
+			inst, err := m.backend.Get(ctx, entry.ID)
+			if err != nil {
+				return nil, err
+			}
+			inst.UserID = userID
+			return inst, nil
+		}
 	}
-	m.mu.Unlock()
-
-	// Pool exhausted — create a fresh instance.
-	return m.CreateSandbox(ctx, userID, ports.SandboxConfig{Image: image})
+	m.poolMu.Unlock()
+	return nil, nil // no match, caller should create fresh
 }
 
 // applyDefaults fills zero-value fields in cfg with the manager's defaults.
