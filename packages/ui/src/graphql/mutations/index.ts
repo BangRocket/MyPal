@@ -142,6 +142,18 @@ export const DELETE_MEMORY_NODE_MUTATION = /* GraphQL */ `
   }
 `;
 
+export const REMEMBER_MEMORY_MUTATION = /* GraphQL */ `
+  mutation RememberMemory($userId: String!, $content: String!, $metadata: String) {
+    rememberMemory(userId: $userId, content: $content, metadata: $metadata)
+  }
+`;
+
+export const FORGET_MEMORY_MUTATION = /* GraphQL */ `
+  mutation ForgetMemory($id: String!) {
+    forgetMemory(id: $id)
+  }
+`;
+
 // ─── Skills ────────────────────────────────────────────────────────────────────
 
 export const ENABLE_SKILL_MUTATION = /* GraphQL */ `

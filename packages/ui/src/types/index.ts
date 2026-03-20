@@ -168,6 +168,49 @@ export interface MemoryGraph {
   edges: MemoryEdge[];
 }
 
+/** A vector search result returned by the `vectorSearch` query. */
+export interface VectorSearchResult {
+  id: string;
+  content: string;
+  score: number;
+  userId: string;
+  metadata: string;
+  createdAt: string;
+}
+
+/** An entity in the graph returned by `graphNeighbors`. */
+export interface GraphEntity {
+  id: string;
+  type: string;
+  name: string;
+  userId: string;
+  properties: string;
+  createdAt: string;
+}
+
+/** A relation in the graph returned by `graphNeighbors`. */
+export interface GraphRelation {
+  id: string;
+  fromId: string;
+  toId: string;
+  type: string;
+  weight: number;
+  metadata: string;
+}
+
+/** Result of the `graphNeighbors` query. */
+export interface GraphNeighborsResult {
+  entities: GraphEntity[];
+  relations: GraphRelation[];
+}
+
+/** Aggregate memory statistics. */
+export interface MemoryStats {
+  vectorCount: number;
+  entityCount: number;
+  relationCount: number;
+}
+
 // ─── Skills ──────────────────────────────────────────────────────────────────
 
 /** A Claude skill available to the agent. */

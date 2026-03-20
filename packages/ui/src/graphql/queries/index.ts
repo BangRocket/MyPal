@@ -184,6 +184,54 @@ export const MEMORY_QUERY = /* GraphQL */ `
   }
 `;
 
+// ─── Vector Memory ──────────────────────────────────────────────────────────
+
+export const VECTOR_SEARCH_QUERY = /* GraphQL */ `
+  query VectorSearch($userId: String!, $query: String!, $topK: Int) {
+    vectorSearch(userId: $userId, query: $query, topK: $topK) {
+      id
+      content
+      score
+      userId
+      metadata
+      createdAt
+    }
+  }
+`;
+
+export const GRAPH_NEIGHBORS_QUERY = /* GraphQL */ `
+  query GraphNeighbors($entityId: String!, $depth: Int) {
+    graphNeighbors(entityId: $entityId, depth: $depth) {
+      entities {
+        id
+        type
+        name
+        userId
+        properties
+        createdAt
+      }
+      relations {
+        id
+        fromId
+        toId
+        type
+        weight
+        metadata
+      }
+    }
+  }
+`;
+
+export const MEMORY_STATS_QUERY = /* GraphQL */ `
+  query MemoryStats($userId: String!) {
+    memoryStats(userId: $userId) {
+      vectorCount
+      entityCount
+      relationCount
+    }
+  }
+`;
+
 // ─── Skills ────────────────────────────────────────────────────────────────────
 
 export const SKILLS_QUERY = /* GraphQL */ `
