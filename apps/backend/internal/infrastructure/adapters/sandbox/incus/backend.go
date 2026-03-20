@@ -63,9 +63,30 @@ func checkInstalled() error {
 	return nil
 }
 
+// sanitizeName replaces characters that are invalid in Incus instance names
+// (only alphanumeric and hyphens are allowed) with hyphens, and collapses
+// consecutive hyphens.
+func sanitizeName(s string) string {
+	var b strings.Builder
+	prev := byte('-')
+	for i := 0; i < len(s); i++ {
+		c := s[i]
+		if (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') {
+			b.WriteByte(c)
+			prev = c
+		} else if prev != '-' {
+			b.WriteByte('-')
+			prev = '-'
+		}
+	}
+	// Trim trailing hyphen.
+	out := b.String()
+	return strings.TrimRight(out, "-")
+}
+
 // containerName returns the full container name for a sandbox ID.
 func containerName(id string) string {
-	return containerPrefix + id
+	return containerPrefix + sanitizeName(id)
 }
 
 // formatMemLimit converts bytes to an Incus-compatible memory string (e.g.
