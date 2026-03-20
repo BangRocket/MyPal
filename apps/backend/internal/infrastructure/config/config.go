@@ -514,22 +514,33 @@ type SlackConfig struct {
 	AppToken string `mapstructure:"app_token"`
 }
 
+// EmailFilter defines a single inbound email filtering rule.
+// Field is the header to match ("from", "to", "subject").
+// Pattern is a regular expression matched against the field value.
+// Action is "process" (whitelist) or "ignore" (blacklist).
+type EmailFilter struct {
+	Field   string `mapstructure:"field"`   // "from", "subject", "to"
+	Pattern string `mapstructure:"pattern"` // regex pattern
+	Action  string `mapstructure:"action"`  // "process", "ignore"
+}
+
 // EmailConfig holds IMAP (inbound) and SMTP (outbound) email settings.
 type EmailConfig struct {
-	Enabled        bool   `mapstructure:"enabled"`
-	IMAPHost       string `mapstructure:"imap_host"`
-	IMAPPort       int    `mapstructure:"imap_port"`
-	IMAPUser       string `mapstructure:"imap_user"`
-	IMAPPass       string `mapstructure:"imap_pass"`
-	IMAPTLS        bool   `mapstructure:"imap_tls"`
-	SMTPHost       string `mapstructure:"smtp_host"`
-	SMTPPort       int    `mapstructure:"smtp_port"`
-	SMTPUser       string `mapstructure:"smtp_user"`
-	SMTPPass       string `mapstructure:"smtp_pass"`
-	SMTPFrom       string `mapstructure:"smtp_from"`
-	SMTPTLS        bool   `mapstructure:"smtp_tls"`
-	PollInterval   int    `mapstructure:"poll_interval"`
-	ProcessedLabel string `mapstructure:"processed_label"`
+	Enabled        bool          `mapstructure:"enabled"`
+	IMAPHost       string        `mapstructure:"imap_host"`
+	IMAPPort       int           `mapstructure:"imap_port"`
+	IMAPUser       string        `mapstructure:"imap_user"`
+	IMAPPass       string        `mapstructure:"imap_pass"`
+	IMAPTLS        bool          `mapstructure:"imap_tls"`
+	SMTPHost       string        `mapstructure:"smtp_host"`
+	SMTPPort       int           `mapstructure:"smtp_port"`
+	SMTPUser       string        `mapstructure:"smtp_user"`
+	SMTPPass       string        `mapstructure:"smtp_pass"`
+	SMTPFrom       string        `mapstructure:"smtp_from"`
+	SMTPTLS        bool          `mapstructure:"smtp_tls"`
+	PollInterval   int           `mapstructure:"poll_interval"`
+	ProcessedLabel string        `mapstructure:"processed_label"`
+	Filters        []EmailFilter `mapstructure:"filters"`
 }
 
 type MCPConfig struct {

@@ -11,6 +11,7 @@ import (
 	"log"
 	"net"
 	"net/smtp"
+	"regexp"
 	"strings"
 	"time"
 
@@ -152,7 +153,23 @@ func (a *Adapter) poll(ctx context.Context) {
 			continue
 		}
 
+		// Always mark as seen so we don't re-fetch filtered messages.
 		fetchedUIDs = append(fetchedUIDs, uid)
+
+		// Apply inbound filters before processing.
+		fromAddr := ""
+		if len(envelope.From) > 0 {
+			fromAddr = envelope.From[0].Addr()
+		}
+		toAddr := ""
+		if len(envelope.To) > 0 {
+			toAddr = envelope.To[0].Addr()
+		}
+		if !a.shouldProcess(fromAddr, toAddr, envelope.Subject) {
+			log.Printf("email: filtered out message from=%s subject=%q", fromAddr, envelope.Subject)
+			continue
+		}
+
 		domainMsg := a.convertToDomainMessage(envelope, body)
 		if domainMsg != nil {
 			a.onMessage(ctx, domainMsg)
@@ -278,6 +295,71 @@ func extractPlainText(rawBody []byte) string {
 	}
 
 	return ""
+}
+
+// --------------------------------------------------------------------------
+// Filtering
+// --------------------------------------------------------------------------
+
+// shouldProcess evaluates configured filters to decide whether an email should
+// be processed. If no filters are configured, all emails are processed.
+//
+// Semantics:
+//  1. If any "ignore" filter matches, the email is skipped.
+//  2. If "process" filters exist and none match, the email is skipped.
+//  3. Otherwise the email is processed.
+func (a *Adapter) shouldProcess(from, to, subject string) bool {
+	filters := a.cfg.Filters
+	if len(filters) == 0 {
+		return true // no filters → process everything
+	}
+
+	hasProcessFilter := false
+	processMatched := false
+
+	for _, f := range filters {
+		re, err := regexp.Compile(f.Pattern)
+		if err != nil {
+			log.Printf("email: invalid filter pattern %q: %v", f.Pattern, err)
+			continue
+		}
+
+		var value string
+		switch strings.ToLower(f.Field) {
+		case "from":
+			value = from
+		case "to":
+			value = to
+		case "subject":
+			value = subject
+		default:
+			log.Printf("email: unknown filter field %q, skipping", f.Field)
+			continue
+		}
+
+		matched := re.MatchString(value)
+
+		switch strings.ToLower(f.Action) {
+		case "ignore":
+			if matched {
+				return false
+			}
+		case "process":
+			hasProcessFilter = true
+			if matched {
+				processMatched = true
+			}
+		default:
+			log.Printf("email: unknown filter action %q, skipping", f.Action)
+		}
+	}
+
+	// If process filters exist, at least one must match.
+	if hasProcessFilter && !processMatched {
+		return false
+	}
+
+	return true
 }
 
 // --------------------------------------------------------------------------

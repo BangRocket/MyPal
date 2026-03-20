@@ -1,5 +1,11 @@
 # ─── Email Channel Config ────────────────────────────────────────────────────
 
+type EmailFilterRule {
+  field: String!
+  pattern: String!
+  action: String!
+}
+
 type EmailChannelConfig {
   enabled: Boolean!
   imapHost: String!
@@ -12,6 +18,7 @@ type EmailChannelConfig {
   smtpTls: Boolean!
   pollInterval: Int!
   processedLabel: String!
+  filters: [EmailFilterRule!]!
 }
 
 extend type Query {

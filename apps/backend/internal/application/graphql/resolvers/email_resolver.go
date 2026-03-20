@@ -14,6 +14,17 @@ import (
 // EmailConfig is the resolver for the emailConfig field.
 func (r *queryResolver) EmailConfig(ctx context.Context) (*generated.EmailChannelConfig, error) {
 	ec := r.Deps.EmailConfig
+
+	// Convert config filter rules to GraphQL model.
+	filters := make([]*generated.EmailFilterRule, 0, len(ec.Filters))
+	for _, f := range ec.Filters {
+		filters = append(filters, &generated.EmailFilterRule{
+			Field:   f.Field,
+			Pattern: f.Pattern,
+			Action:  f.Action,
+		})
+	}
+
 	return &generated.EmailChannelConfig{
 		Enabled:        ec.Enabled,
 		ImapHost:       ec.IMAPHost,
@@ -26,5 +37,6 @@ func (r *queryResolver) EmailConfig(ctx context.Context) (*generated.EmailChanne
 		SMTPTLS:        ec.SMTPTLS,
 		PollInterval:   ec.PollInterval,
 		ProcessedLabel: ec.ProcessedLabel,
+		Filters:        filters,
 	}, nil
 }

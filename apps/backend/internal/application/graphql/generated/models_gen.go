@@ -157,17 +157,24 @@ type DenyPairingResult struct {
 }
 
 type EmailChannelConfig struct {
-	Enabled        bool   `json:"enabled"`
-	ImapHost       string `json:"imapHost"`
-	ImapPort       int    `json:"imapPort"`
-	ImapUser       string `json:"imapUser"`
-	ImapTLS        bool   `json:"imapTls"`
-	SMTPHost       string `json:"smtpHost"`
-	SMTPPort       int    `json:"smtpPort"`
-	SMTPFrom       string `json:"smtpFrom"`
-	SMTPTLS        bool   `json:"smtpTls"`
-	PollInterval   int    `json:"pollInterval"`
-	ProcessedLabel string `json:"processedLabel"`
+	Enabled        bool               `json:"enabled"`
+	ImapHost       string             `json:"imapHost"`
+	ImapPort       int                `json:"imapPort"`
+	ImapUser       string             `json:"imapUser"`
+	ImapTLS        bool               `json:"imapTls"`
+	SMTPHost       string             `json:"smtpHost"`
+	SMTPPort       int                `json:"smtpPort"`
+	SMTPFrom       string             `json:"smtpFrom"`
+	SMTPTLS        bool               `json:"smtpTls"`
+	PollInterval   int                `json:"pollInterval"`
+	ProcessedLabel string             `json:"processedLabel"`
+	Filters        []*EmailFilterRule `json:"filters"`
+}
+
+type EmailFilterRule struct {
+	Field   string `json:"field"`
+	Pattern string `json:"pattern"`
+	Action  string `json:"action"`
 }
 
 type EventPayload struct {

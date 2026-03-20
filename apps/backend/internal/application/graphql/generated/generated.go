@@ -181,6 +181,7 @@ type ComplexityRoot struct {
 
 	EmailChannelConfig struct {
 		Enabled        func(childComplexity int) int
+		Filters        func(childComplexity int) int
 		ImapHost       func(childComplexity int) int
 		ImapPort       func(childComplexity int) int
 		ImapTLS        func(childComplexity int) int
@@ -191,6 +192,12 @@ type ComplexityRoot struct {
 		SMTPHost       func(childComplexity int) int
 		SMTPPort       func(childComplexity int) int
 		SMTPTLS        func(childComplexity int) int
+	}
+
+	EmailFilterRule struct {
+		Action  func(childComplexity int) int
+		Field   func(childComplexity int) int
+		Pattern func(childComplexity int) int
 	}
 
 	EventPayload struct {
@@ -455,6 +462,7 @@ type ComplexityRoot struct {
 		ImportSkill           func(childComplexity int, data string) int
 		InitiateOAuth         func(childComplexity int, name string, url string) int
 		KillSubAgent          func(childComplexity int, id string) int
+		PreviewPersonality    func(childComplexity int, personalityID string, userID string, channelType string, testMessage string) int
 		RememberMemory        func(childComplexity int, userID string, content string, metadata *string) int
 		RemoveTask            func(childComplexity int, taskID string) int
 		SendMessage           func(childComplexity int, conversationID *string, channelID *string, content string) int
@@ -785,6 +793,7 @@ type MutationResolver interface {
 	UpdatePersonality(ctx context.Context, id string, input PersonalityInput) (*Personality, error)
 	DeletePersonality(ctx context.Context, id string) (bool, error)
 	SetDefaultPersonality(ctx context.Context, id string) (bool, error)
+	PreviewPersonality(ctx context.Context, personalityID string, userID string, channelType string, testMessage string) (string, error)
 	UpdateOrganicConfig(ctx context.Context, channelID string, input OrganicResponseConfigInput) (*OrganicResponseConfig, error)
 	CreateHeartbeatItem(ctx context.Context, input HeartbeatItemInput) (*HeartbeatItem, error)
 	UpdateHeartbeatItem(ctx context.Context, id string, input HeartbeatItemInput) (*HeartbeatItem, error)
@@ -1486,6 +1495,12 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.ComplexityRoot.EmailChannelConfig.Enabled(childComplexity), true
+	case "EmailChannelConfig.filters":
+		if e.ComplexityRoot.EmailChannelConfig.Filters == nil {
+			break
+		}
+
+		return e.ComplexityRoot.EmailChannelConfig.Filters(childComplexity), true
 	case "EmailChannelConfig.imapHost":
 		if e.ComplexityRoot.EmailChannelConfig.ImapHost == nil {
 			break
@@ -1546,6 +1561,25 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.ComplexityRoot.EmailChannelConfig.SMTPTLS(childComplexity), true
+
+	case "EmailFilterRule.action":
+		if e.ComplexityRoot.EmailFilterRule.Action == nil {
+			break
+		}
+
+		return e.ComplexityRoot.EmailFilterRule.Action(childComplexity), true
+	case "EmailFilterRule.field":
+		if e.ComplexityRoot.EmailFilterRule.Field == nil {
+			break
+		}
+
+		return e.ComplexityRoot.EmailFilterRule.Field(childComplexity), true
+	case "EmailFilterRule.pattern":
+		if e.ComplexityRoot.EmailFilterRule.Pattern == nil {
+			break
+		}
+
+		return e.ComplexityRoot.EmailFilterRule.Pattern(childComplexity), true
 
 	case "EventPayload.data":
 		if e.ComplexityRoot.EventPayload.Data == nil {
@@ -2731,6 +2765,17 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.ComplexityRoot.Mutation.KillSubAgent(childComplexity, args["id"].(string)), true
+	case "Mutation.previewPersonality":
+		if e.ComplexityRoot.Mutation.PreviewPersonality == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_previewPersonality_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.ComplexityRoot.Mutation.PreviewPersonality(childComplexity, args["personalityId"].(string), args["userId"].(string), args["channelType"].(string), args["testMessage"].(string)), true
 	case "Mutation.rememberMemory":
 		if e.ComplexityRoot.Mutation.RememberMemory == nil {
 			break
@@ -5008,6 +5053,7 @@ extend type Mutation {
   updatePersonality(id: String!, input: PersonalityInput!): Personality!
   deletePersonality(id: String!): Boolean!
   setDefaultPersonality(id: String!): Boolean!
+  previewPersonality(personalityId: String!, userId: String!, channelType: String!, testMessage: String!): String!
 }
 `, BuiltIn: false},
 	{Name: "../../../../../../schema/modeltiers.graphql", Input: `# ─── Model Tiers ─────────────────────────────────────────────────────────────
@@ -5032,6 +5078,12 @@ extend type Query {
 `, BuiltIn: false},
 	{Name: "../../../../../../schema/email.graphql", Input: `# ─── Email Channel Config ────────────────────────────────────────────────────
 
+type EmailFilterRule {
+  field: String!
+  pattern: String!
+  action: String!
+}
+
 type EmailChannelConfig {
   enabled: Boolean!
   imapHost: String!
@@ -5044,6 +5096,7 @@ type EmailChannelConfig {
   smtpTls: Boolean!
   pollInterval: Int!
   processedLabel: String!
+  filters: [EmailFilterRule!]!
 }
 
 extend type Query {
@@ -5597,6 +5650,32 @@ func (ec *executionContext) field_Mutation_killSubAgent_args(ctx context.Context
 		return nil, err
 	}
 	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_previewPersonality_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "personalityId", ec.unmarshalNString2string)
+	if err != nil {
+		return nil, err
+	}
+	args["personalityId"] = arg0
+	arg1, err := graphql.ProcessArgField(ctx, rawArgs, "userId", ec.unmarshalNString2string)
+	if err != nil {
+		return nil, err
+	}
+	args["userId"] = arg1
+	arg2, err := graphql.ProcessArgField(ctx, rawArgs, "channelType", ec.unmarshalNString2string)
+	if err != nil {
+		return nil, err
+	}
+	args["channelType"] = arg2
+	arg3, err := graphql.ProcessArgField(ctx, rawArgs, "testMessage", ec.unmarshalNString2string)
+	if err != nil {
+		return nil, err
+	}
+	args["testMessage"] = arg3
 	return args, nil
 }
 
@@ -9499,6 +9578,130 @@ func (ec *executionContext) _EmailChannelConfig_processedLabel(ctx context.Conte
 func (ec *executionContext) fieldContext_EmailChannelConfig_processedLabel(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "EmailChannelConfig",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _EmailChannelConfig_filters(ctx context.Context, field graphql.CollectedField, obj *EmailChannelConfig) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_EmailChannelConfig_filters,
+		func(ctx context.Context) (any, error) {
+			return obj.Filters, nil
+		},
+		nil,
+		ec.marshalNEmailFilterRule2ᚕᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEmailFilterRuleᚄ,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_EmailChannelConfig_filters(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "EmailChannelConfig",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "field":
+				return ec.fieldContext_EmailFilterRule_field(ctx, field)
+			case "pattern":
+				return ec.fieldContext_EmailFilterRule_pattern(ctx, field)
+			case "action":
+				return ec.fieldContext_EmailFilterRule_action(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type EmailFilterRule", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _EmailFilterRule_field(ctx context.Context, field graphql.CollectedField, obj *EmailFilterRule) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_EmailFilterRule_field,
+		func(ctx context.Context) (any, error) {
+			return obj.Field, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_EmailFilterRule_field(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "EmailFilterRule",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _EmailFilterRule_pattern(ctx context.Context, field graphql.CollectedField, obj *EmailFilterRule) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_EmailFilterRule_pattern,
+		func(ctx context.Context) (any, error) {
+			return obj.Pattern, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_EmailFilterRule_pattern(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "EmailFilterRule",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _EmailFilterRule_action(ctx context.Context, field graphql.CollectedField, obj *EmailFilterRule) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_EmailFilterRule_action,
+		func(ctx context.Context) (any, error) {
+			return obj.Action, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_EmailFilterRule_action(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "EmailFilterRule",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -15378,6 +15581,47 @@ func (ec *executionContext) fieldContext_Mutation_setDefaultPersonality(ctx cont
 	return fc, nil
 }
 
+func (ec *executionContext) _Mutation_previewPersonality(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Mutation_previewPersonality,
+		func(ctx context.Context) (any, error) {
+			fc := graphql.GetFieldContext(ctx)
+			return ec.Resolvers.Mutation().PreviewPersonality(ctx, fc.Args["personalityId"].(string), fc.Args["userId"].(string), fc.Args["channelType"].(string), fc.Args["testMessage"].(string))
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Mutation_previewPersonality(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_previewPersonality_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Mutation_updateOrganicConfig(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	return graphql.ResolveField(
 		ctx,
@@ -18487,6 +18731,8 @@ func (ec *executionContext) fieldContext_Query_emailConfig(_ context.Context, fi
 				return ec.fieldContext_EmailChannelConfig_pollInterval(ctx, field)
 			case "processedLabel":
 				return ec.fieldContext_EmailChannelConfig_processedLabel(ctx, field)
+			case "filters":
+				return ec.fieldContext_EmailChannelConfig_filters(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type EmailChannelConfig", field.Name)
 		},
@@ -25350,6 +25596,60 @@ func (ec *executionContext) _EmailChannelConfig(ctx context.Context, sel ast.Sel
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
+		case "filters":
+			out.Values[i] = ec._EmailChannelConfig_filters(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.Deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.ProcessDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var emailFilterRuleImplementors = []string{"EmailFilterRule"}
+
+func (ec *executionContext) _EmailFilterRule(ctx context.Context, sel ast.SelectionSet, obj *EmailFilterRule) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, emailFilterRuleImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("EmailFilterRule")
+		case "field":
+			out.Values[i] = ec._EmailFilterRule_field(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "pattern":
+			out.Values[i] = ec._EmailFilterRule_pattern(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "action":
+			out.Values[i] = ec._EmailFilterRule_action(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -27191,6 +27491,13 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "setDefaultPersonality":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_setDefaultPersonality(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "previewPersonality":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_previewPersonality(ctx, field)
 			})
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
@@ -30120,6 +30427,32 @@ func (ec *executionContext) marshalNEmailChannelConfig2ᚖgithubᚗcomᚋBangRoc
 		return graphql.Null
 	}
 	return ec._EmailChannelConfig(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNEmailFilterRule2ᚕᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEmailFilterRuleᚄ(ctx context.Context, sel ast.SelectionSet, v []*EmailFilterRule) graphql.Marshaler {
+	ret := graphql.MarshalSliceConcurrently(ctx, len(v), 0, false, func(ctx context.Context, i int) graphql.Marshaler {
+		fc := graphql.GetFieldContext(ctx)
+		fc.Result = &v[i]
+		return ec.marshalNEmailFilterRule2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEmailFilterRule(ctx, sel, v[i])
+	})
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNEmailFilterRule2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐEmailFilterRule(ctx context.Context, sel ast.SelectionSet, v *EmailFilterRule) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._EmailFilterRule(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNFloat2float64(ctx context.Context, v any) (float64, error) {
