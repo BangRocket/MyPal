@@ -10,6 +10,7 @@ import {
   UPDATE_PERSONALITY_MUTATION,
   DELETE_PERSONALITY_MUTATION,
   SET_DEFAULT_PERSONALITY_MUTATION,
+  PREVIEW_PERSONALITY_MUTATION,
 } from "@mypal/ui/graphql/mutations";
 import { client } from "../../graphql/client";
 import AppShell from "../../components/AppShell";
@@ -38,6 +39,14 @@ const PersonalityView: Component = () => {
   const [modalOpen, setModalOpen] = createSignal(false);
   const [editingId, setEditingId] = createSignal<string | null>(null);
   const [form, setForm] = createSignal<PersonalityInput>(emptyForm());
+
+  // Preview modal state
+  const [previewOpen, setPreviewOpen] = createSignal(false);
+  const [previewPersonalityId, setPreviewPersonalityId] = createSignal("");
+  const [previewChannelType, setPreviewChannelType] = createSignal("discord");
+  const [previewUserId, setPreviewUserId] = createSignal("new-user");
+  const [previewTestMessage, setPreviewTestMessage] = createSignal("Hello, how are you?");
+  const [previewResult, setPreviewResult] = createSignal("");
 
   // Message state
   const [message, setMessage] = createSignal<{ type: "success" | "error"; text: string } | null>(null);
@@ -92,6 +101,15 @@ const PersonalityView: Component = () => {
     onError: (err: Error) => flash("error", err.message),
   }));
 
+  const previewPersonality = createMutation(() => ({
+    mutationFn: (vars: { personalityId: string; userId: string; channelType: string; testMessage: string }) =>
+      client.request<{ previewPersonality: string }>(PREVIEW_PERSONALITY_MUTATION, vars),
+    onSuccess: (data) => {
+      setPreviewResult(data.previewPersonality);
+    },
+    onError: (err: Error) => flash("error", err.message),
+  }));
+
   // ── Helpers ────────────────────────────────────────────────────────────
 
   const openCreate = () => {
@@ -118,6 +136,26 @@ const PersonalityView: Component = () => {
   const closeModal = () => {
     setModalOpen(false);
     setEditingId(null);
+  };
+
+  const openPreview = (p: Personality) => {
+    setPreviewPersonalityId(p.id);
+    setPreviewResult("");
+    setPreviewOpen(true);
+  };
+
+  const closePreview = () => {
+    setPreviewOpen(false);
+    setPreviewResult("");
+  };
+
+  const handlePreview = () => {
+    previewPersonality.mutate({
+      personalityId: previewPersonalityId(),
+      userId: previewUserId(),
+      channelType: previewChannelType(),
+      testMessage: previewTestMessage(),
+    });
   };
 
   const handleSubmit = () => {
@@ -203,6 +241,10 @@ const PersonalityView: Component = () => {
                     </div>
                   </Show>
                   <div class="personality-card__actions" onClick={(e) => e.stopPropagation()}>
+                    <button class="personality-card__btn" onClick={() => openPreview(p)}>
+                      <span class="material-symbols-outlined">visibility</span>
+                      Preview
+                    </button>
                     <button class="personality-card__btn" onClick={() => openEdit(p)}>
                       <span class="material-symbols-outlined">edit</span>
                       Edit
@@ -346,6 +388,82 @@ const PersonalityView: Component = () => {
               {editingId() ? "Save Changes" : "Create"}
             </button>
           </div>
+        </div>
+      </Modal>
+
+      {/* Preview Modal */}
+      <Modal
+        isOpen={previewOpen()}
+        onClose={closePreview}
+        title="Preview Personality"
+      >
+        <div class="personality-form">
+          {/* Channel Type */}
+          <div class="personality-form__field">
+            <label class="personality-form__label">Channel Type</label>
+            <select
+              class="personality-form__input"
+              value={previewChannelType()}
+              onChange={(e) => setPreviewChannelType(e.currentTarget.value)}
+            >
+              <option value="discord">Discord</option>
+              <option value="telegram">Telegram</option>
+              <option value="email">Email</option>
+              <option value="slack">Slack</option>
+              <option value="sms">SMS</option>
+            </select>
+          </div>
+
+          {/* User ID */}
+          <div class="personality-form__field">
+            <label class="personality-form__label">User ID</label>
+            <input
+              class="personality-form__input"
+              type="text"
+              value={previewUserId()}
+              onInput={(e) => setPreviewUserId(e.currentTarget.value)}
+              placeholder="new-user (low familiarity)"
+            />
+            <span class="personality-form__hint">
+              Use "new-user" for low familiarity or a real user ID
+            </span>
+          </div>
+
+          {/* Test Message */}
+          <div class="personality-form__field">
+            <label class="personality-form__label">Test Message</label>
+            <textarea
+              class="personality-form__textarea"
+              value={previewTestMessage()}
+              onInput={(e) => setPreviewTestMessage(e.currentTarget.value)}
+              placeholder="Type a test message..."
+            />
+          </div>
+
+          {/* Generate Preview */}
+          <div class="personality-form__actions">
+            <button
+              class="personality-form__btn personality-form__btn--secondary"
+              onClick={closePreview}
+            >
+              Close
+            </button>
+            <button
+              class="personality-form__btn personality-form__btn--primary"
+              onClick={handlePreview}
+              disabled={previewPersonality.isPending}
+            >
+              {previewPersonality.isPending ? "Generating..." : "Generate Preview"}
+            </button>
+          </div>
+
+          {/* Preview Output */}
+          <Show when={previewResult()}>
+            <div class="personality-form__field">
+              <label class="personality-form__label">Assembled Prompt</label>
+              <pre class="personality-preview__output">{previewResult()}</pre>
+            </div>
+          </Show>
         </div>
       </Modal>
 

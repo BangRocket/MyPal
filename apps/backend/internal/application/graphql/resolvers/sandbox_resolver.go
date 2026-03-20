@@ -91,4 +91,3 @@ func (r *queryResolver) SandboxInstance(ctx context.Context, id string) (*genera
 	}
 	return sandboxInstanceToGenerated(inst), nil
 }
-

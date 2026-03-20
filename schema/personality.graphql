@@ -43,4 +43,5 @@ extend type Mutation {
   updatePersonality(id: String!, input: PersonalityInput!): Personality!
   deletePersonality(id: String!): Boolean!
   setDefaultPersonality(id: String!): Boolean!
+  previewPersonality(personalityId: String!, userId: String!, channelType: String!, testMessage: String!): String!
 }

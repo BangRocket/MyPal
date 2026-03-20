@@ -43,6 +43,14 @@ func (r *mutationResolver) SetDefaultPersonality(ctx context.Context, id string)
 	return r.Deps.SetDefaultPersonality(ctx, id)
 }
 
+// PreviewPersonality is the resolver for the previewPersonality field.
+func (r *mutationResolver) PreviewPersonality(ctx context.Context, personalityID string, userID string, channelType string, testMessage string) (string, error) {
+	if r.Deps == nil {
+		return "", nil
+	}
+	return r.Deps.PreviewPersonality(ctx, personalityID, userID, channelType, testMessage)
+}
+
 // Personalities is the resolver for the personalities field.
 func (r *queryResolver) Personalities(ctx context.Context) ([]*generated.Personality, error) {
 	if r.Deps == nil {

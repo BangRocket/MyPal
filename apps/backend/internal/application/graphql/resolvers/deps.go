@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -1059,6 +1060,25 @@ func (d *Deps) SetDefaultPersonality(ctx context.Context, id string) (bool, erro
 	}
 	err := d.PersonalitySvc.SetDefault(ctx, id)
 	return err == nil, err
+}
+
+// PreviewPersonality assembles the system prompt for a personality and returns it
+// along with the test message so the operator can preview the output style.
+func (d *Deps) PreviewPersonality(ctx context.Context, personalityID, userID, channelType, testMessage string) (string, error) {
+	if d.PersonalitySvc == nil {
+		return "", nil
+	}
+	prompt, err := d.PersonalitySvc.BuildPersonalityPrompt(ctx, personalityID, userID, channelType)
+	if err != nil {
+		return "", fmt.Errorf("preview personality: %w", err)
+	}
+
+	var b strings.Builder
+	b.WriteString("=== SYSTEM PROMPT ===\n\n")
+	b.WriteString(prompt)
+	b.WriteString("\n\n=== USER MESSAGE ===\n\n")
+	b.WriteString(testMessage)
+	return b.String(), nil
 }
 
 // ─── Personality mapping helpers ─────────────────────────────────────────────
