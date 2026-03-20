@@ -75,19 +75,20 @@ type ComplexityRoot struct {
 	}
 
 	AppConfig struct {
-		ActiveSessions  func(childComplexity int) int
-		Agent           func(childComplexity int) int
-		Capabilities    func(childComplexity int) int
-		ChannelSecrets  func(childComplexity int) int
-		Channels        func(childComplexity int) int
-		Database        func(childComplexity int) int
-		Graphql         func(childComplexity int) int
-		Logging         func(childComplexity int) int
-		Memory          func(childComplexity int) int
-		Scheduler       func(childComplexity int) int
-		Secrets         func(childComplexity int) int
-		Subagents       func(childComplexity int) int
-		WizardCompleted func(childComplexity int) int
+		ActiveSessions          func(childComplexity int) int
+		Agent                   func(childComplexity int) int
+		Capabilities            func(childComplexity int) int
+		ChannelSecrets          func(childComplexity int) int
+		Channels                func(childComplexity int) int
+		ConfigEncryptionEnabled func(childComplexity int) int
+		Database                func(childComplexity int) int
+		Graphql                 func(childComplexity int) int
+		Logging                 func(childComplexity int) int
+		Memory                  func(childComplexity int) int
+		Scheduler               func(childComplexity int) int
+		Secrets                 func(childComplexity int) int
+		Subagents               func(childComplexity int) int
+		WizardCompleted         func(childComplexity int) int
 	}
 
 	ApprovePairingResult struct {
@@ -1093,6 +1094,12 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.ComplexityRoot.AppConfig.Channels(childComplexity), true
+	case "AppConfig.configEncryptionEnabled":
+		if e.ComplexityRoot.AppConfig.ConfigEncryptionEnabled == nil {
+			break
+		}
+
+		return e.ComplexityRoot.AppConfig.ConfigEncryptionEnabled(childComplexity), true
 	case "AppConfig.database":
 		if e.ComplexityRoot.AppConfig.Database == nil {
 			break
@@ -4595,6 +4602,7 @@ type AppConfig {
   channels:       [ChannelConfig!]!
   channelSecrets: ChannelSecretsConfig
   wizardCompleted: Boolean  # True when first-boot wizard has been completed (server-side)
+  configEncryptionEnabled: Boolean  # Whether the config file is encrypted on disk
 }
 
 type UpdateConfigResult {
@@ -4664,6 +4672,7 @@ input UpdateConfigInput {
   channelSlackBotToken:    String
   channelSlackAppToken:     String
   wizardCompleted:         Boolean
+  configEncryptionEnabled: Boolean
 }
 
 extend type Query {
@@ -7665,6 +7674,35 @@ func (ec *executionContext) _AppConfig_wizardCompleted(ctx context.Context, fiel
 }
 
 func (ec *executionContext) fieldContext_AppConfig_wizardCompleted(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "AppConfig",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _AppConfig_configEncryptionEnabled(ctx context.Context, field graphql.CollectedField, obj *AppConfig) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_AppConfig_configEncryptionEnabled,
+		func(ctx context.Context) (any, error) {
+			return obj.ConfigEncryptionEnabled, nil
+		},
+		nil,
+		ec.marshalOBoolean2ᚖbool,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_AppConfig_configEncryptionEnabled(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "AppConfig",
 		Field:      field,
@@ -17799,6 +17837,8 @@ func (ec *executionContext) fieldContext_Query_config(_ context.Context, field g
 				return ec.fieldContext_AppConfig_channelSecrets(ctx, field)
 			case "wizardCompleted":
 				return ec.fieldContext_AppConfig_wizardCompleted(ctx, field)
+			case "configEncryptionEnabled":
+				return ec.fieldContext_AppConfig_configEncryptionEnabled(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type AppConfig", field.Name)
 		},
@@ -24458,10 +24498,6 @@ func (ec *executionContext) fieldContext___Type_isOneOf(_ context.Context, field
 
 func (ec *executionContext) unmarshalInputCapabilitiesInput(ctx context.Context, obj any) (CapabilitiesInput, error) {
 	var it CapabilitiesInput
-	if obj == nil {
-		return it, nil
-	}
-
 	asMap := map[string]any{}
 	for k, v := range obj.(map[string]any) {
 		asMap[k] = v
@@ -24530,10 +24566,6 @@ func (ec *executionContext) unmarshalInputCapabilitiesInput(ctx context.Context,
 
 func (ec *executionContext) unmarshalInputHeartbeatItemInput(ctx context.Context, obj any) (HeartbeatItemInput, error) {
 	var it HeartbeatItemInput
-	if obj == nil {
-		return it, nil
-	}
-
 	asMap := map[string]any{}
 	for k, v := range obj.(map[string]any) {
 		asMap[k] = v
@@ -24602,10 +24634,6 @@ func (ec *executionContext) unmarshalInputHeartbeatItemInput(ctx context.Context
 
 func (ec *executionContext) unmarshalInputOrganicResponseConfigInput(ctx context.Context, obj any) (OrganicResponseConfigInput, error) {
 	var it OrganicResponseConfigInput
-	if obj == nil {
-		return it, nil
-	}
-
 	asMap := map[string]any{}
 	for k, v := range obj.(map[string]any) {
 		asMap[k] = v
@@ -24681,10 +24709,6 @@ func (ec *executionContext) unmarshalInputOrganicResponseConfigInput(ctx context
 
 func (ec *executionContext) unmarshalInputPersonalityInput(ctx context.Context, obj any) (PersonalityInput, error) {
 	var it PersonalityInput
-	if obj == nil {
-		return it, nil
-	}
-
 	asMap := map[string]any{}
 	for k, v := range obj.(map[string]any) {
 		asMap[k] = v
@@ -24760,10 +24784,6 @@ func (ec *executionContext) unmarshalInputPersonalityInput(ctx context.Context, 
 
 func (ec *executionContext) unmarshalInputSandboxMountInput(ctx context.Context, obj any) (SandboxMountInput, error) {
 	var it SandboxMountInput
-	if obj == nil {
-		return it, nil
-	}
-
 	asMap := map[string]any{}
 	for k, v := range obj.(map[string]any) {
 		asMap[k] = v
@@ -24804,16 +24824,12 @@ func (ec *executionContext) unmarshalInputSandboxMountInput(ctx context.Context,
 
 func (ec *executionContext) unmarshalInputUpdateConfigInput(ctx context.Context, obj any) (UpdateConfigInput, error) {
 	var it UpdateConfigInput
-	if obj == nil {
-		return it, nil
-	}
-
 	asMap := map[string]any{}
 	for k, v := range obj.(map[string]any) {
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"agentName", "systemPrompt", "provider", "model", "apiKey", "baseURL", "ollamaHost", "ollamaApiKey", "anthropicApiKey", "dockerModelRunnerEndpoint", "dockerModelRunnerModel", "capabilities", "databaseDriver", "databaseDSN", "databaseMaxOpenConns", "databaseMaxIdleConns", "memoryBackend", "memoryFilePath", "memoryNeo4jURI", "memoryNeo4jUser", "memoryNeo4jPassword", "subagentsMaxConcurrent", "subagentsDefaultTimeout", "graphqlEnabled", "graphqlPort", "graphqlHost", "graphqlBaseUrl", "loggingLevel", "loggingPath", "secretsBackend", "secretsFilePath", "secretsOpenbaoURL", "secretsOpenbaoToken", "schedulerEnabled", "schedulerMemoryEnabled", "schedulerMemoryInterval", "channelTelegramEnabled", "channelTelegramToken", "channelDiscordEnabled", "channelDiscordToken", "channelWhatsAppEnabled", "channelWhatsAppPhoneId", "channelWhatsAppApiToken", "channelTwilioEnabled", "channelTwilioAccountSid", "channelTwilioAuthToken", "channelTwilioFromNumber", "channelSlackEnabled", "channelSlackBotToken", "channelSlackAppToken", "wizardCompleted"}
+	fieldsInOrder := [...]string{"agentName", "systemPrompt", "provider", "model", "apiKey", "baseURL", "ollamaHost", "ollamaApiKey", "anthropicApiKey", "dockerModelRunnerEndpoint", "dockerModelRunnerModel", "capabilities", "databaseDriver", "databaseDSN", "databaseMaxOpenConns", "databaseMaxIdleConns", "memoryBackend", "memoryFilePath", "memoryNeo4jURI", "memoryNeo4jUser", "memoryNeo4jPassword", "subagentsMaxConcurrent", "subagentsDefaultTimeout", "graphqlEnabled", "graphqlPort", "graphqlHost", "graphqlBaseUrl", "loggingLevel", "loggingPath", "secretsBackend", "secretsFilePath", "secretsOpenbaoURL", "secretsOpenbaoToken", "schedulerEnabled", "schedulerMemoryEnabled", "schedulerMemoryInterval", "channelTelegramEnabled", "channelTelegramToken", "channelDiscordEnabled", "channelDiscordToken", "channelWhatsAppEnabled", "channelWhatsAppPhoneId", "channelWhatsAppApiToken", "channelTwilioEnabled", "channelTwilioAccountSid", "channelTwilioAuthToken", "channelTwilioFromNumber", "channelSlackEnabled", "channelSlackBotToken", "channelSlackAppToken", "wizardCompleted", "configEncryptionEnabled"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -25177,6 +25193,13 @@ func (ec *executionContext) unmarshalInputUpdateConfigInput(ctx context.Context,
 				return it, err
 			}
 			it.WizardCompleted = data
+		case "configEncryptionEnabled":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("configEncryptionEnabled"))
+			data, err := ec.unmarshalOBoolean2ᚖbool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ConfigEncryptionEnabled = data
 		}
 	}
 	return it, nil
@@ -25447,6 +25470,8 @@ func (ec *executionContext) _AppConfig(ctx context.Context, sel ast.SelectionSet
 			out.Values[i] = ec._AppConfig_channelSecrets(ctx, field, obj)
 		case "wizardCompleted":
 			out.Values[i] = ec._AppConfig_wizardCompleted(ctx, field, obj)
+		case "configEncryptionEnabled":
+			out.Values[i] = ec._AppConfig_configEncryptionEnabled(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

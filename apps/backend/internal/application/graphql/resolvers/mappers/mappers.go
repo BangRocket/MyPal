@@ -434,6 +434,7 @@ func AppConfigSnapshotToGenerated(cfg *dto.AppConfigSnapshot) *generated.AppConf
 		out.ChannelSecrets = cs
 	}
 	out.WizardCompleted = BoolPtr(cfg.WizardCompleted)
+	out.ConfigEncryptionEnabled = BoolPtr(cfg.ConfigEncryptionEnabled)
 	return out
 }
 
@@ -656,6 +657,9 @@ func UpdateConfigInputToMap(input generated.UpdateConfigInput) map[string]interf
 	}
 	if input.WizardCompleted != nil {
 		m["wizardCompleted"] = *input.WizardCompleted
+	}
+	if input.ConfigEncryptionEnabled != nil {
+		m["configEncryptionEnabled"] = *input.ConfigEncryptionEnabled
 	}
 	return m
 }

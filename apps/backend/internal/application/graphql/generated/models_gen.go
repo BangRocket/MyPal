@@ -42,19 +42,20 @@ type AgentConfig struct {
 }
 
 type AppConfig struct {
-	Agent           *AgentConfig          `json:"agent,omitempty"`
-	Capabilities    *CapabilitiesConfig   `json:"capabilities,omitempty"`
-	Database        *DatabaseConfig       `json:"database,omitempty"`
-	Memory          *MemoryConfig         `json:"memory,omitempty"`
-	Subagents       *SubagentsConfig      `json:"subagents,omitempty"`
-	Graphql         *GraphQLConfig        `json:"graphql,omitempty"`
-	Logging         *LoggingConfig        `json:"logging,omitempty"`
-	Secrets         *SecretsConfig        `json:"secrets,omitempty"`
-	Scheduler       *SchedulerConfig      `json:"scheduler,omitempty"`
-	ActiveSessions  []*ActiveSession      `json:"activeSessions"`
-	Channels        []*ChannelConfig      `json:"channels"`
-	ChannelSecrets  *ChannelSecretsConfig `json:"channelSecrets,omitempty"`
-	WizardCompleted *bool                 `json:"wizardCompleted,omitempty"`
+	Agent                   *AgentConfig          `json:"agent,omitempty"`
+	Capabilities            *CapabilitiesConfig   `json:"capabilities,omitempty"`
+	Database                *DatabaseConfig       `json:"database,omitempty"`
+	Memory                  *MemoryConfig         `json:"memory,omitempty"`
+	Subagents               *SubagentsConfig      `json:"subagents,omitempty"`
+	Graphql                 *GraphQLConfig        `json:"graphql,omitempty"`
+	Logging                 *LoggingConfig        `json:"logging,omitempty"`
+	Secrets                 *SecretsConfig        `json:"secrets,omitempty"`
+	Scheduler               *SchedulerConfig      `json:"scheduler,omitempty"`
+	ActiveSessions          []*ActiveSession      `json:"activeSessions"`
+	Channels                []*ChannelConfig      `json:"channels"`
+	ChannelSecrets          *ChannelSecretsConfig `json:"channelSecrets,omitempty"`
+	WizardCompleted         *bool                 `json:"wizardCompleted,omitempty"`
+	ConfigEncryptionEnabled *bool                 `json:"configEncryptionEnabled,omitempty"`
 }
 
 type ApprovePairingResult struct {
@@ -692,6 +693,7 @@ type UpdateConfigInput struct {
 	ChannelSlackBotToken      *string            `json:"channelSlackBotToken,omitempty"`
 	ChannelSlackAppToken      *string            `json:"channelSlackAppToken,omitempty"`
 	WizardCompleted           *bool              `json:"wizardCompleted,omitempty"`
+	ConfigEncryptionEnabled   *bool              `json:"configEncryptionEnabled,omitempty"`
 }
 
 type UpdateConfigResult struct {

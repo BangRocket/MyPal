@@ -409,6 +409,12 @@ export const configSchema: ConfigSchema = {
         },
       },
     },
+    configEncryptionEnabled: {
+      type: "boolean",
+      title: "Config File Encryption",
+      description: "Encrypt the config file on disk (uses AES-GCM). Disable for plain YAML.",
+      default: true,
+    },
 
     // ========== SCHEDULER CONFIGURATION ==========
     schedulerEnabled: {
@@ -627,7 +633,7 @@ export const configGroups = [
   {
     id: "secrets",
     title: "SECRETS CONFIGURATION",
-    fields: ["secretsBackend", "secretsFilePath", "secretsOpenbaoURL", "secretsOpenbaoToken"],
+    fields: ["secretsBackend", "secretsFilePath", "secretsOpenbaoURL", "secretsOpenbaoToken", "configEncryptionEnabled"],
   },
   {
     id: "scheduler",

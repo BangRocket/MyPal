@@ -99,6 +99,7 @@ func BuildConfigSnapshot(cfg *config.Config, providerNameFn func(*config.Config)
 			SlackBotToken:    cfg.Channels.Slack.BotToken,
 			SlackAppToken:    cfg.Channels.Slack.AppToken,
 		},
-		WizardCompleted: cfg.Wizard.Completed,
+		WizardCompleted:         cfg.Wizard.Completed,
+		ConfigEncryptionEnabled: config.ConfigEncryptEnabled(),
 	}
 }

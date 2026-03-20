@@ -7,6 +7,8 @@ import (
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/spf13/viper"
 )
 
 const envSecretKey = "MYPAL_SECRET_KEY"
@@ -51,16 +53,21 @@ func SecretKey() []byte {
 }
 
 // ConfigEncryptEnabled returns whether config should be stored encrypted on disk.
-// Reads MYPAL_CONFIG_ENCRYPT from env; if unset or invalid, defaults to 1 (enabled).
-// Use 0 to disable encryption (plain YAML).
+// Checks (in priority order):
+//  1. MYPAL_CONFIG_ENCRYPT env var (0 = disabled, 1 = enabled)
+//  2. config_encrypt key in viper (set via the Settings UI)
+//  3. Default: true (encrypted)
 func ConfigEncryptEnabled() bool {
-	s := strings.TrimSpace(os.Getenv(envConfigEncrypt))
-	if s == "" {
-		return true
+	// Env var takes precedence.
+	if s := strings.TrimSpace(os.Getenv(envConfigEncrypt)); s != "" {
+		v, err := strconv.ParseInt(s, 10, 64)
+		if err == nil {
+			return v != 0
+		}
 	}
-	v, err := strconv.ParseInt(s, 10, 64)
-	if err != nil {
-		return true
+	// Check viper config key (set by the UI toggle).
+	if viper.IsSet("config_encrypt") {
+		return viper.GetBool("config_encrypt")
 	}
-	return v != 0
+	return true
 }

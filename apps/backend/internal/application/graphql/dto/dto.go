@@ -207,7 +207,8 @@ type AppConfigSnapshot struct {
 	ActiveSessions  []ActiveSessionSnapshot
 	Channels        []ChannelConfigSnapshot
 	ChannelSecrets  *ChannelSecretsSnapshot
-	WizardCompleted bool
+	WizardCompleted         bool
+	ConfigEncryptionEnabled bool
 }
 
 type AgentConfigSnapshot struct {

@@ -205,5 +205,6 @@ func InputToViperKeyMap() map[string]string {
 		"channelSlackBotToken":    "channels.slack.bot_token",
 		"channelSlackAppToken":    "channels.slack.app_token",
 		"wizardCompleted":         "wizard.completed",
+		"configEncryptionEnabled": "config_encrypt",
 	}
 }

@@ -126,6 +126,7 @@ type AppConfig {
   channels:       [ChannelConfig!]!
   channelSecrets: ChannelSecretsConfig
   wizardCompleted: Boolean  # True when first-boot wizard has been completed (server-side)
+  configEncryptionEnabled: Boolean  # Whether the config file is encrypted on disk
 }
 
 type UpdateConfigResult {
@@ -195,6 +196,7 @@ input UpdateConfigInput {
   channelSlackBotToken:    String
   channelSlackAppToken:     String
   wizardCompleted:         Boolean
+  configEncryptionEnabled: Boolean
 }
 
 extend type Query {

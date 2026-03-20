@@ -735,6 +735,7 @@ func setDefaults() {
 	viper.SetDefault("agent.capabilities.filesystem", true)
 	viper.SetDefault("agent.capabilities.sessions", true)
 	viper.SetDefault("wizard.completed", false)
+	viper.SetDefault("config_encrypt", true)
 	viper.SetDefault("model_tiers.enabled", false)
 	viper.SetDefault("memory.vector.enabled", false)
 	viper.SetDefault("memory.vector.backend", "pgvector")
@@ -808,6 +809,7 @@ func bootstrapEncryptedConfig(path string) error {
 	v.SetDefault("agent.capabilities.filesystem", true)
 	v.SetDefault("agent.capabilities.sessions", true)
 	v.SetDefault("wizard.completed", false)
+	v.SetDefault("config_encrypt", true)
 	return WriteEncryptedConfigFromViper(v, absPath)
 }
 
