@@ -222,15 +222,22 @@ func (a *App) initServices() {
 		a.MemoryAdapter,
 		a.ToolRegistry,
 	)
-	// When the enhanced memory system has a graph backend (FalkorDB), attach
-	// it to the context injector so imported memories are visible in prompts.
-	if a.MemorySys != nil && a.MemorySys.Graph != nil {
-		type graphSetter interface {
+	// When the enhanced memory system is available, attach its backends to
+	// the context injector so imported memories are visible in prompts.
+	if a.MemorySys != nil {
+		type enhancedMemorySetter interface {
 			SetGraphBackend(ports.GraphBackend)
+			SetVectorRecaller(appcontext.VectorRecaller)
 		}
-		if ci, ok := a.CtxInjector.(graphSetter); ok {
-			ci.SetGraphBackend(a.MemorySys.Graph)
-			log.Println("context injector: enhanced graph backend attached")
+		if ci, ok := a.CtxInjector.(enhancedMemorySetter); ok {
+			if a.MemorySys.Graph != nil {
+				ci.SetGraphBackend(a.MemorySys.Graph)
+				log.Println("context injector: enhanced graph backend attached")
+			}
+			if a.MemorySys.Vector != nil {
+				ci.SetVectorRecaller(a.MemorySys.Vector)
+				log.Println("context injector: vector recall attached")
+			}
 		}
 	}
 

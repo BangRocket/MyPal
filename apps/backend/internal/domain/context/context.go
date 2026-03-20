@@ -50,16 +50,22 @@ type Tool struct {
 	Category    string
 }
 
+// VectorRecaller is the subset of VectorMemory needed for context injection.
+type VectorRecaller interface {
+	Recall(ctx context.Context, userID, query string, topK int) ([]ports.VectorResult, error)
+}
+
 type contextInjector struct {
-	agentName     string
-	agentsPath    string
-	soulPath      string
-	identityPath  string
-	bootstrapPath string
-	memoryPath    string
-	memoryPort    ports.MemoryPort
-	graphBackend  ports.GraphBackend // optional enhanced graph (FalkorDB)
-	toolRegistry  *mcp.ToolRegistry
+	agentName      string
+	agentsPath     string
+	soulPath       string
+	identityPath   string
+	bootstrapPath  string
+	memoryPath     string
+	memoryPort     ports.MemoryPort
+	graphBackend   ports.GraphBackend // optional enhanced graph (FalkorDB)
+	vectorRecaller VectorRecaller     // optional enhanced vector (Qdrant)
+	toolRegistry   *mcp.ToolRegistry
 }
 
 func NewContextInjector(
@@ -89,6 +95,13 @@ func NewContextInjector(
 // instead of the legacy MemoryPort, enabling access to imported memories.
 func (c *contextInjector) SetGraphBackend(gb ports.GraphBackend) {
 	c.graphBackend = gb
+}
+
+// SetVectorRecaller attaches a vector memory service (e.g. Qdrant) to
+// the context injector. When set, BuildContext performs a semantic search
+// against the user's message to surface relevant memories.
+func (c *contextInjector) SetVectorRecaller(vr VectorRecaller) {
+	c.vectorRecaller = vr
 }
 
 func (c *contextInjector) BuildContext(ctx context.Context, userID string, sessionID string) (*AgentLLMContext, error) {
@@ -239,21 +252,71 @@ func (c *contextInjector) getTools() []Tool {
 }
 
 func (c *contextInjector) getMemoryDigest(ctx context.Context, userID string) (string, error) {
-	// Prefer enhanced graph backend (FalkorDB) when available — it has
-	// imported memories and richer data than the legacy GML file.
-	if c.graphBackend != nil {
-		entities, relations, err := c.graphBackend.GetNeighbors(ctx, "user:"+userID, 2)
-		if err == nil && len(entities) > 0 {
-			return formatEnhancedGraph(userID, entities, relations), nil
-		}
-		// Also try UserGraph via the Search method for name-based lookup.
-		entities, relations, err = c.graphBackend.UserGraph(ctx, userID)
-		if err == nil && len(entities) > 0 {
-			return formatEnhancedGraph(userID, entities, relations), nil
+	var parts []string
+
+	// 1. Vector recall — semantic memories with actual content.
+	if c.vectorRecaller != nil {
+		results, err := c.vectorRecaller.Recall(ctx, userID, "user background and preferences", 20)
+		if err == nil && len(results) > 0 {
+			var b strings.Builder
+			b.WriteString("## Memories about this user\n")
+			for _, r := range results {
+				if r.Content != "" {
+					b.WriteString("- ")
+					b.WriteString(r.Content)
+					b.WriteString("\n")
+				}
+			}
+			parts = append(parts, b.String())
 		}
 	}
 
-	// Fall back to legacy MemoryPort (GML/Neo4j).
+	// 2. Graph entities — known facts and relationships.
+	if c.graphBackend != nil {
+		entities, relations, err := c.graphBackend.UserGraph(ctx, userID)
+		if err == nil && len(entities) > 0 {
+			var b strings.Builder
+			b.WriteString("## Known entities related to this user\n")
+			// Cap at 50 entities to avoid bloating the prompt.
+			limit := len(entities)
+			if limit > 50 {
+				limit = 50
+			}
+			for _, e := range entities[:limit] {
+				if e.Name != "" {
+					name := strings.ReplaceAll(e.Name, "_", " ")
+					b.WriteString("- ")
+					b.WriteString(name)
+					b.WriteString("\n")
+				}
+			}
+			if len(relations) > 0 {
+				b.WriteString("\nRelationships:\n")
+				relLimit := len(relations)
+				if relLimit > 30 {
+					relLimit = 30
+				}
+				for _, r := range relations[:relLimit] {
+					fromName := strings.ReplaceAll(r.FromID, "_", " ")
+					toName := strings.ReplaceAll(r.ToID, "_", " ")
+					b.WriteString("- ")
+					b.WriteString(fromName)
+					b.WriteString(" -[")
+					b.WriteString(r.Type)
+					b.WriteString("]-> ")
+					b.WriteString(toName)
+					b.WriteString("\n")
+				}
+			}
+			parts = append(parts, b.String())
+		}
+	}
+
+	if len(parts) > 0 {
+		return strings.Join(parts, "\n"), nil
+	}
+
+	// 3. Fall back to legacy MemoryPort (GML/Neo4j).
 	if c.memoryPort == nil {
 		return "", nil
 	}
@@ -268,34 +331,6 @@ func (c *contextInjector) getMemoryDigest(ctx context.Context, userID string) (s
 	}
 
 	return formatGraphAsText(&graph), nil
-}
-
-// formatEnhancedGraph converts GraphBackend entities and relations into
-// a human-readable text block for the system prompt.
-func formatEnhancedGraph(userID string, entities []ports.GraphEntity, relations []ports.GraphRelation) string {
-	var b strings.Builder
-	b.WriteString("Known facts about this user:\n")
-	for _, e := range entities {
-		if e.Name != "" {
-			b.WriteString("- ")
-			if e.Type != "" && e.Type != "Entity" {
-				b.WriteString("[" + e.Type + "] ")
-			}
-			b.WriteString(e.Name)
-			b.WriteString("\n")
-		}
-	}
-	if len(relations) > 0 {
-		b.WriteString("\nRelationships:\n")
-		for _, r := range relations {
-			b.WriteString("- ")
-			b.WriteString(r.FromID)
-			b.WriteString(" -[" + r.Type + "]-> ")
-			b.WriteString(r.ToID)
-			b.WriteString("\n")
-		}
-	}
-	return b.String()
 }
 
 func splitToolName(name string) []string {
