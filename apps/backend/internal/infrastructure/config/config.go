@@ -735,7 +735,7 @@ func setDefaults() {
 	viper.SetDefault("agent.capabilities.filesystem", true)
 	viper.SetDefault("agent.capabilities.sessions", true)
 	viper.SetDefault("wizard.completed", false)
-	viper.SetDefault("config_encrypt", true)
+	viper.SetDefault("config_encrypt", false)
 	viper.SetDefault("model_tiers.enabled", false)
 	viper.SetDefault("memory.vector.enabled", false)
 	viper.SetDefault("memory.vector.backend", "pgvector")

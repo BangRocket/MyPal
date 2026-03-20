@@ -413,7 +413,7 @@ export const configSchema: ConfigSchema = {
       type: "boolean",
       title: "Config File Encryption",
       description: "Encrypt the config file on disk (uses AES-GCM). Disable for plain YAML.",
-      default: true,
+      default: false,
     },
 
     // ========== SCHEDULER CONFIGURATION ==========

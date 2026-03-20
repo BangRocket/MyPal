@@ -69,5 +69,5 @@ func ConfigEncryptEnabled() bool {
 	if viper.IsSet("config_encrypt") {
 		return viper.GetBool("config_encrypt")
 	}
-	return true
+	return false
 }
