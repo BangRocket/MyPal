@@ -57,6 +57,7 @@ type contextInjector struct {
 	bootstrapPath string
 	memoryPath    string
 	memoryPort    ports.MemoryPort
+	graphBackend  ports.GraphBackend // optional enhanced graph (FalkorDB)
 	toolRegistry  *mcp.ToolRegistry
 }
 
@@ -80,6 +81,13 @@ func NewContextInjector(
 		memoryPort:    memoryPort,
 		toolRegistry:  toolRegistry,
 	}
+}
+
+// SetGraphBackend attaches an enhanced graph backend (e.g. FalkorDB) to
+// the context injector. When set, getMemoryDigest reads from this backend
+// instead of the legacy MemoryPort, enabling access to imported memories.
+func (c *contextInjector) SetGraphBackend(gb ports.GraphBackend) {
+	c.graphBackend = gb
 }
 
 func (c *contextInjector) BuildContext(ctx context.Context, userID string, sessionID string) (*AgentLLMContext, error) {
@@ -219,6 +227,21 @@ func (c *contextInjector) getTools() []Tool {
 }
 
 func (c *contextInjector) getMemoryDigest(ctx context.Context, userID string) (string, error) {
+	// Prefer enhanced graph backend (FalkorDB) when available — it has
+	// imported memories and richer data than the legacy GML file.
+	if c.graphBackend != nil {
+		entities, relations, err := c.graphBackend.GetNeighbors(ctx, "user:"+userID, 2)
+		if err == nil && len(entities) > 0 {
+			return formatEnhancedGraph(userID, entities, relations), nil
+		}
+		// Also try UserGraph via the Search method for name-based lookup.
+		entities, relations, err = c.graphBackend.UserGraph(ctx, userID)
+		if err == nil && len(entities) > 0 {
+			return formatEnhancedGraph(userID, entities, relations), nil
+		}
+	}
+
+	// Fall back to legacy MemoryPort (GML/Neo4j).
 	if c.memoryPort == nil {
 		return "", nil
 	}
@@ -233,6 +256,34 @@ func (c *contextInjector) getMemoryDigest(ctx context.Context, userID string) (s
 	}
 
 	return formatGraphAsText(&graph), nil
+}
+
+// formatEnhancedGraph converts GraphBackend entities and relations into
+// a human-readable text block for the system prompt.
+func formatEnhancedGraph(userID string, entities []ports.GraphEntity, relations []ports.GraphRelation) string {
+	var b strings.Builder
+	b.WriteString("Known facts about this user:\n")
+	for _, e := range entities {
+		if e.Name != "" {
+			b.WriteString("- ")
+			if e.Type != "" && e.Type != "Entity" {
+				b.WriteString("[" + e.Type + "] ")
+			}
+			b.WriteString(e.Name)
+			b.WriteString("\n")
+		}
+	}
+	if len(relations) > 0 {
+		b.WriteString("\nRelationships:\n")
+		for _, r := range relations {
+			b.WriteString("- ")
+			b.WriteString(r.FromID)
+			b.WriteString(" -[" + r.Type + "]-> ")
+			b.WriteString(r.ToID)
+			b.WriteString("\n")
+		}
+	}
+	return b.String()
 }
 
 func splitToolName(name string) []string {

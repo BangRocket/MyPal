@@ -222,6 +222,17 @@ func (a *App) initServices() {
 		a.MemoryAdapter,
 		a.ToolRegistry,
 	)
+	// When the enhanced memory system has a graph backend (FalkorDB), attach
+	// it to the context injector so imported memories are visible in prompts.
+	if a.MemorySys != nil && a.MemorySys.Graph != nil {
+		type graphSetter interface {
+			SetGraphBackend(ports.GraphBackend)
+		}
+		if ci, ok := a.CtxInjector.(graphSetter); ok {
+			ci.SetGraphBackend(a.MemorySys.Graph)
+			log.Println("context injector: enhanced graph backend attached")
+		}
+	}
 
 	// Message handler
 	gormDB := a.db.GormDB()
