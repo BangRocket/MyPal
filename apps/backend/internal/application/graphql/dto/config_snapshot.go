@@ -66,6 +66,22 @@ func BuildConfigSnapshot(cfg *config.Config, providerNameFn func(*config.Config)
 			Backend: string(cfg.Memory.Backend), FilePath: cfg.Memory.File.Path,
 			Neo4j:    &Neo4jConfigSnapshot{URI: cfg.Memory.Neo4j.URI, User: cfg.Memory.Neo4j.User, Password: cfg.Memory.Neo4j.Password},
 			Postgres: &PostgresConfigSnapshot{DSN: cfg.Memory.Postgres.DSN},
+			Vector: &VectorMemorySnapshot{
+				Enabled:          cfg.Memory.Vector.Enabled,
+				Backend:          cfg.Memory.Vector.Backend,
+				TopK:             cfg.Memory.Vector.TopK,
+				QdrantEndpoint:   cfg.Memory.Vector.Qdrant.Endpoint,
+				QdrantCollection: cfg.Memory.Vector.Qdrant.Collection,
+				QdrantAPIKey:     cfg.Memory.Vector.Qdrant.APIKey,
+			},
+			Graph: &GraphMemorySnapshot{
+				Enabled:          cfg.Memory.Graph.Enabled,
+				Backend:          cfg.Memory.Graph.Backend,
+				FalkorDBAddr:     cfg.Memory.Graph.FalkorDB.Addr,
+				FalkorDBPassword: cfg.Memory.Graph.FalkorDB.Password,
+				FalkorDBGraph:    cfg.Memory.Graph.FalkorDB.Graph,
+				FilePath:         cfg.Memory.Graph.FilePath,
+			},
 		},
 		Subagents: &SubagentsConfigSnapshot{
 			MaxConcurrent: cfg.SubAgents.MaxConcurrent, DefaultTimeout: cfg.SubAgents.DefaultTimeout.String(),

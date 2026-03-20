@@ -203,6 +203,15 @@ type GraphEntity struct {
 	CreatedAt  string  `json:"createdAt"`
 }
 
+type GraphMemoryConfigGql struct {
+	Enabled          *bool   `json:"enabled,omitempty"`
+	Backend          *string `json:"backend,omitempty"`
+	FalkordbAddr     *string `json:"falkordbAddr,omitempty"`
+	FalkordbPassword *string `json:"falkordbPassword,omitempty"`
+	FalkordbGraph    *string `json:"falkordbGraph,omitempty"`
+	FilePath         *string `json:"filePath,omitempty"`
+}
+
 type GraphNeighborResult struct {
 	Entities  []*GraphEntity   `json:"entities"`
 	Relations []*GraphRelation `json:"relations"`
@@ -334,9 +343,11 @@ type MCPUser struct {
 }
 
 type MemoryConfig struct {
-	Backend  *string      `json:"backend,omitempty"`
-	FilePath *string      `json:"filePath,omitempty"`
-	Neo4j    *Neo4jConfig `json:"neo4j,omitempty"`
+	Backend  *string                `json:"backend,omitempty"`
+	FilePath *string                `json:"filePath,omitempty"`
+	Neo4j    *Neo4jConfig           `json:"neo4j,omitempty"`
+	Vector   *VectorMemoryConfigGql `json:"vector,omitempty"`
+	Graph    *GraphMemoryConfigGql  `json:"graph,omitempty"`
 }
 
 type MemoryEdge struct {
@@ -642,58 +653,70 @@ type ToolPermission struct {
 }
 
 type UpdateConfigInput struct {
-	AgentName                 *string            `json:"agentName,omitempty"`
-	SystemPrompt              *string            `json:"systemPrompt,omitempty"`
-	Provider                  *string            `json:"provider,omitempty"`
-	Model                     *string            `json:"model,omitempty"`
-	APIKey                    *string            `json:"apiKey,omitempty"`
-	BaseURL                   *string            `json:"baseURL,omitempty"`
-	OllamaHost                *string            `json:"ollamaHost,omitempty"`
-	OllamaAPIKey              *string            `json:"ollamaApiKey,omitempty"`
-	AnthropicAPIKey           *string            `json:"anthropicApiKey,omitempty"`
-	DockerModelRunnerEndpoint *string            `json:"dockerModelRunnerEndpoint,omitempty"`
-	DockerModelRunnerModel    *string            `json:"dockerModelRunnerModel,omitempty"`
-	Capabilities              *CapabilitiesInput `json:"capabilities,omitempty"`
-	DatabaseDriver            *string            `json:"databaseDriver,omitempty"`
-	DatabaseDsn               *string            `json:"databaseDSN,omitempty"`
-	DatabaseMaxOpenConns      *int               `json:"databaseMaxOpenConns,omitempty"`
-	DatabaseMaxIdleConns      *int               `json:"databaseMaxIdleConns,omitempty"`
-	MemoryBackend             *string            `json:"memoryBackend,omitempty"`
-	MemoryFilePath            *string            `json:"memoryFilePath,omitempty"`
-	MemoryNeo4jURI            *string            `json:"memoryNeo4jURI,omitempty"`
-	MemoryNeo4jUser           *string            `json:"memoryNeo4jUser,omitempty"`
-	MemoryNeo4jPassword       *string            `json:"memoryNeo4jPassword,omitempty"`
-	SubagentsMaxConcurrent    *int               `json:"subagentsMaxConcurrent,omitempty"`
-	SubagentsDefaultTimeout   *string            `json:"subagentsDefaultTimeout,omitempty"`
-	GraphqlEnabled            *bool              `json:"graphqlEnabled,omitempty"`
-	GraphqlPort               *int               `json:"graphqlPort,omitempty"`
-	GraphqlHost               *string            `json:"graphqlHost,omitempty"`
-	GraphqlBaseURL            *string            `json:"graphqlBaseUrl,omitempty"`
-	LoggingLevel              *string            `json:"loggingLevel,omitempty"`
-	LoggingPath               *string            `json:"loggingPath,omitempty"`
-	SecretsBackend            *string            `json:"secretsBackend,omitempty"`
-	SecretsFilePath           *string            `json:"secretsFilePath,omitempty"`
-	SecretsOpenbaoURL         *string            `json:"secretsOpenbaoURL,omitempty"`
-	SecretsOpenbaoToken       *string            `json:"secretsOpenbaoToken,omitempty"`
-	SchedulerEnabled          *bool              `json:"schedulerEnabled,omitempty"`
-	SchedulerMemoryEnabled    *bool              `json:"schedulerMemoryEnabled,omitempty"`
-	SchedulerMemoryInterval   *string            `json:"schedulerMemoryInterval,omitempty"`
-	ChannelTelegramEnabled    *bool              `json:"channelTelegramEnabled,omitempty"`
-	ChannelTelegramToken      *string            `json:"channelTelegramToken,omitempty"`
-	ChannelDiscordEnabled     *bool              `json:"channelDiscordEnabled,omitempty"`
-	ChannelDiscordToken       *string            `json:"channelDiscordToken,omitempty"`
-	ChannelWhatsAppEnabled    *bool              `json:"channelWhatsAppEnabled,omitempty"`
-	ChannelWhatsAppPhoneID    *string            `json:"channelWhatsAppPhoneId,omitempty"`
-	ChannelWhatsAppAPIToken   *string            `json:"channelWhatsAppApiToken,omitempty"`
-	ChannelTwilioEnabled      *bool              `json:"channelTwilioEnabled,omitempty"`
-	ChannelTwilioAccountSid   *string            `json:"channelTwilioAccountSid,omitempty"`
-	ChannelTwilioAuthToken    *string            `json:"channelTwilioAuthToken,omitempty"`
-	ChannelTwilioFromNumber   *string            `json:"channelTwilioFromNumber,omitempty"`
-	ChannelSlackEnabled       *bool              `json:"channelSlackEnabled,omitempty"`
-	ChannelSlackBotToken      *string            `json:"channelSlackBotToken,omitempty"`
-	ChannelSlackAppToken      *string            `json:"channelSlackAppToken,omitempty"`
-	WizardCompleted           *bool              `json:"wizardCompleted,omitempty"`
-	ConfigEncryptionEnabled   *bool              `json:"configEncryptionEnabled,omitempty"`
+	AgentName                    *string            `json:"agentName,omitempty"`
+	SystemPrompt                 *string            `json:"systemPrompt,omitempty"`
+	Provider                     *string            `json:"provider,omitempty"`
+	Model                        *string            `json:"model,omitempty"`
+	APIKey                       *string            `json:"apiKey,omitempty"`
+	BaseURL                      *string            `json:"baseURL,omitempty"`
+	OllamaHost                   *string            `json:"ollamaHost,omitempty"`
+	OllamaAPIKey                 *string            `json:"ollamaApiKey,omitempty"`
+	AnthropicAPIKey              *string            `json:"anthropicApiKey,omitempty"`
+	DockerModelRunnerEndpoint    *string            `json:"dockerModelRunnerEndpoint,omitempty"`
+	DockerModelRunnerModel       *string            `json:"dockerModelRunnerModel,omitempty"`
+	Capabilities                 *CapabilitiesInput `json:"capabilities,omitempty"`
+	DatabaseDriver               *string            `json:"databaseDriver,omitempty"`
+	DatabaseDsn                  *string            `json:"databaseDSN,omitempty"`
+	DatabaseMaxOpenConns         *int               `json:"databaseMaxOpenConns,omitempty"`
+	DatabaseMaxIdleConns         *int               `json:"databaseMaxIdleConns,omitempty"`
+	MemoryBackend                *string            `json:"memoryBackend,omitempty"`
+	MemoryFilePath               *string            `json:"memoryFilePath,omitempty"`
+	MemoryNeo4jURI               *string            `json:"memoryNeo4jURI,omitempty"`
+	MemoryNeo4jUser              *string            `json:"memoryNeo4jUser,omitempty"`
+	MemoryNeo4jPassword          *string            `json:"memoryNeo4jPassword,omitempty"`
+	MemoryVectorEnabled          *bool              `json:"memoryVectorEnabled,omitempty"`
+	MemoryVectorBackend          *string            `json:"memoryVectorBackend,omitempty"`
+	MemoryVectorTopK             *int               `json:"memoryVectorTopK,omitempty"`
+	MemoryVectorQdrantEndpoint   *string            `json:"memoryVectorQdrantEndpoint,omitempty"`
+	MemoryVectorQdrantCollection *string            `json:"memoryVectorQdrantCollection,omitempty"`
+	MemoryVectorQdrantAPIKey     *string            `json:"memoryVectorQdrantApiKey,omitempty"`
+	MemoryGraphEnabled           *bool              `json:"memoryGraphEnabled,omitempty"`
+	MemoryGraphBackend           *string            `json:"memoryGraphBackend,omitempty"`
+	MemoryGraphFalkordbAddr      *string            `json:"memoryGraphFalkordbAddr,omitempty"`
+	MemoryGraphFalkordbPassword  *string            `json:"memoryGraphFalkordbPassword,omitempty"`
+	MemoryGraphFalkordbGraph     *string            `json:"memoryGraphFalkordbGraph,omitempty"`
+	MemoryGraphFilePath          *string            `json:"memoryGraphFilePath,omitempty"`
+	SubagentsMaxConcurrent       *int               `json:"subagentsMaxConcurrent,omitempty"`
+	SubagentsDefaultTimeout      *string            `json:"subagentsDefaultTimeout,omitempty"`
+	GraphqlEnabled               *bool              `json:"graphqlEnabled,omitempty"`
+	GraphqlPort                  *int               `json:"graphqlPort,omitempty"`
+	GraphqlHost                  *string            `json:"graphqlHost,omitempty"`
+	GraphqlBaseURL               *string            `json:"graphqlBaseUrl,omitempty"`
+	LoggingLevel                 *string            `json:"loggingLevel,omitempty"`
+	LoggingPath                  *string            `json:"loggingPath,omitempty"`
+	SecretsBackend               *string            `json:"secretsBackend,omitempty"`
+	SecretsFilePath              *string            `json:"secretsFilePath,omitempty"`
+	SecretsOpenbaoURL            *string            `json:"secretsOpenbaoURL,omitempty"`
+	SecretsOpenbaoToken          *string            `json:"secretsOpenbaoToken,omitempty"`
+	SchedulerEnabled             *bool              `json:"schedulerEnabled,omitempty"`
+	SchedulerMemoryEnabled       *bool              `json:"schedulerMemoryEnabled,omitempty"`
+	SchedulerMemoryInterval      *string            `json:"schedulerMemoryInterval,omitempty"`
+	ChannelTelegramEnabled       *bool              `json:"channelTelegramEnabled,omitempty"`
+	ChannelTelegramToken         *string            `json:"channelTelegramToken,omitempty"`
+	ChannelDiscordEnabled        *bool              `json:"channelDiscordEnabled,omitempty"`
+	ChannelDiscordToken          *string            `json:"channelDiscordToken,omitempty"`
+	ChannelWhatsAppEnabled       *bool              `json:"channelWhatsAppEnabled,omitempty"`
+	ChannelWhatsAppPhoneID       *string            `json:"channelWhatsAppPhoneId,omitempty"`
+	ChannelWhatsAppAPIToken      *string            `json:"channelWhatsAppApiToken,omitempty"`
+	ChannelTwilioEnabled         *bool              `json:"channelTwilioEnabled,omitempty"`
+	ChannelTwilioAccountSid      *string            `json:"channelTwilioAccountSid,omitempty"`
+	ChannelTwilioAuthToken       *string            `json:"channelTwilioAuthToken,omitempty"`
+	ChannelTwilioFromNumber      *string            `json:"channelTwilioFromNumber,omitempty"`
+	ChannelSlackEnabled          *bool              `json:"channelSlackEnabled,omitempty"`
+	ChannelSlackBotToken         *string            `json:"channelSlackBotToken,omitempty"`
+	ChannelSlackAppToken         *string            `json:"channelSlackAppToken,omitempty"`
+	WizardCompleted              *bool              `json:"wizardCompleted,omitempty"`
+	ConfigEncryptionEnabled      *bool              `json:"configEncryptionEnabled,omitempty"`
 }
 
 type UpdateConfigResult struct {
@@ -723,6 +746,15 @@ type UserRelationship struct {
 	Preferences      *string `json:"preferences,omitempty"`
 	InteractionCount int     `json:"interactionCount"`
 	LastInteraction  *string `json:"lastInteraction,omitempty"`
+}
+
+type VectorMemoryConfigGql struct {
+	Enabled          *bool   `json:"enabled,omitempty"`
+	Backend          *string `json:"backend,omitempty"`
+	TopK             *int    `json:"topK,omitempty"`
+	QdrantEndpoint   *string `json:"qdrantEndpoint,omitempty"`
+	QdrantCollection *string `json:"qdrantCollection,omitempty"`
+	QdrantAPIKey     *string `json:"qdrantApiKey,omitempty"`
 }
 
 type VectorSearchResult struct {

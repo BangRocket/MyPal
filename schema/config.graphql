@@ -37,10 +37,30 @@ type Neo4jConfig {
   password: String
 }
 
+type VectorMemoryConfigGQL {
+  enabled:    Boolean
+  backend:    String
+  topK:       Int
+  qdrantEndpoint:   String
+  qdrantCollection: String
+  qdrantApiKey:     String
+}
+
+type GraphMemoryConfigGQL {
+  enabled:          Boolean
+  backend:          String
+  falkordbAddr:     String
+  falkordbPassword: String
+  falkordbGraph:    String
+  filePath:         String
+}
+
 type MemoryConfig {
   backend:  String
   filePath: String
   neo4j:    Neo4jConfig
+  vector:   VectorMemoryConfigGQL
+  graph:    GraphMemoryConfigGQL
 }
 
 type SubagentsConfig {
@@ -160,6 +180,20 @@ input UpdateConfigInput {
   memoryNeo4jURI:      String
   memoryNeo4jUser:     String
   memoryNeo4jPassword: String
+
+  memoryVectorEnabled:        Boolean
+  memoryVectorBackend:        String
+  memoryVectorTopK:           Int
+  memoryVectorQdrantEndpoint: String
+  memoryVectorQdrantCollection: String
+  memoryVectorQdrantApiKey:   String
+
+  memoryGraphEnabled:          Boolean
+  memoryGraphBackend:          String
+  memoryGraphFalkordbAddr:     String
+  memoryGraphFalkordbPassword: String
+  memoryGraphFalkordbGraph:    String
+  memoryGraphFilePath:         String
 
   subagentsMaxConcurrent:  Int
   subagentsDefaultTimeout: String

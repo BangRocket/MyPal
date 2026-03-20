@@ -226,6 +226,15 @@ type ComplexityRoot struct {
 		UserID     func(childComplexity int) int
 	}
 
+	GraphMemoryConfigGQL struct {
+		Backend          func(childComplexity int) int
+		Enabled          func(childComplexity int) int
+		FalkordbAddr     func(childComplexity int) int
+		FalkordbGraph    func(childComplexity int) int
+		FalkordbPassword func(childComplexity int) int
+		FilePath         func(childComplexity int) int
+	}
+
 	GraphNeighborResult struct {
 		Entities  func(childComplexity int) int
 		Relations func(childComplexity int) int
@@ -349,7 +358,9 @@ type ComplexityRoot struct {
 	MemoryConfig struct {
 		Backend  func(childComplexity int) int
 		FilePath func(childComplexity int) int
+		Graph    func(childComplexity int) int
 		Neo4j    func(childComplexity int) int
+		Vector   func(childComplexity int) int
 	}
 
 	MemoryEdge struct {
@@ -759,6 +770,15 @@ type ComplexityRoot struct {
 		PersonalityID    func(childComplexity int) int
 		Preferences      func(childComplexity int) int
 		UserID           func(childComplexity int) int
+	}
+
+	VectorMemoryConfigGQL struct {
+		Backend          func(childComplexity int) int
+		Enabled          func(childComplexity int) int
+		QdrantAPIKey     func(childComplexity int) int
+		QdrantCollection func(childComplexity int) int
+		QdrantEndpoint   func(childComplexity int) int
+		TopK             func(childComplexity int) int
 	}
 
 	VectorSearchResult struct {
@@ -1687,6 +1707,43 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.ComplexityRoot.GraphEntity.UserID(childComplexity), true
 
+	case "GraphMemoryConfigGQL.backend":
+		if e.ComplexityRoot.GraphMemoryConfigGQL.Backend == nil {
+			break
+		}
+
+		return e.ComplexityRoot.GraphMemoryConfigGQL.Backend(childComplexity), true
+	case "GraphMemoryConfigGQL.enabled":
+		if e.ComplexityRoot.GraphMemoryConfigGQL.Enabled == nil {
+			break
+		}
+
+		return e.ComplexityRoot.GraphMemoryConfigGQL.Enabled(childComplexity), true
+	case "GraphMemoryConfigGQL.falkordbAddr":
+		if e.ComplexityRoot.GraphMemoryConfigGQL.FalkordbAddr == nil {
+			break
+		}
+
+		return e.ComplexityRoot.GraphMemoryConfigGQL.FalkordbAddr(childComplexity), true
+	case "GraphMemoryConfigGQL.falkordbGraph":
+		if e.ComplexityRoot.GraphMemoryConfigGQL.FalkordbGraph == nil {
+			break
+		}
+
+		return e.ComplexityRoot.GraphMemoryConfigGQL.FalkordbGraph(childComplexity), true
+	case "GraphMemoryConfigGQL.falkordbPassword":
+		if e.ComplexityRoot.GraphMemoryConfigGQL.FalkordbPassword == nil {
+			break
+		}
+
+		return e.ComplexityRoot.GraphMemoryConfigGQL.FalkordbPassword(childComplexity), true
+	case "GraphMemoryConfigGQL.filePath":
+		if e.ComplexityRoot.GraphMemoryConfigGQL.FilePath == nil {
+			break
+		}
+
+		return e.ComplexityRoot.GraphMemoryConfigGQL.FilePath(childComplexity), true
+
 	case "GraphNeighborResult.entities":
 		if e.ComplexityRoot.GraphNeighborResult.Entities == nil {
 			break
@@ -2147,12 +2204,24 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.ComplexityRoot.MemoryConfig.FilePath(childComplexity), true
+	case "MemoryConfig.graph":
+		if e.ComplexityRoot.MemoryConfig.Graph == nil {
+			break
+		}
+
+		return e.ComplexityRoot.MemoryConfig.Graph(childComplexity), true
 	case "MemoryConfig.neo4j":
 		if e.ComplexityRoot.MemoryConfig.Neo4j == nil {
 			break
 		}
 
 		return e.ComplexityRoot.MemoryConfig.Neo4j(childComplexity), true
+	case "MemoryConfig.vector":
+		if e.ComplexityRoot.MemoryConfig.Vector == nil {
+			break
+		}
+
+		return e.ComplexityRoot.MemoryConfig.Vector(childComplexity), true
 
 	case "MemoryEdge.id":
 		if e.ComplexityRoot.MemoryEdge.ID == nil {
@@ -4210,6 +4279,43 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.ComplexityRoot.UserRelationship.UserID(childComplexity), true
 
+	case "VectorMemoryConfigGQL.backend":
+		if e.ComplexityRoot.VectorMemoryConfigGQL.Backend == nil {
+			break
+		}
+
+		return e.ComplexityRoot.VectorMemoryConfigGQL.Backend(childComplexity), true
+	case "VectorMemoryConfigGQL.enabled":
+		if e.ComplexityRoot.VectorMemoryConfigGQL.Enabled == nil {
+			break
+		}
+
+		return e.ComplexityRoot.VectorMemoryConfigGQL.Enabled(childComplexity), true
+	case "VectorMemoryConfigGQL.qdrantApiKey":
+		if e.ComplexityRoot.VectorMemoryConfigGQL.QdrantAPIKey == nil {
+			break
+		}
+
+		return e.ComplexityRoot.VectorMemoryConfigGQL.QdrantAPIKey(childComplexity), true
+	case "VectorMemoryConfigGQL.qdrantCollection":
+		if e.ComplexityRoot.VectorMemoryConfigGQL.QdrantCollection == nil {
+			break
+		}
+
+		return e.ComplexityRoot.VectorMemoryConfigGQL.QdrantCollection(childComplexity), true
+	case "VectorMemoryConfigGQL.qdrantEndpoint":
+		if e.ComplexityRoot.VectorMemoryConfigGQL.QdrantEndpoint == nil {
+			break
+		}
+
+		return e.ComplexityRoot.VectorMemoryConfigGQL.QdrantEndpoint(childComplexity), true
+	case "VectorMemoryConfigGQL.topK":
+		if e.ComplexityRoot.VectorMemoryConfigGQL.TopK == nil {
+			break
+		}
+
+		return e.ComplexityRoot.VectorMemoryConfigGQL.TopK(childComplexity), true
+
 	case "VectorSearchResult.content":
 		if e.ComplexityRoot.VectorSearchResult.Content == nil {
 			break
@@ -4513,10 +4619,30 @@ type Neo4jConfig {
   password: String
 }
 
+type VectorMemoryConfigGQL {
+  enabled:    Boolean
+  backend:    String
+  topK:       Int
+  qdrantEndpoint:   String
+  qdrantCollection: String
+  qdrantApiKey:     String
+}
+
+type GraphMemoryConfigGQL {
+  enabled:          Boolean
+  backend:          String
+  falkordbAddr:     String
+  falkordbPassword: String
+  falkordbGraph:    String
+  filePath:         String
+}
+
 type MemoryConfig {
   backend:  String
   filePath: String
   neo4j:    Neo4jConfig
+  vector:   VectorMemoryConfigGQL
+  graph:    GraphMemoryConfigGQL
 }
 
 type SubagentsConfig {
@@ -4636,6 +4762,20 @@ input UpdateConfigInput {
   memoryNeo4jURI:      String
   memoryNeo4jUser:     String
   memoryNeo4jPassword: String
+
+  memoryVectorEnabled:        Boolean
+  memoryVectorBackend:        String
+  memoryVectorTopK:           Int
+  memoryVectorQdrantEndpoint: String
+  memoryVectorQdrantCollection: String
+  memoryVectorQdrantApiKey:   String
+
+  memoryGraphEnabled:          Boolean
+  memoryGraphBackend:          String
+  memoryGraphFalkordbAddr:     String
+  memoryGraphFalkordbPassword: String
+  memoryGraphFalkordbGraph:    String
+  memoryGraphFilePath:         String
 
   subagentsMaxConcurrent:  Int
   subagentsDefaultTimeout: String
@@ -7330,6 +7470,10 @@ func (ec *executionContext) fieldContext_AppConfig_memory(_ context.Context, fie
 				return ec.fieldContext_MemoryConfig_filePath(ctx, field)
 			case "neo4j":
 				return ec.fieldContext_MemoryConfig_neo4j(ctx, field)
+			case "vector":
+				return ec.fieldContext_MemoryConfig_vector(ctx, field)
+			case "graph":
+				return ec.fieldContext_MemoryConfig_graph(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type MemoryConfig", field.Name)
 		},
@@ -10262,6 +10406,180 @@ func (ec *executionContext) fieldContext_GraphEntity_createdAt(_ context.Context
 	return fc, nil
 }
 
+func (ec *executionContext) _GraphMemoryConfigGQL_enabled(ctx context.Context, field graphql.CollectedField, obj *GraphMemoryConfigGql) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_GraphMemoryConfigGQL_enabled,
+		func(ctx context.Context) (any, error) {
+			return obj.Enabled, nil
+		},
+		nil,
+		ec.marshalOBoolean2ᚖbool,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_GraphMemoryConfigGQL_enabled(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GraphMemoryConfigGQL",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GraphMemoryConfigGQL_backend(ctx context.Context, field graphql.CollectedField, obj *GraphMemoryConfigGql) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_GraphMemoryConfigGQL_backend,
+		func(ctx context.Context) (any, error) {
+			return obj.Backend, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_GraphMemoryConfigGQL_backend(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GraphMemoryConfigGQL",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GraphMemoryConfigGQL_falkordbAddr(ctx context.Context, field graphql.CollectedField, obj *GraphMemoryConfigGql) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_GraphMemoryConfigGQL_falkordbAddr,
+		func(ctx context.Context) (any, error) {
+			return obj.FalkordbAddr, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_GraphMemoryConfigGQL_falkordbAddr(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GraphMemoryConfigGQL",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GraphMemoryConfigGQL_falkordbPassword(ctx context.Context, field graphql.CollectedField, obj *GraphMemoryConfigGql) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_GraphMemoryConfigGQL_falkordbPassword,
+		func(ctx context.Context) (any, error) {
+			return obj.FalkordbPassword, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_GraphMemoryConfigGQL_falkordbPassword(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GraphMemoryConfigGQL",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GraphMemoryConfigGQL_falkordbGraph(ctx context.Context, field graphql.CollectedField, obj *GraphMemoryConfigGql) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_GraphMemoryConfigGQL_falkordbGraph,
+		func(ctx context.Context) (any, error) {
+			return obj.FalkordbGraph, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_GraphMemoryConfigGQL_falkordbGraph(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GraphMemoryConfigGQL",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GraphMemoryConfigGQL_filePath(ctx context.Context, field graphql.CollectedField, obj *GraphMemoryConfigGql) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_GraphMemoryConfigGQL_filePath,
+		func(ctx context.Context) (any, error) {
+			return obj.FilePath, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_GraphMemoryConfigGQL_filePath(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GraphMemoryConfigGQL",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _GraphNeighborResult_entities(ctx context.Context, field graphql.CollectedField, obj *GraphNeighborResult) (ret graphql.Marshaler) {
 	return graphql.ResolveField(
 		ctx,
@@ -12476,6 +12794,92 @@ func (ec *executionContext) fieldContext_MemoryConfig_neo4j(_ context.Context, f
 				return ec.fieldContext_Neo4jConfig_password(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Neo4jConfig", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _MemoryConfig_vector(ctx context.Context, field graphql.CollectedField, obj *MemoryConfig) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_MemoryConfig_vector,
+		func(ctx context.Context) (any, error) {
+			return obj.Vector, nil
+		},
+		nil,
+		ec.marshalOVectorMemoryConfigGQL2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐVectorMemoryConfigGql,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_MemoryConfig_vector(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "MemoryConfig",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "enabled":
+				return ec.fieldContext_VectorMemoryConfigGQL_enabled(ctx, field)
+			case "backend":
+				return ec.fieldContext_VectorMemoryConfigGQL_backend(ctx, field)
+			case "topK":
+				return ec.fieldContext_VectorMemoryConfigGQL_topK(ctx, field)
+			case "qdrantEndpoint":
+				return ec.fieldContext_VectorMemoryConfigGQL_qdrantEndpoint(ctx, field)
+			case "qdrantCollection":
+				return ec.fieldContext_VectorMemoryConfigGQL_qdrantCollection(ctx, field)
+			case "qdrantApiKey":
+				return ec.fieldContext_VectorMemoryConfigGQL_qdrantApiKey(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type VectorMemoryConfigGQL", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _MemoryConfig_graph(ctx context.Context, field graphql.CollectedField, obj *MemoryConfig) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_MemoryConfig_graph,
+		func(ctx context.Context) (any, error) {
+			return obj.Graph, nil
+		},
+		nil,
+		ec.marshalOGraphMemoryConfigGQL2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐGraphMemoryConfigGql,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_MemoryConfig_graph(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "MemoryConfig",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "enabled":
+				return ec.fieldContext_GraphMemoryConfigGQL_enabled(ctx, field)
+			case "backend":
+				return ec.fieldContext_GraphMemoryConfigGQL_backend(ctx, field)
+			case "falkordbAddr":
+				return ec.fieldContext_GraphMemoryConfigGQL_falkordbAddr(ctx, field)
+			case "falkordbPassword":
+				return ec.fieldContext_GraphMemoryConfigGQL_falkordbPassword(ctx, field)
+			case "falkordbGraph":
+				return ec.fieldContext_GraphMemoryConfigGQL_falkordbGraph(ctx, field)
+			case "filePath":
+				return ec.fieldContext_GraphMemoryConfigGQL_filePath(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type GraphMemoryConfigGQL", field.Name)
 		},
 	}
 	return fc, nil
@@ -22876,6 +23280,180 @@ func (ec *executionContext) fieldContext_UserRelationship_lastInteraction(_ cont
 	return fc, nil
 }
 
+func (ec *executionContext) _VectorMemoryConfigGQL_enabled(ctx context.Context, field graphql.CollectedField, obj *VectorMemoryConfigGql) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_VectorMemoryConfigGQL_enabled,
+		func(ctx context.Context) (any, error) {
+			return obj.Enabled, nil
+		},
+		nil,
+		ec.marshalOBoolean2ᚖbool,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_VectorMemoryConfigGQL_enabled(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "VectorMemoryConfigGQL",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _VectorMemoryConfigGQL_backend(ctx context.Context, field graphql.CollectedField, obj *VectorMemoryConfigGql) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_VectorMemoryConfigGQL_backend,
+		func(ctx context.Context) (any, error) {
+			return obj.Backend, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_VectorMemoryConfigGQL_backend(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "VectorMemoryConfigGQL",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _VectorMemoryConfigGQL_topK(ctx context.Context, field graphql.CollectedField, obj *VectorMemoryConfigGql) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_VectorMemoryConfigGQL_topK,
+		func(ctx context.Context) (any, error) {
+			return obj.TopK, nil
+		},
+		nil,
+		ec.marshalOInt2ᚖint,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_VectorMemoryConfigGQL_topK(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "VectorMemoryConfigGQL",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _VectorMemoryConfigGQL_qdrantEndpoint(ctx context.Context, field graphql.CollectedField, obj *VectorMemoryConfigGql) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_VectorMemoryConfigGQL_qdrantEndpoint,
+		func(ctx context.Context) (any, error) {
+			return obj.QdrantEndpoint, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_VectorMemoryConfigGQL_qdrantEndpoint(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "VectorMemoryConfigGQL",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _VectorMemoryConfigGQL_qdrantCollection(ctx context.Context, field graphql.CollectedField, obj *VectorMemoryConfigGql) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_VectorMemoryConfigGQL_qdrantCollection,
+		func(ctx context.Context) (any, error) {
+			return obj.QdrantCollection, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_VectorMemoryConfigGQL_qdrantCollection(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "VectorMemoryConfigGQL",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _VectorMemoryConfigGQL_qdrantApiKey(ctx context.Context, field graphql.CollectedField, obj *VectorMemoryConfigGql) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_VectorMemoryConfigGQL_qdrantApiKey,
+		func(ctx context.Context) (any, error) {
+			return obj.QdrantAPIKey, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_VectorMemoryConfigGQL_qdrantApiKey(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "VectorMemoryConfigGQL",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _VectorSearchResult_id(ctx context.Context, field graphql.CollectedField, obj *VectorSearchResult) (ret graphql.Marshaler) {
 	return graphql.ResolveField(
 		ctx,
@@ -24829,7 +25407,7 @@ func (ec *executionContext) unmarshalInputUpdateConfigInput(ctx context.Context,
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"agentName", "systemPrompt", "provider", "model", "apiKey", "baseURL", "ollamaHost", "ollamaApiKey", "anthropicApiKey", "dockerModelRunnerEndpoint", "dockerModelRunnerModel", "capabilities", "databaseDriver", "databaseDSN", "databaseMaxOpenConns", "databaseMaxIdleConns", "memoryBackend", "memoryFilePath", "memoryNeo4jURI", "memoryNeo4jUser", "memoryNeo4jPassword", "subagentsMaxConcurrent", "subagentsDefaultTimeout", "graphqlEnabled", "graphqlPort", "graphqlHost", "graphqlBaseUrl", "loggingLevel", "loggingPath", "secretsBackend", "secretsFilePath", "secretsOpenbaoURL", "secretsOpenbaoToken", "schedulerEnabled", "schedulerMemoryEnabled", "schedulerMemoryInterval", "channelTelegramEnabled", "channelTelegramToken", "channelDiscordEnabled", "channelDiscordToken", "channelWhatsAppEnabled", "channelWhatsAppPhoneId", "channelWhatsAppApiToken", "channelTwilioEnabled", "channelTwilioAccountSid", "channelTwilioAuthToken", "channelTwilioFromNumber", "channelSlackEnabled", "channelSlackBotToken", "channelSlackAppToken", "wizardCompleted", "configEncryptionEnabled"}
+	fieldsInOrder := [...]string{"agentName", "systemPrompt", "provider", "model", "apiKey", "baseURL", "ollamaHost", "ollamaApiKey", "anthropicApiKey", "dockerModelRunnerEndpoint", "dockerModelRunnerModel", "capabilities", "databaseDriver", "databaseDSN", "databaseMaxOpenConns", "databaseMaxIdleConns", "memoryBackend", "memoryFilePath", "memoryNeo4jURI", "memoryNeo4jUser", "memoryNeo4jPassword", "memoryVectorEnabled", "memoryVectorBackend", "memoryVectorTopK", "memoryVectorQdrantEndpoint", "memoryVectorQdrantCollection", "memoryVectorQdrantApiKey", "memoryGraphEnabled", "memoryGraphBackend", "memoryGraphFalkordbAddr", "memoryGraphFalkordbPassword", "memoryGraphFalkordbGraph", "memoryGraphFilePath", "subagentsMaxConcurrent", "subagentsDefaultTimeout", "graphqlEnabled", "graphqlPort", "graphqlHost", "graphqlBaseUrl", "loggingLevel", "loggingPath", "secretsBackend", "secretsFilePath", "secretsOpenbaoURL", "secretsOpenbaoToken", "schedulerEnabled", "schedulerMemoryEnabled", "schedulerMemoryInterval", "channelTelegramEnabled", "channelTelegramToken", "channelDiscordEnabled", "channelDiscordToken", "channelWhatsAppEnabled", "channelWhatsAppPhoneId", "channelWhatsAppApiToken", "channelTwilioEnabled", "channelTwilioAccountSid", "channelTwilioAuthToken", "channelTwilioFromNumber", "channelSlackEnabled", "channelSlackBotToken", "channelSlackAppToken", "wizardCompleted", "configEncryptionEnabled"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -24983,6 +25561,90 @@ func (ec *executionContext) unmarshalInputUpdateConfigInput(ctx context.Context,
 				return it, err
 			}
 			it.MemoryNeo4jPassword = data
+		case "memoryVectorEnabled":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("memoryVectorEnabled"))
+			data, err := ec.unmarshalOBoolean2ᚖbool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.MemoryVectorEnabled = data
+		case "memoryVectorBackend":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("memoryVectorBackend"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.MemoryVectorBackend = data
+		case "memoryVectorTopK":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("memoryVectorTopK"))
+			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.MemoryVectorTopK = data
+		case "memoryVectorQdrantEndpoint":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("memoryVectorQdrantEndpoint"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.MemoryVectorQdrantEndpoint = data
+		case "memoryVectorQdrantCollection":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("memoryVectorQdrantCollection"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.MemoryVectorQdrantCollection = data
+		case "memoryVectorQdrantApiKey":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("memoryVectorQdrantApiKey"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.MemoryVectorQdrantAPIKey = data
+		case "memoryGraphEnabled":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("memoryGraphEnabled"))
+			data, err := ec.unmarshalOBoolean2ᚖbool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.MemoryGraphEnabled = data
+		case "memoryGraphBackend":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("memoryGraphBackend"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.MemoryGraphBackend = data
+		case "memoryGraphFalkordbAddr":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("memoryGraphFalkordbAddr"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.MemoryGraphFalkordbAddr = data
+		case "memoryGraphFalkordbPassword":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("memoryGraphFalkordbPassword"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.MemoryGraphFalkordbPassword = data
+		case "memoryGraphFalkordbGraph":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("memoryGraphFalkordbGraph"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.MemoryGraphFalkordbGraph = data
+		case "memoryGraphFilePath":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("memoryGraphFilePath"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.MemoryGraphFilePath = data
 		case "subagentsMaxConcurrent":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("subagentsMaxConcurrent"))
 			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
@@ -26336,6 +26998,52 @@ func (ec *executionContext) _GraphEntity(ctx context.Context, sel ast.SelectionS
 	return out
 }
 
+var graphMemoryConfigGQLImplementors = []string{"GraphMemoryConfigGQL"}
+
+func (ec *executionContext) _GraphMemoryConfigGQL(ctx context.Context, sel ast.SelectionSet, obj *GraphMemoryConfigGql) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, graphMemoryConfigGQLImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("GraphMemoryConfigGQL")
+		case "enabled":
+			out.Values[i] = ec._GraphMemoryConfigGQL_enabled(ctx, field, obj)
+		case "backend":
+			out.Values[i] = ec._GraphMemoryConfigGQL_backend(ctx, field, obj)
+		case "falkordbAddr":
+			out.Values[i] = ec._GraphMemoryConfigGQL_falkordbAddr(ctx, field, obj)
+		case "falkordbPassword":
+			out.Values[i] = ec._GraphMemoryConfigGQL_falkordbPassword(ctx, field, obj)
+		case "falkordbGraph":
+			out.Values[i] = ec._GraphMemoryConfigGQL_falkordbGraph(ctx, field, obj)
+		case "filePath":
+			out.Values[i] = ec._GraphMemoryConfigGQL_filePath(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.Deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.ProcessDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
 var graphNeighborResultImplementors = []string{"GraphNeighborResult"}
 
 func (ec *executionContext) _GraphNeighborResult(ctx context.Context, sel ast.SelectionSet, obj *GraphNeighborResult) graphql.Marshaler {
@@ -27137,6 +27845,10 @@ func (ec *executionContext) _MemoryConfig(ctx context.Context, sel ast.Selection
 			out.Values[i] = ec._MemoryConfig_filePath(ctx, field, obj)
 		case "neo4j":
 			out.Values[i] = ec._MemoryConfig_neo4j(ctx, field, obj)
+		case "vector":
+			out.Values[i] = ec._MemoryConfig_vector(ctx, field, obj)
+		case "graph":
+			out.Values[i] = ec._MemoryConfig_graph(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -30458,6 +31170,52 @@ func (ec *executionContext) _UserRelationship(ctx context.Context, sel ast.Selec
 	return out
 }
 
+var vectorMemoryConfigGQLImplementors = []string{"VectorMemoryConfigGQL"}
+
+func (ec *executionContext) _VectorMemoryConfigGQL(ctx context.Context, sel ast.SelectionSet, obj *VectorMemoryConfigGql) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, vectorMemoryConfigGQLImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("VectorMemoryConfigGQL")
+		case "enabled":
+			out.Values[i] = ec._VectorMemoryConfigGQL_enabled(ctx, field, obj)
+		case "backend":
+			out.Values[i] = ec._VectorMemoryConfigGQL_backend(ctx, field, obj)
+		case "topK":
+			out.Values[i] = ec._VectorMemoryConfigGQL_topK(ctx, field, obj)
+		case "qdrantEndpoint":
+			out.Values[i] = ec._VectorMemoryConfigGQL_qdrantEndpoint(ctx, field, obj)
+		case "qdrantCollection":
+			out.Values[i] = ec._VectorMemoryConfigGQL_qdrantCollection(ctx, field, obj)
+		case "qdrantApiKey":
+			out.Values[i] = ec._VectorMemoryConfigGQL_qdrantApiKey(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.Deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.ProcessDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
 var vectorSearchResultImplementors = []string{"VectorSearchResult"}
 
 func (ec *executionContext) _VectorSearchResult(ctx context.Context, sel ast.SelectionSet, obj *VectorSearchResult) graphql.Marshaler {
@@ -32368,6 +33126,13 @@ func (ec *executionContext) marshalOGraphEdge2ᚕᚖgithubᚗcomᚋBangRocketᚋ
 	return ret
 }
 
+func (ec *executionContext) marshalOGraphMemoryConfigGQL2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐGraphMemoryConfigGql(ctx context.Context, sel ast.SelectionSet, v *GraphMemoryConfigGql) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._GraphMemoryConfigGQL(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalOGraphNode2ᚕᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐGraphNodeᚄ(ctx context.Context, sel ast.SelectionSet, v []*GraphNode) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -32659,6 +33424,13 @@ func (ec *executionContext) marshalOUserGraphResult2ᚖgithubᚗcomᚋBangRocket
 		return graphql.Null
 	}
 	return ec._UserGraphResult(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOVectorMemoryConfigGQL2ᚖgithubᚗcomᚋBangRocketᚋMyPalᚋappsᚋbackendᚋinternalᚋapplicationᚋgraphqlᚋgeneratedᚐVectorMemoryConfigGql(ctx context.Context, sel ast.SelectionSet, v *VectorMemoryConfigGql) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._VectorMemoryConfigGQL(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalO__EnumValue2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐEnumValueᚄ(ctx context.Context, sel ast.SelectionSet, v []introspection.EnumValue) graphql.Marshaler {

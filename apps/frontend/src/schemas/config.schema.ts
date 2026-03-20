@@ -228,16 +228,16 @@ export const configSchema: ConfigSchema = {
     // ========== MEMORY CONFIGURATION ==========
     memoryBackend: {
       type: "string",
-      title: "Memory Backend",
-      description: "Backend storage for agent memory",
+      title: "Legacy Memory Backend",
+      description: "Backend for the legacy memory graph (file-based GML or Neo4j). Use Vector/Graph settings below for the enhanced memory system.",
       enum: ["file", "neo4j"],
       default: "file",
     },
     memoryFilePath: {
       type: "string",
-      title: "File Path",
-      description: "Path for file-based memory storage",
-      default: "./data/memory",
+      title: "Legacy File Path",
+      description: "Path for file-based legacy memory storage (GML format)",
+      default: "./data/memory.gml",
       dependencies: {
         memoryBackend: {
           properties: { memoryBackend: { const: "file" } },
@@ -272,6 +272,136 @@ export const configSchema: ConfigSchema = {
       dependencies: {
         memoryBackend: {
           properties: { memoryBackend: { const: "neo4j" } },
+        },
+      },
+    },
+
+    // --- Vector Memory (Semantic Search) ---
+    memoryVectorEnabled: {
+      type: "boolean",
+      title: "Vector Memory",
+      description: "Enable semantic vector search for memory recall (Qdrant or pgvector)",
+      default: false,
+    },
+    memoryVectorBackend: {
+      type: "string",
+      title: "Vector Backend",
+      description: "Vector store provider",
+      enum: ["qdrant", "pgvector"],
+      default: "qdrant",
+      dependencies: {
+        memoryVectorEnabled: {
+          properties: { memoryVectorEnabled: { const: true } },
+        },
+      },
+    },
+    memoryVectorTopK: {
+      type: "integer",
+      title: "Top K Results",
+      description: "Number of similar memories to retrieve per query",
+      default: 10,
+      minimum: 1,
+      maximum: 100,
+      dependencies: {
+        memoryVectorEnabled: {
+          properties: { memoryVectorEnabled: { const: true } },
+        },
+      },
+    },
+    memoryVectorQdrantEndpoint: {
+      type: "string",
+      title: "Qdrant Endpoint",
+      description: "Qdrant REST API endpoint",
+      default: "http://localhost:6333",
+      dependencies: {
+        memoryVectorBackend: {
+          properties: { memoryVectorBackend: { const: "qdrant" } },
+        },
+      },
+    },
+    memoryVectorQdrantCollection: {
+      type: "string",
+      title: "Qdrant Collection",
+      description: "Qdrant collection name for memories",
+      default: "mypal_memories",
+      dependencies: {
+        memoryVectorBackend: {
+          properties: { memoryVectorBackend: { const: "qdrant" } },
+        },
+      },
+    },
+    memoryVectorQdrantApiKey: {
+      type: "string",
+      title: "Qdrant API Key",
+      description: "Qdrant API key (optional)",
+      format: "password",
+      dependencies: {
+        memoryVectorBackend: {
+          properties: { memoryVectorBackend: { const: "qdrant" } },
+        },
+      },
+    },
+
+    // --- Graph Memory (Entity Relationships) ---
+    memoryGraphEnabled: {
+      type: "boolean",
+      title: "Graph Memory",
+      description: "Enable graph-based entity relationship memory (FalkorDB or file)",
+      default: false,
+    },
+    memoryGraphBackend: {
+      type: "string",
+      title: "Graph Backend",
+      description: "Graph store provider",
+      enum: ["falkordb", "file"],
+      default: "falkordb",
+      dependencies: {
+        memoryGraphEnabled: {
+          properties: { memoryGraphEnabled: { const: true } },
+        },
+      },
+    },
+    memoryGraphFalkordbAddr: {
+      type: "string",
+      title: "FalkorDB Address",
+      description: "FalkorDB Redis-compatible address (host:port)",
+      default: "localhost:6379",
+      dependencies: {
+        memoryGraphBackend: {
+          properties: { memoryGraphBackend: { const: "falkordb" } },
+        },
+      },
+    },
+    memoryGraphFalkordbPassword: {
+      type: "string",
+      title: "FalkorDB Password",
+      description: "FalkorDB password (optional)",
+      format: "password",
+      dependencies: {
+        memoryGraphBackend: {
+          properties: { memoryGraphBackend: { const: "falkordb" } },
+        },
+      },
+    },
+    memoryGraphFalkordbGraph: {
+      type: "string",
+      title: "FalkorDB Graph Name",
+      description: "FalkorDB graph name for memory entities",
+      default: "mypal_memory",
+      dependencies: {
+        memoryGraphBackend: {
+          properties: { memoryGraphBackend: { const: "falkordb" } },
+        },
+      },
+    },
+    memoryGraphFilePath: {
+      type: "string",
+      title: "Graph File Path",
+      description: "Path for file-based graph storage (JSON format)",
+      default: "data/graph.json",
+      dependencies: {
+        memoryGraphBackend: {
+          properties: { memoryGraphBackend: { const: "file" } },
         },
       },
     },
@@ -613,7 +743,13 @@ export const configGroups = [
   {
     id: "memory",
     title: "MEMORY CONFIGURATION",
-    fields: ["memoryBackend", "memoryFilePath", "memoryNeo4jURI", "memoryNeo4jUser", "memoryNeo4jPassword"],
+    fields: [
+      "memoryBackend", "memoryFilePath", "memoryNeo4jURI", "memoryNeo4jUser", "memoryNeo4jPassword",
+      "memoryVectorEnabled", "memoryVectorBackend", "memoryVectorTopK",
+      "memoryVectorQdrantEndpoint", "memoryVectorQdrantCollection", "memoryVectorQdrantApiKey",
+      "memoryGraphEnabled", "memoryGraphBackend",
+      "memoryGraphFalkordbAddr", "memoryGraphFalkordbPassword", "memoryGraphFalkordbGraph", "memoryGraphFilePath",
+    ],
   },
   {
     id: "subagents",

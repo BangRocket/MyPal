@@ -350,6 +350,26 @@ func AppConfigSnapshotToGenerated(cfg *dto.AppConfigSnapshot) *generated.AppConf
 				Password: strOrNil(cfg.Memory.Neo4j.Password),
 			}
 		}
+		if cfg.Memory.Vector != nil {
+			mm.Vector = &generated.VectorMemoryConfigGql{
+				Enabled:          BoolPtr(cfg.Memory.Vector.Enabled),
+				Backend:          strOrNil(cfg.Memory.Vector.Backend),
+				TopK:             intOrNil(cfg.Memory.Vector.TopK),
+				QdrantEndpoint:   strOrNil(cfg.Memory.Vector.QdrantEndpoint),
+				QdrantCollection: strOrNil(cfg.Memory.Vector.QdrantCollection),
+				QdrantAPIKey:     strOrNil(cfg.Memory.Vector.QdrantAPIKey),
+			}
+		}
+		if cfg.Memory.Graph != nil {
+			mm.Graph = &generated.GraphMemoryConfigGql{
+				Enabled:          BoolPtr(cfg.Memory.Graph.Enabled),
+				Backend:          strOrNil(cfg.Memory.Graph.Backend),
+				FalkordbAddr:     strOrNil(cfg.Memory.Graph.FalkorDBAddr),
+				FalkordbPassword: strOrNil(cfg.Memory.Graph.FalkorDBPassword),
+				FalkordbGraph:    strOrNil(cfg.Memory.Graph.FalkorDBGraph),
+				FilePath:         strOrNil(cfg.Memory.Graph.FilePath),
+			}
+		}
 		out.Memory = mm
 	}
 	if cfg.Subagents != nil {
@@ -567,6 +587,42 @@ func UpdateConfigInputToMap(input generated.UpdateConfigInput) map[string]interf
 	}
 	if input.MemoryNeo4jPassword != nil {
 		m["memoryNeo4jPassword"] = *input.MemoryNeo4jPassword
+	}
+	if input.MemoryVectorEnabled != nil {
+		m["memoryVectorEnabled"] = *input.MemoryVectorEnabled
+	}
+	if input.MemoryVectorBackend != nil {
+		m["memoryVectorBackend"] = *input.MemoryVectorBackend
+	}
+	if input.MemoryVectorTopK != nil {
+		m["memoryVectorTopK"] = *input.MemoryVectorTopK
+	}
+	if input.MemoryVectorQdrantEndpoint != nil {
+		m["memoryVectorQdrantEndpoint"] = *input.MemoryVectorQdrantEndpoint
+	}
+	if input.MemoryVectorQdrantCollection != nil {
+		m["memoryVectorQdrantCollection"] = *input.MemoryVectorQdrantCollection
+	}
+	if input.MemoryVectorQdrantAPIKey != nil {
+		m["memoryVectorQdrantApiKey"] = *input.MemoryVectorQdrantAPIKey
+	}
+	if input.MemoryGraphEnabled != nil {
+		m["memoryGraphEnabled"] = *input.MemoryGraphEnabled
+	}
+	if input.MemoryGraphBackend != nil {
+		m["memoryGraphBackend"] = *input.MemoryGraphBackend
+	}
+	if input.MemoryGraphFalkordbAddr != nil {
+		m["memoryGraphFalkordbAddr"] = *input.MemoryGraphFalkordbAddr
+	}
+	if input.MemoryGraphFalkordbPassword != nil {
+		m["memoryGraphFalkordbPassword"] = *input.MemoryGraphFalkordbPassword
+	}
+	if input.MemoryGraphFalkordbGraph != nil {
+		m["memoryGraphFalkordbGraph"] = *input.MemoryGraphFalkordbGraph
+	}
+	if input.MemoryGraphFilePath != nil {
+		m["memoryGraphFilePath"] = *input.MemoryGraphFilePath
 	}
 	if input.SubagentsMaxConcurrent != nil {
 		m["subagentsMaxConcurrent"] = *input.SubagentsMaxConcurrent

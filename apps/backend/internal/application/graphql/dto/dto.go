@@ -247,6 +247,26 @@ type MemoryConfigSnapshot struct {
 	FilePath string
 	Neo4j    *Neo4jConfigSnapshot
 	Postgres *PostgresConfigSnapshot
+	Vector   *VectorMemorySnapshot
+	Graph    *GraphMemorySnapshot
+}
+
+type VectorMemorySnapshot struct {
+	Enabled          bool
+	Backend          string
+	TopK             int
+	QdrantEndpoint   string
+	QdrantCollection string
+	QdrantAPIKey     string
+}
+
+type GraphMemorySnapshot struct {
+	Enabled          bool
+	Backend          string
+	FalkorDBAddr     string
+	FalkorDBPassword string
+	FalkorDBGraph    string
+	FilePath         string
 }
 
 type Neo4jConfigSnapshot struct {

@@ -286,6 +286,22 @@ export const CONFIG_QUERY = /* GraphQL */ `
           user
           password
         }
+        vector {
+          enabled
+          backend
+          topK
+          qdrantEndpoint
+          qdrantCollection
+          qdrantApiKey
+        }
+        graph {
+          enabled
+          backend
+          falkordbAddr
+          falkordbPassword
+          falkordbGraph
+          filePath
+        }
       }
       subagents {
         maxConcurrent
