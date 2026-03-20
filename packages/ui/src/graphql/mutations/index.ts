@@ -274,6 +274,12 @@ export const SET_DEFAULT_PERSONALITY_MUTATION = /* GraphQL */ `
   }
 `;
 
+export const PREVIEW_PERSONALITY_MUTATION = /* GraphQL */ `
+  mutation PreviewPersonality($personalityId: String!, $userId: String!, $channelType: String!, $testMessage: String!) {
+    previewPersonality(personalityId: $personalityId, userId: $userId, channelType: $channelType, testMessage: $testMessage)
+  }
+`;
+
 // ─── System Files ─────────────────────────────────────────────────────────────
 
 export const WRITE_SYSTEM_FILE_MUTATION = /* GraphQL */ `
@@ -355,5 +361,23 @@ export const EXECUTE_SANDBOX_MUTATION = /* GraphQL */ `
 export const DESTROY_SANDBOX_MUTATION = /* GraphQL */ `
   mutation DestroySandbox($id: String!) {
     destroySandbox(id: $id)
+  }
+`;
+
+// ─── Organic Response ────────────────────────────────────────────────────────
+
+export const UPDATE_ORGANIC_CONFIG_MUTATION = /* GraphQL */ `
+  mutation UpdateOrganicConfig($channelId: String!, $input: OrganicResponseConfigInput!) {
+    updateOrganicConfig(channelId: $channelId, input: $input) {
+      channelId
+      enabled
+      cooldownSeconds
+      relevanceThreshold
+      maxDailyOrganic
+      allowReactions
+      threadPolicy
+      quietHoursStart
+      quietHoursEnd
+    }
   }
 `;

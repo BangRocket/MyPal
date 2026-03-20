@@ -481,3 +481,21 @@ export const SANDBOX_INSTANCES_QUERY = /* GraphQL */ `
     }
   }
 `;
+
+// ─── Organic Response ────────────────────────────────────────────────────────
+
+export const ORGANIC_CONFIG_QUERY = /* GraphQL */ `
+  query OrganicConfig($channelId: String!) {
+    organicConfig(channelId: $channelId) {
+      channelId
+      enabled
+      cooldownSeconds
+      relevanceThreshold
+      maxDailyOrganic
+      allowReactions
+      threadPolicy
+      quietHoursStart
+      quietHoursEnd
+    }
+  }
+`;
