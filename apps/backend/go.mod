@@ -4,7 +4,7 @@ go 1.25.0
 
 require (
 	github.com/99designs/gqlgen v0.17.88
-	github.com/anthropics/anthropic-sdk-go v1.26.0
+	github.com/anthropics/anthropic-sdk-go v1.27.1
 	github.com/chromedp/chromedp v0.14.2
 	github.com/diamondburned/arikawa/v3 v3.6.0
 	github.com/emersion/go-imap/v2 v2.0.0-beta.8
